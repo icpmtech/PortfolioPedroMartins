@@ -6,7 +6,7 @@ export default function Footer() {
   const amazonUrl = "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259?language=pt&ref=ap_rdr&shoppingPortalEnabled=true";
 
   return (
-    <div className="relative h-screen w-full bg-black flex items-center justify-center overflow-hidden px-6 md:px-12">
+    <div className="relative min-h-screen w-full bg-black flex items-center justify-center overflow-hidden px-6 md:px-12 py-24 md:py-0">
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#C5A059_0%,transparent_70%)] blur-[120px]" />
       </div>
@@ -70,18 +70,18 @@ export default function Footer() {
             href="https://pt.linkedin.com/in/pedromiguelmouraomartins"
             target="_blank"
             rel="noreferrer"
-            className="flex items-center justify-between p-6 glass-morphism rounded-2xl hover:bg-[#0077b5]/20 transition-all group"
+            className="flex items-center justify-between p-4 md:p-6 glass-morphism rounded-2xl hover:bg-[#0077b5]/20 transition-all group"
           >
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 rounded-xl border border-white/10 flex items-center justify-center text-[#0077b5]">
-                <Linkedin size={20} />
+            <div className="flex items-center space-x-3 md:space-x-4">
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl border border-white/10 flex items-center justify-center text-[#0077b5]">
+                <Linkedin size={18} md:size={20} />
               </div>
               <div className="text-left">
-                <p className="text-[10px] uppercase font-bold text-white/40">Professional</p>
-                <p className="text-sm text-white">LinkedIn Network</p>
+                <p className="text-[8px] md:text-[10px] uppercase font-bold text-white/40">Professional</p>
+                <p className="text-xs md:text-sm text-white">LinkedIn Network</p>
               </div>
             </div>
-            <ArrowRight size={16} className="text-white/20 group-hover:text-[#0077b5] transition-all" />
+            <ArrowRight size={14} md:size={16} className="text-white/20 group-hover:text-[#0077b5] transition-all" />
           </a>
         </div>
 

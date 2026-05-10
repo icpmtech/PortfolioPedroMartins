@@ -4,44 +4,44 @@ import { ExternalLink, Layers, Globe, Code } from 'lucide-react';
 
 const PROJECTS = [
   {
-    title: "Digital Transformation Porto",
-    category: "Lead Solution Architecture / Claranet",
+    title: "Whitworths Industrial",
+    category: "Lead Architect / Claranet",
     year: "Active",
-    tags: [".NET", "Cloud", "Porto"],
-    image: "https://images.unsplash.com/photo-1542662565-7e4b66bae529?auto=format&fit=crop&q=80&w=800",
+    tags: [".NET Core", "React JS", "Sharepoint"],
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800",
   },
   {
-    title: "Enterprise Cloud Ecosystems",
-    category: "Systems Analysis & Design",
-    year: "2024",
-    tags: ["Azure", "Kubernetes", "DevOps"],
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800",
+    title: "Natixis CIB",
+    category: "High-Availability Banking",
+    year: "2018",
+    tags: ["CIB", "Architecture", "Fintech"],
+    image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=800",
   },
   {
-    title: "Multidisciplinary Integration",
-    category: "Java & .NET Convergence",
-    year: "2023",
-    tags: ["Legacy", "API", "Auth"],
-    image: "https://images.unsplash.com/photo-1510511459019-5dee2c1a7eaa?auto=format&fit=crop&q=80&w=800",
+    title: "ZON TV Widgets",
+    category: "Media & Consumption Systems",
+    year: "2012",
+    tags: ["C#", "SQL Server", "Widgets"],
+    image: "https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&q=80&w=800",
   },
   {
-    title: "Cantinho de .NET",
-    category: "Technical Coaching & Community",
-    year: "Active",
-    tags: ["Mentoring", "Blog", "dotnet"],
-    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&q=80&w=800",
+    title: "GALP Energy Portal",
+    category: "Power Platform & Dynamics",
+    year: "2020",
+    tags: ["Dynamics 365", "Dynamics", "Azure"],
+    image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=800",
   },
 ];
 
 export default function Portfolio() {
   return (
-    <div className="relative h-screen w-full bg-[#0A0A0A] flex flex-col justify-center px-6 md:px-12 py-20 pb-24 md:py-0">
-      <div className="md:absolute top-12 left-12 flex flex-col mb-8 md:mb-0">
+    <div className="relative min-h-screen w-full bg-[#0A0A0A] flex flex-col justify-center px-6 md:px-12 py-24 md:py-0">
+      <div className="md:absolute top-12 left-12 flex flex-col mb-10 md:mb-0">
         <span className="text-gold font-mono text-[9px] md:text-[10px] tracking-[0.3em] md:tracking-[0.4em] uppercase font-bold mb-2">Systems Index</span>
-        <h2 className="font-serif text-3xl md:text-4xl text-white">Strategic Architecture</h2>
+        <h2 className="font-serif text-4xl text-white tracking-tight">Strategic Architecture</h2>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-0 md:mt-20 max-w-7xl w-full overflow-y-auto no-scrollbar max-h-[60vh] md:max-h-none">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-0 md:mt-20 max-w-7xl w-full">
         {PROJECTS.map((project, index) => (
           <motion.div
             key={index}

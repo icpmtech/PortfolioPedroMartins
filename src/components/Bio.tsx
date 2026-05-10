@@ -1,33 +1,47 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, Code, Cpu, Award, Zap, BookOpen, GraduationCap } from 'lucide-react';
+import { ArrowRight, Code, Cpu, Award, Zap, BookOpen, GraduationCap, MessageCircle } from 'lucide-react';
 
 const MILESTONES = [
   {
-    year: "2008",
-    title: "The Foundation",
-    description: "Engineering degree at University of Minho, specialized in software systems.",
+    year: "2010",
+    title: "Software Foundations",
+    description: "Started at Exago Markets developing predictive market apps after graduating from ISMAI.",
     icon: GraduationCap,
-    stat: "BSc/MSc"
+    stat: "ISMAI / Exago"
+  },
+  {
+    year: "2012",
+    title: "Public Infrastructure",
+    description: "Architected public transportation ticket systems at Novabase and news solutions for Público/ZON.",
+    icon: Zap,
+    stat: "Novabase"
   },
   {
     year: "2015",
-    title: "Community Launch",
-    description: "Founded 'Cantinho de .NET', becoming a reference in the Portuguese technical community.",
-    icon: Zap,
-    stat: "Legacy"
+    title: "Innovation & Community",
+    description: "Founded 'Cantinho de .NET' while managing construction ERP solutions at Sparkle IT.",
+    icon: MessageCircle,
+    stat: "Sparkle / Community"
   },
   {
-    year: "2018",
-    title: "Senior Architecture",
-    description: "Leading strategic technical transitions for multi-national industries at Claranet.",
+    year: "2017",
+    title: "Global Banking Scale",
+    description: "Web Solution Architect at Natixis, maintaining high-availability CIB banking platforms.",
     icon: Award,
-    stat: "Systems"
+    stat: "Natixis CIB"
+  },
+  {
+    year: "2019",
+    title: "Master Architecture",
+    description: "Software Architect at Claranet, leading complex .NET/Java transitions for Whitworths and GALP.",
+    icon: Cpu,
+    stat: "Claranet"
   },
   {
     year: "2024",
-    title: "Author Legacy",
-    description: "Published 30+ technical books on Amazon, demystifying .NET and AI technologies.",
+    title: "Published Legacy",
+    description: "Published over 30 technical books on Amazon, distilling 15+ years of architectural wisdom.",
     icon: BookOpen,
     stat: "30+ Books"
   }
@@ -44,24 +58,24 @@ export default function Bio() {
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#C5A059_1px,transparent_1px)] [background-size:40px_40px]" />
       </div>
 
-      <div className="container mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 relative z-10 pt-20 md:pt-0">
+      <div className="container mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 relative z-10 py-24 lg:py-0">
         <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col justify-center"
         >
           <div className="flex items-center space-x-3 mb-4 md:mb-6">
             <span className="h-px w-6 md:w-8 bg-gold" />
-            <span className="text-[10px] uppercase tracking-[0.3em] md:tracking-[0.5em] text-gold font-bold font-mono text-xs">Software Architect</span>
+            <span className="text-[10px] uppercase tracking-[0.3em] md:tracking-[0.5em] text-gold font-bold font-mono">Software Architect</span>
           </div>
           
-          <h1 className="font-serif text-5xl md:text-8xl leading-[0.9] md:leading-none mb-4 tracking-tighter text-white">
+          <h1 className="font-serif text-5xl sm:text-6xl md:text-8xl leading-[0.9] md:leading-none mb-4 tracking-tighter text-white">
             Pedro <br className="hidden md:block" />
             <span className="text-white/20 italic">Mourão Martins</span>
           </h1>
 
-          <div className="max-w-md space-y-4 md:space-y-6 text-[#A0A0A0] text-base md:text-lg font-light leading-relaxed mb-8 md:mb-10">
+          <div className="max-w-md space-y-4 md:space-y-6 text-[#A0A0A0] text-sm sm:text-base md:text-lg font-light leading-relaxed mb-8 md:mb-10">
             <p>
               Designing high-performance systems at <span className="text-white font-medium underline underline-offset-8 decoration-gold/30">Claranet Portugal</span>.
             </p>

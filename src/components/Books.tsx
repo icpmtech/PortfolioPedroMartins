@@ -58,20 +58,20 @@ export default function Books() {
   const amazonUrl = "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259?language=pt&ref=ap_rdr&shoppingPortalEnabled=true";
 
   return (
-    <div className="relative h-screen w-full bg-[#0D0D0D] flex flex-col justify-center overflow-hidden px-6 md:px-12 py-20 md:py-0">
-      <div className="md:absolute top-12 left-12 flex flex-col mb-4 md:mb-0">
+    <div className="relative min-h-screen w-full bg-[#0D0D0D] flex flex-col justify-center overflow-hidden px-6 md:px-12 py-24 md:py-0">
+      <div className="md:absolute top-12 left-12 flex flex-col mb-6 md:mb-0">
         <span className="text-gold font-mono text-[9px] md:text-[10px] tracking-[0.3em] md:tracking-[0.4em] uppercase font-bold mb-2">Technical Publications</span>
-        <h2 className="font-serif text-3xl md:text-4xl text-white">The Library</h2>
+        <h2 className="font-serif text-4xl text-white tracking-tight">The Library</h2>
       </div>
 
-      <div className="flex space-x-4 md:space-x-6 overflow-x-auto no-scrollbar pb-8 md:pb-12 pt-4 md:pt-20">
+      <div className="flex space-x-4 md:space-x-6 overflow-x-auto no-scrollbar pb-8 md:pb-12 pt-4 md:pt-20 snap-x snap-mandatory">
         {BOOKS.map((book, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1, duration: 0.6 }}
-            className="flex-shrink-0 w-64 md:w-72 h-[380px] md:h-[450px] relative rounded-lg overflow-hidden group border border-white/5 bg-black"
+            className="flex-shrink-0 w-64 md:w-72 h-[380px] md:h-[450px] relative rounded-lg overflow-hidden group border border-white/5 bg-black snap-center"
           >
             <img 
               src={book.image} 
