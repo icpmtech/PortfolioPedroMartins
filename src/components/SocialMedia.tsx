@@ -1,54 +1,56 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { Youtube, Facebook, Video, Play, ExternalLink, Share2, Check, BookOpen } from 'lucide-react';
 
-const SOCIAL_FEEDS = [
-  {
-    platform: "YouTube",
-    title: "UX/UI Design Architecture",
-    stats: "15.4k views",
-    thumbnail: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800",
-    icon: Youtube,
-    color: "bg-red-600/20 text-red-500",
-    url: "https://youtube.com/@cantinhodedotnet?si=S1xPa_vduc-4-Xt6"
-  },
-  {
-    platform: "TikTok",
-    title: "Product & UX Interaction",
-    stats: "2.1k likes",
-    thumbnail: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
-    icon: Video,
-    color: "bg-cyan-500/20 text-cyan-400",
-    url: "https://www.tiktok.com/@cantinhodedotnet?_r=1&_t=ZG-96FMgNnz01Q"
-  },
-  {
-    platform: "Facebook",
-    title: "Community UX Lab",
-    stats: "890 shares",
-    thumbnail: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800",
-    icon: Facebook,
-    color: "bg-blue-600/20 text-blue-500",
-    url: "https://www.facebook.com/share/1LdCY6dzfs/"
-  },
-  {
-    platform: "Reading Feed",
-    title: "UX/UI Library & Insights",
-    stats: "400+ Articles",
-    thumbnail: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?auto=format&fit=crop&q=80&w=800",
-    icon: BookOpen,
-    color: "bg-gold/20 text-gold",
-    url: "https://cantinhodotnet.com"
-  }
-];
-
 export default function SocialMedia() {
+  const { t } = useTranslation();
   const [sharedIndex, setSharedIndex] = useState<number | null>(null);
+
+  const SOCIAL_FEEDS = [
+    {
+      platform: t('media.platforms.youtube'),
+      title: t('media.feeds.youtube'),
+      stats: "15.4k views",
+      thumbnail: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800",
+      icon: Youtube,
+      color: "bg-red-600/20 text-red-500",
+      url: "https://youtube.com/@cantinhodedotnet?si=S1xPa_vduc-4-Xt6"
+    },
+    {
+      platform: t('media.platforms.tiktok'),
+      title: t('media.feeds.tiktok'),
+      stats: "2.1k likes",
+      thumbnail: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
+      icon: Video,
+      color: "bg-cyan-500/20 text-cyan-400",
+      url: "https://www.tiktok.com/@cantinhodedotnet?_r=1&_t=ZG-96FMgNnz01Q"
+    },
+    {
+      platform: t('media.platforms.facebook'),
+      title: t('media.feeds.facebook'),
+      stats: "890 shares",
+      thumbnail: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800",
+      icon: Facebook,
+      color: "bg-blue-600/20 text-blue-500",
+      url: "https://www.facebook.com/share/1LdCY6dzfs/"
+    },
+    {
+      platform: t('media.platforms.reading'),
+      title: t('media.feeds.reading'),
+      stats: "400+ Articles",
+      thumbnail: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?auto=format&fit=crop&q=80&w=800",
+      icon: BookOpen,
+      color: "bg-gold/20 text-gold",
+      url: "https://cantinhodotnet.com"
+    }
+  ];
 
   const handleShare = async (title: string, url: string, index: number) => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `Check out ${title} by Pedro Mourão Martins`,
+          title: t('media.shareTitle', { title }),
           url,
         });
         setSharedIndex(index);
@@ -72,8 +74,8 @@ export default function SocialMedia() {
   return (
     <div className="relative min-h-screen w-full bg-[#050505] flex flex-col justify-center px-6 md:px-12 py-24 md:py-0">
       <div className="md:absolute top-12 left-12 flex flex-col mb-10 md:mb-0">
-        <span className="text-gold font-mono text-[9px] md:text-[10px] tracking-[0.3em] md:tracking-[0.4em] uppercase font-bold mb-2">Media Channels</span>
-        <h2 className="font-serif text-4xl text-white tracking-tight">Social Presence</h2>
+        <span className="text-gold font-mono text-[9px] md:text-[10px] tracking-[0.3em] md:tracking-[0.4em] uppercase font-bold mb-2">{t('media.channels')}</span>
+        <h2 className="font-serif text-4xl text-white tracking-tight">{t('media.presence')}</h2>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-7xl w-full mx-auto">
@@ -104,7 +106,7 @@ export default function SocialMedia() {
                 </div>
                 <div className="bg-black/40 backdrop-blur px-3 py-1 rounded-full border border-white/5 flex items-center space-x-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                  <span className="text-[10px] font-mono text-white/60">LIVE FEED</span>
+                  <span className="text-[10px] font-mono text-white/60">{t('common.liveFeed')}</span>
                 </div>
               </div>
 
@@ -116,7 +118,7 @@ export default function SocialMedia() {
                 
                 <div className="flex items-center justify-between">
                   <div className="flex flex-col">
-                    <span className="text-[9px] uppercase tracking-widest text-white/40 font-bold">Engagement</span>
+                    <span className="text-[9px] uppercase tracking-widest text-white/40 font-bold">{t('common.engagement')}</span>
                     <span className="text-sm font-mono text-white/80">{feed.stats}</span>
                   </div>
                   <div className="flex items-center space-x-3">

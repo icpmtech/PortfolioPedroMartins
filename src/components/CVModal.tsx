@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Mail, Phone, MapPin, Globe, Award, Briefcase, GraduationCap, Code, Server, Database, Cloud } from 'lucide-react';
 
@@ -7,38 +8,40 @@ interface CVModalProps {
   onClose: () => void;
 }
 
-const EXPERIENCE = [
-  {
-    period: "2019 - Present",
-    role: "Software Architect",
-    company: "Claranet Porto",
-    description: "Creating solutions and implementing various projects using Sharepoint Online, Power Platform, Java and .NET technologies. Mentoring the team as technical lead and solution architect.",
-    tech: ["C# 7.1", "JAVA 8-11", "React JS", "AWS", "Dynamics 365"]
-  },
-  {
-    period: "2018 - 2019",
-    role: ".NET BackEnd Solution Architect",
-    company: "Alter Solution / Farfetch",
-    description: "Created various solutions for BackEnd Web APIs and Azure Cloud applications for Farfetch.",
-    tech: ["Kafka", "Redis", "Elastic Search", "Cassandra DB", "Grafana"]
-  },
-  {
-    period: "2017 - 2018",
-    role: ".NET Web Solution Architect",
-    company: "Natixis SA",
-    description: "Maintained high-availability CIB banking platforms. Designed technological solutions for new business requirements and migrated databases between Sybase and SQL Server.",
-    tech: [".NET", "SQL Server", "Sybase", "CIB Platforms"]
-  }
-];
-
-const SKILLS = [
-  { category: "Back-end", items: [".NET Core", "C#", "Java", "Python", "SQL Server"] },
-  { category: "Front-end", items: ["React JS", "Angular 6-9", "TypeScript", "Tailwind CSS"] },
-  { category: "Cloud & DevOps", items: ["AWS (Lambda, DynamoDB)", "Azure", "Docker", "Kafka", "Grafana"] },
-  { category: "Enterprise", items: ["Sharepoint Online", "Power Platform", "Dynamics 365", "Umbraco"] }
-];
-
 export default function CVModal({ isOpen, onClose }: CVModalProps) {
+  const { t, i18n } = useTranslation();
+  
+  const EXPERIENCE = [
+    {
+      period: "2019 - Present",
+      role: t('cv.experience.role1'),
+      company: "Claranet Porto",
+      description: t('cv.experience.desc1'),
+      tech: ["C# 7.1", "JAVA 8-11", "React JS", "AWS", "Dynamics 365"]
+    },
+    {
+      period: "2018 - 2019",
+      role: t('cv.experience.role2'),
+      company: "Alter Solution / Farfetch",
+      description: t('cv.experience.desc2'),
+      tech: ["Kafka", "Redis", "Elastic Search", "Cassandra DB", "Grafana"]
+    },
+    {
+      period: "2017 - 2018",
+      role: t('cv.experience.role3'),
+      company: "Natixis SA",
+      description: t('cv.experience.desc3'),
+      tech: [".NET", "SQL Server", "Sybase", "CIB Platforms"]
+    }
+  ];
+
+  const SKILLS = [
+    { category: t('cv.skills.backend'), items: [".NET Core", "C#", "Java", "Python", "SQL Server"] },
+    { category: t('cv.skills.frontend'), items: ["React JS", "Angular 6-9", "TypeScript", "Tailwind CSS"] },
+    { category: t('cv.skills.cloud'), items: ["AWS (Lambda, DynamoDB)", "Azure", "Docker", "Kafka", "Grafana"] },
+    { category: t('cv.skills.enterprise'), items: ["Sharepoint Online", "Power Platform", "Dynamics 365", "Umbraco"] }
+  ];
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -61,7 +64,7 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
             <div className="p-5 md:p-10 border-b border-white/5 flex justify-between items-start">
               <div>
                 <h2 className="text-2xl sm:text-3xl md:text-5xl font-serif text-white mb-1 md:mb-2">Pedro<span className="text-gold italic font-light ml-2">Mourão Martins</span></h2>
-                <p className="text-gold font-mono text-[8px] md:text-[10px] uppercase tracking-[0.2em] md:tracking-[0.3em] font-bold">Software Architect // Portfolio V.2026</p>
+                <p className="text-gold font-mono text-[8px] md:text-[10px] uppercase tracking-[0.2em] md:tracking-[0.3em] font-bold">{t('cv.subtitle')}</p>
               </div>
               <button 
                 onClick={onClose}
@@ -80,7 +83,7 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
                   {/* Contact */}
                   <section className="space-y-4">
                     <h3 className="text-xs uppercase tracking-widest text-white/40 font-bold flex items-center gap-2">
-                       <MapPin size={14} className="text-gold" /> Contact
+                       <MapPin size={14} className="text-gold" /> {t('cv.contact')}
                     </h3>
                     <div className="space-y-3 text-sm text-[#A0A0A0]">
                       <p className="flex items-center gap-3"><Mail size={14} /> mourao.martins@gmail.com</p>
@@ -92,7 +95,7 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
                   {/* Skills Grid */}
                   <section className="space-y-6">
                     <h3 className="text-xs uppercase tracking-widest text-white/40 font-bold flex items-center gap-2">
-                      <Code size={14} className="text-gold" /> Technologies
+                       <Code size={14} className="text-gold" /> {t('cv.technologies')}
                     </h3>
                     {SKILLS.map((set, idx) => (
                       <div key={idx} className="space-y-2">
@@ -131,7 +134,7 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
                 <div className="lg:col-span-2 space-y-12">
                   <section className="space-y-8">
                     <h3 className="text-xs uppercase tracking-widest text-white/40 font-bold flex items-center gap-2">
-                      <Briefcase size={14} className="text-gold" /> Professional Path
+                      <Briefcase size={14} className="text-gold" /> {t('cv.professionalPath')}
                     </h3>
                     <div className="space-y-10">
                       {EXPERIENCE.map((job, idx) => (
@@ -155,12 +158,12 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
 
                   <section className="space-y-6">
                     <h3 className="text-xs uppercase tracking-widest text-white/40 font-bold flex items-center gap-2">
-                      <GraduationCap size={14} className="text-gold" /> Education
+                      <GraduationCap size={14} className="text-gold" /> {t('cv.education')}
                     </h3>
                     <div className="p-6 glass-morphism rounded-2xl border border-white/5">
-                      <p className="text-white font-medium">Masters, Systems Engineering and Informatics</p>
-                      <p className="text-sm text-[#A0A0A0]">Universidade do Minho (UM), Campus de Gualtar, Braga</p>
-                      <p className="text-xs text-gold/60 mt-1">2010 - 2012 • EQF level 7</p>
+                      <p className="text-white font-medium">{t('cv.masters')}</p>
+                      <p className="text-sm text-[#A0A0A0]">{t('cv.university')}</p>
+                      <p className="text-xs text-gold/60 mt-1">2010 - 2012 • {t('cv.eqf')}</p>
                     </div>
                   </section>
                 </div>
@@ -169,13 +172,13 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
 
             {/* Footer Action */}
             <div className="p-6 md:p-8 bg-black/40 border-t border-white/5 flex flex-wrap gap-4 items-center justify-between">
-              <p className="text-xs text-[#666]">Built with React & Framer Motion // Systems Architect Profile</p>
+              <p className="text-xs text-[#666]">{t('cv.builtWith')}</p>
               <div className="flex gap-4">
                 <a 
                   href="mailto:mourao.martins@gmail.com"
                   className="px-6 py-2 bg-gold text-black rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white transition-colors"
                 >
-                  Hire Me
+                  {t('cv.hireMe')}
                 </a>
               </div>
             </div>

@@ -33,7 +33,7 @@ export default function Navbar() {
       >
       <div className="flex flex-col space-y-4 pointer-events-auto">
         <div>
-          <span className="text-[8px] md:text-[10px] uppercase tracking-[0.3em] md:tracking-[0.5em] font-bold text-white/40">Portfolio Feed // 2026</span>
+          <span className="text-[8px] md:text-[10px] uppercase tracking-[0.3em] md:tracking-[0.5em] font-bold text-white/40">{t('navbar.feedSubtitle')}</span>
         </div>
         <button 
           onClick={toggleLanguage}

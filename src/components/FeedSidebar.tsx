@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Linkedin, Github, MessageCircle, Heart, Share2, Database, Check, User, Youtube, Facebook, Video, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import CVModal from './CVModal';
 
 export default function FeedSidebar() {
+  const { t } = useTranslation();
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(4800);
   const [shared, setShared] = useState(false);
   const [isCVOpen, setIsCVOpen] = useState(false);
 
   const actions = [
-    { icon: Linkedin, label: 'Connect', url: 'https://pt.linkedin.com/in/pedromiguelmouraomartins' },
-    { icon: Github, label: 'Repo', url: 'https://github.com/moraomartins' },
-    { icon: Database, label: 'Kaggle', url: 'https://www.kaggle.com/pedromouraomartins' },
-    { icon: Youtube, label: 'Videos', url: 'https://youtube.com/@cantinhodedotnet?si=S1xPa_vduc-4-Xt6' },
-    { icon: Facebook, label: 'Social', url: 'https://www.facebook.com/share/1LdCY6dzfs/' },
-    { icon: Video, label: 'TikTok', url: 'https://www.tiktok.com/@cantinhodedotnet?_r=1&_t=ZG-96FMgNnz01Q' },
-    { icon: Phone, label: 'WhatsApp', url: 'https://wa.me/351919520386' },
+    { icon: Linkedin, label: t('sidebar.label.connect'), url: 'https://pt.linkedin.com/in/pedromiguelmouraomartins' },
+    { icon: Github, label: t('sidebar.label.repo'), url: 'https://github.com/moraomartins' },
+    { icon: Database, label: t('sidebar.label.kaggle'), url: 'https://www.kaggle.com/pedromouraomartins' },
+    { icon: Youtube, label: t('sidebar.label.videos'), url: 'https://youtube.com/@cantinhodedotnet?si=S1xPa_vduc-4-Xt6' },
+    { icon: Facebook, label: t('sidebar.label.social'), url: 'https://www.facebook.com/share/1LdCY6dzfs/' },
+    { icon: Video, label: t('sidebar.label.tiktok'), url: 'https://www.tiktok.com/@cantinhodedotnet?_r=1&_t=ZG-96FMgNnz01Q' },
+    { icon: Phone, label: t('sidebar.label.whatsapp'), url: 'https://wa.me/351919520386' },
   ];
 
   const handleLike = () => {
@@ -67,7 +69,7 @@ export default function FeedSidebar() {
           <div className="w-9 h-9 md:w-12 md:h-12 rounded-full glass-morphism border-2 border-gold/40 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-all">
             <User size={14} md:size={20} />
           </div>
-          <span className="text-[7px] md:text-[8px] uppercase tracking-tighter font-bold text-gold mt-1 hidden sm:block">Profile</span>
+          <span className="text-[7px] md:text-[8px] uppercase tracking-tighter font-bold text-gold mt-1 hidden sm:block">{t('common.profile')}</span>
         </motion.button>
 
         {actions.map((action, idx) => (
@@ -134,7 +136,7 @@ export default function FeedSidebar() {
             </AnimatePresence>
           </div>
           <span className="text-[7px] md:text-[8px] uppercase tracking-tighter font-bold opacity-60 mt-1 hidden sm:block">
-            {shared ? 'Copied' : 'Share'}
+            {shared ? t('common.copied') : t('common.share')}
           </span>
         </motion.button>
       </div>

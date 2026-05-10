@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence, useScroll } from 'motion/react';
 import { ArrowUp } from 'lucide-react';
 
@@ -7,6 +8,7 @@ interface BackToTopProps {
 }
 
 export default function BackToTop({ containerRef }: BackToTopProps) {
+  const { t } = useTranslation();
   const { scrollY } = useScroll({ container: containerRef as React.RefObject<HTMLElement> });
   const [show, setShow] = useState(false);
 
@@ -38,7 +40,7 @@ export default function BackToTop({ containerRef }: BackToTopProps) {
           whileTap={{ scale: 0.9 }}
           onClick={scrollToTop}
           className="fixed left-6 md:left-12 bottom-6 md:bottom-12 z-50 w-10 h-10 md:w-12 md:h-12 glass-morphism rounded-full flex items-center justify-center text-gold border border-gold/30 hover:border-gold hover:bg-gold/10 transition-all shadow-2xl focus:outline-none"
-          aria-label="Back to top"
+          aria-label={t('common.backToTop')}
         >
           <ArrowUp size={20} />
         </motion.button>

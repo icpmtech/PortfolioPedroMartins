@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { BookOpen, ShoppingBag, ExternalLink } from 'lucide-react';
 
@@ -55,13 +56,14 @@ const BOOKS = [
 ];
 
 export default function Books() {
+  const { t } = useTranslation();
   const amazonUrl = "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259?language=pt&ref=ap_rdr&shoppingPortalEnabled=true";
 
   return (
     <div className="relative min-h-screen w-full bg-[#0D0D0D] flex flex-col justify-center overflow-hidden px-6 md:px-12 py-24 md:py-0">
       <div className="md:absolute top-12 left-12 flex flex-col mb-6 md:mb-0">
-        <span className="text-gold font-mono text-[9px] md:text-[10px] tracking-[0.3em] md:tracking-[0.4em] uppercase font-bold mb-2">Technical Publications</span>
-        <h2 className="font-serif text-4xl text-white tracking-tight">The Library</h2>
+        <span className="text-gold font-mono text-[9px] md:text-[10px] tracking-[0.3em] md:tracking-[0.4em] uppercase font-bold mb-2">{t('books.publications')}</span>
+        <h2 className="font-serif text-4xl text-white tracking-tight">{t('books.library')}</h2>
       </div>
 
       <div className="flex space-x-4 md:space-x-6 overflow-x-auto no-scrollbar pb-8 md:pb-12 pt-4 md:pt-20 snap-x snap-mandatory">
@@ -81,7 +83,7 @@ export default function Books() {
             
             <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black via-black/80 to-transparent flex flex-col justify-end min-h-[200px]">
               <div className="absolute top-4 right-4 bg-gold text-[#0A0A0A] font-bold text-[8px] px-2 py-1 rounded">
-                KINDLE EDITION
+                {t('common.kindle')}
               </div>
               
               <h3 className="font-serif text-2xl text-white mb-2 leading-tight group-hover:text-gold transition-colors">{book.title}</h3>
@@ -114,13 +116,13 @@ export default function Books() {
           <div className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center mb-6 group-hover:border-gold/30 transition-all">
             <BookOpen size={24} className="text-white/20 group-hover:text-gold transition-all" />
           </div>
-          <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/40 group-hover:text-white transition-all">View Full Shelf</span>
-          <span className="text-[8px] uppercase tracking-widest text-[#666] mt-2 group-hover:text-gold/60 transition-all">36 Titles Available</span>
+          <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/40 group-hover:text-white transition-all">{t('books.viewShelf')}</span>
+          <span className="text-[8px] uppercase tracking-widest text-[#666] mt-2 group-hover:text-gold/60 transition-all">{t('books.available', { count: 36 })}</span>
         </motion.a>
       </div>
 
       <div className="absolute top-1/2 right-12 -translate-y-1/2 rotate-90 origin-right hidden lg:block">
-        <span className="text-[10px] uppercase tracking-[0.8em] font-bold text-white/5 select-none text-8xl">LITERARY</span>
+        <span className="text-[10px] uppercase tracking-[0.8em] font-bold text-white/5 select-none text-8xl">{t('common.literary')}</span>
       </div>
     </div>
   );
