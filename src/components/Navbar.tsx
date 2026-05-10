@@ -1,16 +1,28 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion, useScroll, useSpring } from 'motion/react';
 
 export default function Navbar() {
   const amazonUrl = "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259?language=pt&ref=ap_rdr&shoppingPortalEnabled=true";
+  
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   return (
-    <motion.nav 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 1 }}
-      className="fixed top-0 left-0 w-full z-50 px-4 py-4 md:px-12 md:py-6 flex justify-between items-start pointer-events-none"
-    >
+    <>
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[2px] bg-gold origin-left z-[60]"
+        style={{ scaleX }}
+      />
+      <motion.nav 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+        className="fixed top-0 left-0 w-full z-50 px-4 py-4 md:px-12 md:py-6 flex justify-between items-start pointer-events-none"
+      >
       <div className="pointer-events-auto">
         <span className="text-[8px] md:text-[10px] uppercase tracking-[0.3em] md:tracking-[0.5em] font-bold text-white/40">Portfolio Feed // 2026</span>
       </div>
@@ -34,5 +46,6 @@ export default function Navbar() {
         </a>
       </div>
     </motion.nav>
+    </>
   );
 }

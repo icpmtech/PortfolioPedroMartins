@@ -1,8 +1,41 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import { ArrowRight, Code, Cpu } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ArrowRight, Code, Cpu, Award, Zap, BookOpen, GraduationCap } from 'lucide-react';
+
+const MILESTONES = [
+  {
+    year: "2008",
+    title: "The Foundation",
+    description: "Engineering degree at University of Minho, specialized in software systems.",
+    icon: GraduationCap,
+    stat: "BSc/MSc"
+  },
+  {
+    year: "2015",
+    title: "Community Launch",
+    description: "Founded 'Cantinho de .NET', becoming a reference in the Portuguese technical community.",
+    icon: Zap,
+    stat: "Legacy"
+  },
+  {
+    year: "2018",
+    title: "Senior Architecture",
+    description: "Leading strategic technical transitions for multi-national industries at Claranet.",
+    icon: Award,
+    stat: "Systems"
+  },
+  {
+    year: "2024",
+    title: "Author Legacy",
+    description: "Published 30+ technical books on Amazon, demystifying .NET and AI technologies.",
+    icon: BookOpen,
+    stat: "30+ Books"
+  }
+];
 
 export default function Bio() {
+  const [activeMilestone, setActiveMilestone] = useState(MILESTONES[2]);
+
   return (
     <div className="relative h-screen w-full flex items-center overflow-hidden">
       {/* Background Graphic */}
@@ -32,21 +65,46 @@ export default function Bio() {
             <p>
               Designing high-performance systems at <span className="text-white font-medium underline underline-offset-8 decoration-gold/30">Claranet Portugal</span>.
             </p>
-            <p className="text-xs md:text-sm">
-              Strategic technical transitions, University of Minho graduate, and founder of "Cantinho de .NET".
-            </p>
+            
+            <div className="relative mt-8 p-4 glass-morphism rounded-2xl border border-white/5 overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeMilestone.year}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-2"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-gold font-mono text-xs bold tracking-widest">{activeMilestone.year}</span>
+                    <activeMilestone.icon size={14} className="text-gold/40" />
+                  </div>
+                  <h4 className="text-white font-serif text-lg">{activeMilestone.title}</h4>
+                  <p className="text-[11px] md:text-xs text-[#666] leading-relaxed">{activeMilestone.description}</p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
 
-          <div className="flex items-center space-x-6 md:space-x-8">
-            <div className="flex flex-col">
-              <span className="text-xl md:text-2xl font-serif text-white">15+</span>
-              <span className="text-[8px] md:text-[9px] uppercase tracking-widest text-[#666]">Years Exp</span>
-            </div>
-            <div className="h-6 md:h-8 w-px bg-white/10" />
-            <div className="flex flex-col">
-              <span className="text-xl md:text-2xl font-serif text-white">40+</span>
-              <span className="text-[8px] md:text-[9px] uppercase tracking-widest text-[#666]">Systems Built</span>
-            </div>
+          <div className="flex items-center space-x-2 md:space-x-4">
+            {MILESTONES.map((milestone) => (
+              <button
+                key={milestone.year}
+                onClick={() => setActiveMilestone(milestone)}
+                className={`group relative flex flex-col items-center focus:outline-none transition-all duration-300 ${activeMilestone.year === milestone.year ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}`}
+              >
+                <div className={`w-8 h-8 rounded-full border flex items-center justify-center mb-1 transition-all ${activeMilestone.year === milestone.year ? 'border-gold bg-gold/10 text-gold shadow-[0_0_15px_rgba(197,160,89,0.3)]' : 'border-white/10 text-white'}`}>
+                  <milestone.icon size={12} />
+                </div>
+                <span className="text-[8px] font-mono tracking-tighter uppercase font-bold">{milestone.stat}</span>
+                {activeMilestone.year === milestone.year && (
+                  <motion.div 
+                    layoutId="underline"
+                    className="absolute -bottom-1 w-4 h-0.5 bg-gold rounded-full"
+                  />
+                )}
+              </button>
+            ))}
           </div>
         </motion.div>
 
