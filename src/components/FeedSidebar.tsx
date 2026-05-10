@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Linkedin, Github, MessageCircle, Heart, Share2, Database, Check } from 'lucide-react';
+import { Linkedin, Github, MessageCircle, Heart, Share2, Database, Check, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import CVModal from './CVModal';
 
 export default function FeedSidebar() {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(4800);
   const [shared, setShared] = useState(false);
+  const [isCVOpen, setIsCVOpen] = useState(false);
 
   const actions = [
     { icon: Linkedin, label: 'Connect', url: 'https://pt.linkedin.com/in/pedromiguelmouraomartins' },
@@ -36,7 +38,8 @@ export default function FeedSidebar() {
   };
 
   return (
-    <div className="fixed right-2 md:right-4 bottom-20 md:bottom-24 z-50 flex flex-col items-center space-y-4 md:space-y-6">
+    <>
+      <div className="fixed right-2 md:right-4 bottom-20 md:bottom-24 z-50 flex flex-col items-center space-y-4 md:space-y-6">
       <div className="relative">
         <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-gold p-0.5 overflow-hidden">
           <img 
@@ -51,6 +54,18 @@ export default function FeedSidebar() {
       </div>
 
       <div className="flex flex-col items-center space-y-3 md:space-y-4">
+        <motion.button 
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setIsCVOpen(true)}
+          className="flex flex-col items-center group focus:outline-none"
+        >
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full glass-morphism border-2 border-gold/40 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-all">
+            <User size={16} md:size={20} />
+          </div>
+          <span className="text-[8px] uppercase tracking-tighter font-bold text-gold mt-1">Profile</span>
+        </motion.button>
+
         {actions.map((action, idx) => (
           <motion.a
             key={idx}
@@ -119,6 +134,8 @@ export default function FeedSidebar() {
           </span>
         </motion.button>
       </div>
-    </div>
+      </div>
+      <CVModal isOpen={isCVOpen} onClose={() => setIsCVOpen(false)} />
+    </>
   );
 }
