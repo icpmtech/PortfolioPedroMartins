@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { ExternalLink, Layers, Globe, Code } from 'lucide-react';
 
@@ -34,11 +35,43 @@ const PROJECTS = [
 ];
 
 export default function Portfolio() {
+  const { t } = useTranslation();
+  const PROJECTS = [
+    {
+      title: "Whitworths Industrial",
+      category: t('portfolio.projects.whitworths'),
+      year: "Active",
+      tags: [".NET Core", "React JS", "Sharepoint"],
+      image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800",
+    },
+    {
+      title: "Natixis CIB",
+      category: t('portfolio.projects.natixis'),
+      year: "2018",
+      tags: ["CIB", "Architecture", "Fintech"],
+      image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=800",
+    },
+    {
+      title: "ZON TV Widgets",
+      category: t('portfolio.projects.zon'),
+      year: "2012",
+      tags: ["C#", "SQL Server", "Widgets"],
+      image: "https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&q=80&w=800",
+    },
+    {
+      title: "GALP Energy Portal",
+      category: t('portfolio.projects.galp'),
+      year: "2020",
+      tags: ["Dynamics 365", "Dynamics", "Azure"],
+      image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=800",
+    },
+  ];
+
   return (
     <div className="relative min-h-screen w-full bg-[#0A0A0A] flex flex-col justify-center px-6 md:px-12 py-24 md:py-0">
       <div className="md:absolute top-12 left-12 flex flex-col mb-10 md:mb-0">
-        <span className="text-gold font-mono text-[9px] md:text-[10px] tracking-[0.3em] md:tracking-[0.4em] uppercase font-bold mb-2">Systems Index</span>
-        <h2 className="font-serif text-4xl text-white tracking-tight">Strategic Architecture</h2>
+        <span className="text-gold font-mono text-[9px] md:text-[10px] tracking-[0.3em] md:tracking-[0.4em] uppercase font-bold mb-2">{t('portfolio.index')}</span>
+        <h2 className="font-serif text-4xl text-white tracking-tight">{t('portfolio.title')}</h2>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-0 md:mt-20 max-w-7xl w-full">
@@ -77,7 +110,7 @@ export default function Portfolio() {
 
       <div className="absolute bottom-12 right-12 hidden md:flex items-center space-x-4 text-[#444]">
         <div className="flex flex-col items-end">
-          <span className="text-[8px] uppercase font-bold tracking-widest">Active Status</span>
+          <span className="text-[8px] uppercase font-bold tracking-widest">{t('portfolio.status')}</span>
           <span className="text-[10px] font-mono text-gold/60">SYSTEMS_GREEN_OK</span>
         </div>
         <Layers size={24} className="opacity-20" />

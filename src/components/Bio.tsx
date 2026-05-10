@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, Code, Cpu, Award, Zap, BookOpen, GraduationCap, MessageCircle } from 'lucide-react';
 
@@ -48,6 +49,52 @@ const MILESTONES = [
 ];
 
 export default function Bio() {
+  const { t } = useTranslation();
+  const MILESTONES = [
+    {
+      year: "2010",
+      title: t('bio.milestones.2010.title'),
+      description: t('bio.milestones.2010.description'),
+      icon: GraduationCap,
+      stat: "ISMAI / Exago"
+    },
+    {
+      year: "2012",
+      title: t('bio.milestones.2012.title'),
+      description: t('bio.milestones.2012.description'),
+      icon: Zap,
+      stat: "Novabase"
+    },
+    {
+      year: "2015",
+      title: t('bio.milestones.2015.title'),
+      description: t('bio.milestones.2015.description'),
+      icon: MessageCircle,
+      stat: "Sparkle / Community"
+    },
+    {
+      year: "2017",
+      title: t('bio.milestones.2017.title'),
+      description: t('bio.milestones.2017.description'),
+      icon: Award,
+      stat: "Natixis CIB"
+    },
+    {
+      year: "2019",
+      title: t('bio.milestones.2019.title'),
+      description: t('bio.milestones.2019.description'),
+      icon: Cpu,
+      stat: "Claranet"
+    },
+    {
+      year: "2024",
+      title: t('bio.milestones.2024.title'),
+      description: t('bio.milestones.2024.description'),
+      icon: BookOpen,
+      stat: "30+ Books"
+    }
+  ];
+
   const [activeMilestone, setActiveMilestone] = useState(MILESTONES[2]);
 
   return (
@@ -67,7 +114,7 @@ export default function Bio() {
         >
           <div className="flex items-center space-x-3 mb-4 md:mb-6">
             <span className="h-px w-6 md:w-8 bg-gold" />
-            <span className="text-[10px] uppercase tracking-[0.3em] md:tracking-[0.5em] text-gold font-bold font-mono">Software Architect</span>
+            <span className="text-[10px] uppercase tracking-[0.3em] md:tracking-[0.5em] text-gold font-bold font-mono">{t('bio.role')}</span>
           </div>
           
           <h1 className="font-serif text-5xl sm:text-6xl md:text-8xl leading-[0.9] md:leading-none mb-4 tracking-tighter text-white">
@@ -77,7 +124,7 @@ export default function Bio() {
 
           <div className="max-w-md space-y-4 md:space-y-6 text-[#A0A0A0] text-sm sm:text-base md:text-lg font-light leading-relaxed mb-8 md:mb-10">
             <p>
-              Designing high-performance systems at <span className="text-white font-medium underline underline-offset-8 decoration-gold/30">Claranet Portugal</span>.
+              {t('bio.tagline')} <span className="text-white font-medium underline underline-offset-8 decoration-gold/30">Claranet Portugal</span>.
             </p>
             
             <div className="relative mt-8 p-4 glass-morphism rounded-2xl border border-white/5 overflow-hidden">
@@ -149,7 +196,7 @@ export default function Bio() {
               
               <div className="space-y-4">
                 <Code className="text-gold" size={32} />
-                <h3 className="font-serif text-2xl text-white">Architectural <br/> Integrity</h3>
+                <h3 className="font-serif text-2xl text-white">{t('bio.architecture').split(' ')[0]} <br/> {t('bio.architecture').split(' ')[1]}</h3>
                 <div className="h-px w-12 bg-gold/50" />
               </div>
 
@@ -177,7 +224,7 @@ export default function Bio() {
 
       {/* Vertical Navigation Hint */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center animate-bounce opacity-40">
-        <span className="text-[10px] uppercase tracking-widest mb-2 font-bold text-white">Scroll Feed</span>
+        <span className="text-[10px] uppercase tracking-widest mb-2 font-bold text-white">{t('bio.scrollFeed')}</span>
         <div className="h-12 w-px bg-gradient-to-b from-gold to-transparent" />
       </div>
     </div>

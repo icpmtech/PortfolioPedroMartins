@@ -1,8 +1,10 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { Mail, Linkedin, Github, MessageSquare, ArrowRight, Youtube, Facebook, Video, Phone } from 'lucide-react';
 
 export default function Footer() {
+  const { t } = useTranslation();
   const amazonUrl = "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259?language=pt&ref=ap_rdr&shoppingPortalEnabled=true";
 
   return (
@@ -17,12 +19,12 @@ export default function Footer() {
           whileInView={{ opacity: 1, scale: 1 }}
           className="inline-block px-4 py-1 rounded-full border border-gold/30 bg-gold/5 text-gold text-[10px] uppercase font-bold tracking-[0.4em]"
         >
-          End of Feed
+          {t('footer.connectTitle')}
         </motion.div>
 
         <h2 className="font-serif text-4xl md:text-7xl text-white leading-tight">
-          Let's Architect the <br/>
-          <span className="text-gold italic">Next Generation.</span>
+          {t('footer.connectSubtitle').split('the')[0]} <br/>
+          <span className="text-gold italic">{t('footer.connectSubtitle').split('the')[1]}</span>
         </h2>
 
         <motion.div 
@@ -36,14 +38,14 @@ export default function Footer() {
               <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-white/40 font-bold">Expertise & Achievements</span>
             </div>
             <p className="text-xs md:text-base text-[#A0A0A0] leading-relaxed">
-              Software Architect at Claranet Portugal with 15+ years of cross-industry experience. Specialized in .NET, Cloud Solutions, and AI Ontologies. Published author of over 30 technical books on Amazon and founder of "Cantinho de .NET".
+              {t('footer.expertise')}
               <a 
                 href="https://pt.linkedin.com/in/pedromiguelmouraomartins" 
                 target="_blank" 
                 rel="noreferrer"
                 className="inline-flex items-center text-gold ml-1 md:ml-2 hover:underline group font-bold tracking-tight"
               >
-                Read More <ArrowRight size={12} className="ml-1 group-hover:translate-x-1 transition-transform" />
+                {t('footer.readMore')} <ArrowRight size={12} className="ml-1 group-hover:translate-x-1 transition-transform" />
               </a>
             </p>
           </div>
@@ -59,7 +61,7 @@ export default function Footer() {
                 <Mail size={18} />
               </div>
               <div className="text-left">
-                <p className="text-[8px] md:text-[10px] uppercase font-bold text-white/40">Direct Mail</p>
+                <p className="text-[8px] md:text-[10px] uppercase font-bold text-white/40">{t('footer.directMail')}</p>
                 <p className="text-xs md:text-sm text-white">mourao.martins@gmail.com</p>
               </div>
             </div>
@@ -77,7 +79,7 @@ export default function Footer() {
                 <Linkedin size={18} md:size={20} />
               </div>
               <div className="text-left">
-                <p className="text-[8px] md:text-[10px] uppercase font-bold text-white/40">Professional</p>
+                <p className="text-[8px] md:text-[10px] uppercase font-bold text-white/40">{t('footer.professional')}</p>
                 <p className="text-xs md:text-sm text-white">LinkedIn Network</p>
               </div>
             </div>
@@ -93,7 +95,7 @@ export default function Footer() {
             <a href="https://www.tiktok.com/@cantinhodedotnet?_r=1&_t=ZG-96FMgNnz01Q" target="_blank" rel="noreferrer" className="text-white/40 hover:text-cyan-400 transition-all"><Video size={20} /></a>
             <a href="https://wa.me/351919520386" target="_blank" rel="noreferrer" className="text-white/40 hover:text-green-500 transition-all"><Phone size={20} /></a>
             <a href="https://cantinhodotnet.com" className="text-gold opacity-50 hover:opacity-100 transition-all"><MessageSquare size={20} /></a>
-            <a href={amazonUrl} className="text-white/40 hover:text-gold transition-all font-mono text-[10px] font-bold tracking-widest">AMAZON_STORE</a>
+            <a href={amazonUrl} className="text-white/40 hover:text-gold transition-all font-mono text-[10px] font-bold tracking-widest">{t('footer.amazon')}</a>
           </div>
           
           <p className="text-[8px] uppercase tracking-[0.5em] text-white/20 font-bold">
