@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Youtube, Facebook, Video, Play, ExternalLink, Share2, Check } from 'lucide-react';
+import { Youtube, Facebook, Video, Play, ExternalLink, Share2, Check, BookOpen } from 'lucide-react';
 
 const SOCIAL_FEEDS = [
   {
     platform: "YouTube",
-    title: "Technical Architect Series",
+    title: "UX/UI Design Architecture",
     stats: "15.4k views",
     thumbnail: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800",
     icon: Youtube,
@@ -14,7 +14,7 @@ const SOCIAL_FEEDS = [
   },
   {
     platform: "TikTok",
-    title: "Micro-Architectural Tips",
+    title: "Product & UX Interaction",
     stats: "2.1k likes",
     thumbnail: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
     icon: Video,
@@ -23,12 +23,21 @@ const SOCIAL_FEEDS = [
   },
   {
     platform: "Facebook",
-    title: "Community Insights",
+    title: "Community UX Lab",
     stats: "890 shares",
     thumbnail: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800",
     icon: Facebook,
     color: "bg-blue-600/20 text-blue-500",
     url: "https://www.facebook.com/share/1LdCY6dzfs/"
+  },
+  {
+    platform: "Reading Feed",
+    title: "UX/UI Library & Insights",
+    stats: "400+ Articles",
+    thumbnail: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?auto=format&fit=crop&q=80&w=800",
+    icon: BookOpen,
+    color: "bg-gold/20 text-gold",
+    url: "https://cantinhodotnet.com"
   }
 ];
 
@@ -67,14 +76,15 @@ export default function SocialMedia() {
         <h2 className="font-serif text-4xl text-white tracking-tight">Social Presence</h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl w-full mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-7xl w-full mx-auto">
         {SOCIAL_FEEDS.map((feed, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
             transition={{ delay: index * 0.1 }}
-            className="group relative flex flex-col glass-morphism border border-white/5 rounded-3xl overflow-hidden aspect-[9/16] md:aspect-auto md:h-[500px]"
+            className="group relative flex flex-col glass-morphism border border-white/5 rounded-3xl overflow-hidden aspect-[4/5] sm:aspect-[3/4] lg:aspect-auto lg:h-[520px]"
           >
             {/* Background Thumbnail */}
             <div className="absolute inset-0 overflow-hidden">
