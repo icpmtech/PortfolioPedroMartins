@@ -72,80 +72,83 @@ export default function SocialMedia() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#050505] flex flex-col justify-center px-6 md:px-12 py-24 md:py-0">
-      <div className="md:absolute top-12 left-12 flex flex-col mb-10 md:mb-0">
-        <span className="text-gold font-mono text-[9px] md:text-[10px] tracking-[0.3em] md:tracking-[0.4em] uppercase font-bold mb-2">{t('media.channels')}</span>
-        <h2 className="font-serif text-4xl text-white tracking-tight">{t('media.presence')}</h2>
+    <div className="relative min-h-screen w-full bg-dark flex flex-col justify-center px-6 md:px-12 py-24 md:py-0 overflow-hidden">
+      {/* Background Graphic */}
+      <div className="absolute top-0 right-0 w-full h-full opacity-[0.02] pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(212,175,55,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(212,175,55,0.1)_1px,transparent_1px)] [background-size:40px_40px]" />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-7xl w-full mx-auto">
+      <div className="md:absolute top-12 left-12 flex flex-col mb-12 md:mb-0 z-10">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          className="flex items-center space-x-3 mb-3"
+        >
+          <span className="h-px w-8 bg-gold" />
+          <span className="text-gold font-mono text-[10px] tracking-[0.4em] uppercase font-bold">{t('media.channels')}</span>
+        </motion.div>
+        <h2 className="font-serif text-5xl md:text-6xl text-white tracking-tight leading-none">{t('media.presence')}</h2>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-4 mt-0 md:mt-24 max-w-7xl w-full mx-auto relative z-10">
         {SOCIAL_FEEDS.map((feed, index) => (
           <motion.div
             key={index}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: index * 0.1 }}
-            className="group relative flex flex-col glass-morphism border border-white/5 rounded-3xl overflow-hidden aspect-[4/5] sm:aspect-[3/4] lg:aspect-auto lg:h-[520px]"
+            transition={{ delay: index * 0.1, duration: 0.6 }}
+            className="group relative h-[450px] md:h-[520px] flex flex-col glass-morphism border border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-gold/30 shadow-2xl"
           >
             {/* Background Thumbnail */}
             <div className="absolute inset-0 overflow-hidden">
               <img 
                 src={feed.thumbnail} 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-40 group-hover:opacity-60"
+                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-30 group-hover:opacity-50 grayscale group-hover:grayscale-0"
                 alt={feed.title}
+                referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/60 to-transparent" />
             </div>
 
             {/* Content Overlays */}
-            <div className="relative h-full flex flex-col justify-between p-6">
+            <div className="relative h-full flex flex-col justify-between p-8">
               <div className="flex items-center justify-between">
-                <div className={`p-2 rounded-xl border border-white/10 ${feed.color}`}>
-                  <feed.icon size={20} />
+                <div className={`p-3 rounded-2xl border border-white/10 ${feed.color} shadow-lg backdrop-blur-md`}>
+                  <feed.icon size={24} />
                 </div>
-                <div className="bg-black/40 backdrop-blur px-3 py-1 rounded-full border border-white/5 flex items-center space-x-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                  <span className="text-[10px] font-mono text-white/60">{t('common.liveFeed')}</span>
+                <div className="bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 flex items-center space-x-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" />
+                  <span className="text-[9px] font-mono font-bold text-white/80 tracking-widest uppercase">{t('common.liveFeed')}</span>
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase font-bold text-gold tracking-widest">{feed.platform}</p>
-                  <h3 className="text-xl md:text-2xl font-serif text-white">{feed.title}</h3>
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <p className="text-[10px] uppercase font-bold text-gold tracking-[0.3em] font-mono">{feed.platform}</p>
+                  <h3 className="text-3xl md:text-3xl font-serif text-white group-hover:text-gold transition-colors duration-300 leading-tight">{feed.title}</h3>
                 </div>
                 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between pt-4 border-t border-white/5">
                   <div className="flex flex-col">
-                    <span className="text-[9px] uppercase tracking-widest text-white/40 font-bold">{t('common.engagement')}</span>
-                    <span className="text-sm font-mono text-white/80">{feed.stats}</span>
+                    <span className="text-[9px] uppercase tracking-[0.2em] text-white/30 font-bold font-mono">{t('common.engagement')}</span>
+                    <span className="text-base font-mono text-gold-muted font-bold group-hover:text-gold transition-colors">{feed.stats}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <motion.button
                       onClick={() => handleShare(feed.title, feed.url, index)}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
-                      className="w-12 h-12 rounded-full glass-morphism border border-white/10 flex items-center justify-center text-white/80 hover:text-gold transition-colors focus:outline-none"
+                      className="w-12 h-12 rounded-full glass-morphism border border-white/10 flex items-center justify-center text-white/60 hover:text-gold hover:border-gold/40 transition-all duration-300 focus:outline-none"
                     >
                       <AnimatePresence mode="wait">
                         {sharedIndex === index ? (
-                          <motion.div
-                            key="check"
-                            initial={{ scale: 0, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0, opacity: 0 }}
-                          >
-                            <Check size={18} />
+                          <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                            <Check size={20} />
                           </motion.div>
                         ) : (
-                          <motion.div
-                            key="share"
-                            initial={{ scale: 0, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0, opacity: 0 }}
-                          >
-                            <Share2 size={18} />
+                          <motion.div key="share" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                            <Share2 size={20} />
                           </motion.div>
                         )}
                       </AnimatePresence>
@@ -156,18 +159,18 @@ export default function SocialMedia() {
                       rel="noreferrer"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
-                      className="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center shadow-xl group-hover:bg-gold transition-colors"
+                      className="w-12 h-12 rounded-full bg-white text-dark flex items-center justify-center shadow-xl group-hover:bg-gold transition-all duration-300"
                     >
-                      <Play size={20} fill="currentColor" />
+                      <Play size={22} fill="currentColor" className="ml-1" />
                     </motion.a>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Platform Tag */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-10 transition-opacity pointer-events-none">
-               <feed.icon size={200} />
+            {/* Platform Accent - Design element */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-[0.03] transition-opacity pointer-events-none duration-1000">
+               <feed.icon size={300} />
             </div>
           </motion.div>
         ))}

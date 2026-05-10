@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Linkedin, Github, MessageCircle, Heart, Share2, Database, Check, User, Youtube, Facebook, Video, Phone } from 'lucide-react';
+import { Linkedin, Github, MessageCircle, Heart, Share2, Database, Check, User, Youtube, Facebook, Video, Phone, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import CVModal from './CVModal';
 
@@ -45,101 +45,99 @@ export default function FeedSidebar() {
 
   return (
     <>
-      <div className="fixed right-2 md:right-4 bottom-16 md:bottom-24 z-50 flex flex-col items-center space-y-3 md:space-y-6">
-      <div className="relative scale-90 md:scale-100">
-        <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-gold p-0.5 overflow-hidden">
-          <img 
-            src="https://m.media-amazon.com/images/S/amzn-author-media-prod/nq4001lv5jqet2jp2i50o2n229._SY600_._SL200_._PQ50_._FMwebp_.jpg" 
-            alt="Pedro Martins" 
-            className="w-full h-full object-cover rounded-full"
-          />
-        </div>
-        <div className="absolute -bottom-1 md:-bottom-2 left-1/2 -translate-x-1/2 bg-gold text-[#0A0A0A] rounded-full p-0.5 md:p-1 border border-[#0A0A0A]">
-          <MessageCircle size={8} md:size={10} fill="currentColor" />
-        </div>
-      </div>
-
-      <div className="flex flex-col items-center space-y-2 md:space-y-4">
-        <motion.button 
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setIsCVOpen(true)}
-          className="flex flex-col items-center group focus:outline-none"
-        >
-          <div className="w-9 h-9 md:w-12 md:h-12 rounded-full glass-morphism border-2 border-gold/40 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-all">
-            <User size={14} md:size={20} />
+      <div className="fixed right-2 md:right-8 bottom-20 md:bottom-32 z-50 flex flex-col items-center space-y-3 md:space-y-8">
+        {/* Creator Identity */}
+        <div className="relative group cursor-pointer" onClick={() => setIsCVOpen(true)}>
+          <div className="w-11 h-11 md:w-16 md:h-16 rounded-full border-2 border-gold p-0.5 md:p-1 bg-dark overflow-hidden group-hover:scale-110 transition-transform duration-500">
+            <img 
+              src="https://m.media-amazon.com/images/S/amzn-author-media-prod/nq4001lv5jqet2jp2i50o2n229._SY600_._SL200_._PQ50_._FMwebp_.jpg" 
+              alt="Pedro Martins" 
+              className="w-full h-full object-cover rounded-full grayscale group-hover:grayscale-0 transition-all duration-500"
+              referrerPolicy="no-referrer"
+            />
           </div>
-          <span className="text-[7px] md:text-[8px] uppercase tracking-tighter font-bold text-gold mt-1 hidden sm:block">{t('common.profile')}</span>
-        </motion.button>
+          <motion.div 
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="absolute -bottom-1 right-0 bg-gold text-dark rounded-full p-0.5 md:p-1 border-2 border-dark"
+          >
+            <Zap size={8} md:size={10} fill="currentColor" />
+          </motion.div>
+        </div>
 
-        {actions.map((action, idx) => (
-          <motion.a
-            key={idx}
-            href={action.url}
-            target="_blank"
-            rel="noreferrer"
+        <div className="flex flex-col items-center space-y-3 md:space-y-6">
+          <motion.button 
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="flex flex-col items-center group"
+            onClick={() => setIsCVOpen(true)}
+            className="flex flex-col items-center group relative"
           >
-            <div className="w-9 h-9 md:w-12 md:h-12 rounded-full glass-morphism flex items-center justify-center text-white/80 group-hover:text-gold transition-colors">
-              <action.icon size={14} md:size={20} />
+            <div className="w-10 h-10 md:w-14 md:h-14 rounded-full glass-morphism flex items-center justify-center text-gold border border-gold/20 group-hover:bg-gold group-hover:text-dark transition-all duration-300">
+              <User size={18} md:size={24} />
             </div>
-            <span className="text-[7px] md:text-[8px] uppercase tracking-tighter font-bold opacity-60 mt-1 hidden sm:block">{action.label}</span>
-          </motion.a>
-        ))}
-        
-        <motion.button 
-          whileTap={{ scale: 0.8 }}
-          onClick={handleLike}
-          className="flex flex-col items-center group focus:outline-none"
-        >
-          <div className={`w-9 h-9 md:w-12 md:h-12 rounded-full glass-morphism flex items-center justify-center transition-all duration-300 ${liked ? 'text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.4)]' : 'text-white/80 group-hover:text-red-500'}`}>
-            <Heart size={14} md:size={20} fill={liked ? "currentColor" : "none"} />
-          </div>
-          <motion.span 
-            key={likeCount}
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-[7px] md:text-[8px] uppercase tracking-tighter font-bold opacity-60 mt-1 hidden sm:block"
-          >
-            {(likeCount / 1000).toFixed(1)}k
-          </motion.span>
-        </motion.button>
+            <span className="absolute left-full ml-4 px-3 py-1 bg-gold text-dark text-[10px] uppercase font-bold tracking-widest rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap hidden lg:block">
+              {t('common.profile')}
+            </span>
+          </motion.button>
 
-        <motion.button 
-          whileTap={{ scale: 0.8 }}
-          onClick={handleShare}
-          className="flex flex-col items-center group focus:outline-none relative"
-        >
-          <div className={`w-9 h-9 md:w-12 md:h-12 rounded-full glass-morphism flex items-center justify-center transition-all duration-300 ${shared ? 'text-blue-400 shadow-[0_0_15px_rgba(96,165,250,0.4)]' : 'text-white/80 group-hover:text-blue-400'}`}>
-            <AnimatePresence mode="wait">
-              {shared ? (
-                <motion.div
-                  key="check"
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0, opacity: 0 }}
-                >
-                  <Check size={14} md:size={20} />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="share"
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0, opacity: 0 }}
-                >
-                  <Share2 size={14} md:size={20} />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-          <span className="text-[7px] md:text-[8px] uppercase tracking-tighter font-bold opacity-60 mt-1 hidden sm:block">
-            {shared ? t('common.copied') : t('common.share')}
-          </span>
-        </motion.button>
-      </div>
+          {actions.map((action, idx) => (
+            <motion.a
+              key={idx}
+              href={action.url}
+              target="_blank"
+              rel="noreferrer"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="flex flex-col items-center group relative"
+            >
+              <div className="w-9 h-9 md:w-14 md:h-14 rounded-full glass-morphism flex items-center justify-center text-white/40 group-hover:text-gold group-hover:border-gold/40 transition-all duration-300">
+                <action.icon size={16} md:size={24} />
+              </div>
+              <span className="absolute left-full ml-4 px-3 py-1 bg-[#111] text-white/60 text-[10px] uppercase font-bold tracking-widest rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap border border-white/10 hidden lg:block">
+                {action.label}
+              </span>
+            </motion.a>
+          ))}
+          
+          {/* Reaction Actions */}
+          <div className="h-px w-4 md:w-6 bg-white/10 my-1 md:my-2" />
+
+          <motion.button 
+            whileTap={{ scale: 0.7 }}
+            onClick={handleLike}
+            className="flex flex-col items-center group focus:outline-none"
+          >
+            <div className={`w-9 h-9 md:w-14 md:h-14 rounded-full glass-morphism flex items-center justify-center transition-all duration-300 ${liked ? 'text-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)] border-red-500/40' : 'text-white/40 group-hover:text-red-500'}`}>
+              <Heart size={16} md:size={24} fill={liked ? "currentColor" : "none"} />
+            </div>
+            <span className="text-[8px] md:text-[10px] font-mono font-bold mt-1 text-white/30 group-hover:text-white/80 transition-colors">
+              {(likeCount / 1000).toFixed(1)}k
+            </span>
+          </motion.button>
+
+          <motion.button 
+            whileTap={{ scale: 0.7 }}
+            onClick={handleShare}
+            className="flex flex-col items-center group focus:outline-none"
+          >
+            <div className={`w-9 h-9 md:w-14 md:h-14 rounded-full glass-morphism flex items-center justify-center transition-all duration-300 ${shared ? 'text-blue-400 shadow-[0_0_20px_rgba(96,165,250,0.4)] border-blue-400/40' : 'text-white/40 group-hover:text-blue-400'}`}>
+              <AnimatePresence mode="wait">
+                {shared ? (
+                  <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                    <Check size={16} md:size={24} />
+                  </motion.div>
+                ) : (
+                  <motion.div key="share" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                    <Share2 size={16} md:size={24} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            <span className="text-[8px] md:text-[10px] font-mono font-bold mt-1 text-white/30 group-hover:text-white/80 transition-colors uppercase tracking-tighter">
+              {shared ? t('common.copied') : t('common.share')}
+            </span>
+          </motion.button>
+        </div>
       </div>
       <CVModal isOpen={isCVOpen} onClose={() => setIsCVOpen(false)} />
     </>

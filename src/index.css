@@ -6,9 +6,11 @@
   --font-serif: "Playfair Display", ui-serif, Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   
-  --color-gold: #C5A059;
-  --color-dark: #0A0A0A;
-  --color-card: #121212;
+  --color-gold: #D4AF37;
+  --color-gold-muted: #8B7355;
+  --color-dark: #050505;
+  --color-card: #0A0A0A;
+  --color-blueprint: rgba(30, 41, 59, 0.5);
 }
 
 @layer base {
@@ -17,6 +19,14 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
+    background-color: var(--color-dark);
+    color: #E5E5E5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tighter leading-[0.9];
   }
 }
 
@@ -33,6 +43,31 @@
   scroll-snap-stop: always;
   width: 100%;
   position: relative;
+  overflow: hidden;
+}
+
+/* Texture & Decoration */
+.bg-mesh {
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, hsla(225,39%,30%,0.15) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, hsla(339,49%,30%,0.15) 0, transparent 50%);
+}
+
+.glass-morphism {
+  background: rgba(10, 10, 10, 0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.glass-morphism-light {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.text-gradient-gold {
+  @apply bg-clip-text text-transparent bg-gradient-to-tr from-[#8B7355] via-[#D4AF37] to-[#8B7355];
 }
 
 /* Hide scrollbar */
@@ -42,34 +77,4 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-.glass-morphism {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.font-serif {
-  font-family: var(--font-serif);
-}
-
-.font-mono {
-  font-family: var(--font-mono);
-}
-
-.border-blueprint {
-  border-color: rgba(229, 229, 229, 0.05);
-}
-
-.border-gold {
-  border-color: rgba(197, 160, 89, 0.3);
-}
-
-.text-accent {
-  color: #C5A059;
-}
-
-.bg-accent {
-  background-color: #C5A059;
 }

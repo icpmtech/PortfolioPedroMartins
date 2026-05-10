@@ -17,7 +17,7 @@ export default function App() {
   }, []);
 
   return (
-    <main className="font-sans antialiased bg-[#0A0A0A] text-[#E5E5E5] selection:bg-gold/30">
+    <main className="font-sans antialiased bg-dark bg-mesh min-h-screen text-[#E5E5E5] selection:bg-gold/30 overflow-hidden">
       <Navbar />
       <FeedSidebar />
       <BackToTop containerRef={containerRef} />

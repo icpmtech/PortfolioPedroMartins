@@ -95,73 +95,96 @@ export default function Bio() {
     }
   ];
 
-  const [activeMilestone, setActiveMilestone] = useState(MILESTONES[2]);
+  const [activeMilestone, setActiveMilestone] = useState(MILESTONES[4]);
 
   return (
-    <div className="relative h-screen w-full flex items-center overflow-hidden">
+    <div className="relative min-h-screen w-full flex items-center overflow-hidden pt-20 pb-20 md:py-0">
       {/* Background Graphic */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 right-0 w-[80%] h-full bg-gradient-to-l from-gold/5 to-transparent blend-soft-light" />
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#C5A059_1px,transparent_1px)] [background-size:40px_40px]" />
+        <div className="absolute top-0 right-0 w-full md:w-[80%] h-full bg-gradient-to-l from-gold/5 via-transparent to-transparent blend-soft-light" />
+        <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#D4AF37_1px,transparent_1px)] [background-size:24px_24px]" />
+        
+        {/* Animated Architectural Circles */}
+        <div className="absolute -right-20 -top-20 w-[400px] h-[400px] md:w-[600px] md:h-[600px] border border-gold/10 rounded-full animate-[spin_60s_linear_infinite] opacity-20" />
+        <div className="absolute -right-10 -top-10 w-[300px] h-[300px] md:w-[500px] md:h-[500px] border border-gold/5 rounded-full animate-[spin_40s_linear_infinite_reverse] opacity-20" />
       </div>
 
-      <div className="container mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 relative z-10 py-24 lg:py-0">
+      <div className="container mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col justify-center"
+          className="lg:col-span-8 flex flex-col justify-center"
         >
-          <div className="flex items-center space-x-3 mb-4 md:mb-6">
-            <span className="h-px w-6 md:w-8 bg-gold" />
-            <span className="text-[10px] uppercase tracking-[0.3em] md:tracking-[0.5em] text-gold font-bold font-mono">{t('bio.role')}</span>
+          <div className="flex items-center space-x-3 mb-6 md:mb-8">
+            <span className="h-px w-8 md:w-12 bg-gold" />
+            <span className="text-[10px] uppercase tracking-[0.4em] md:tracking-[0.6em] text-gold font-bold font-mono">{t('bio.role')}</span>
           </div>
           
-          <h1 className="font-serif text-5xl sm:text-6xl md:text-8xl leading-[0.9] md:leading-none mb-4 tracking-tighter text-white">
-            Pedro <br className="hidden md:block" />
-            <span className="text-white/20 italic">Mourão Martins</span>
+          <h1 className="font-serif text-[clamp(2.5rem,15vw,9rem)] leading-[0.85] mb-6 tracking-tighter text-white">
+            <span className="block overflow-hidden">
+               <motion.span 
+                 initial={{ y: "100%" }}
+                 animate={{ y: 0 }}
+                 transition={{ duration: 0.8, delay: 0.2 }}
+                 className="block"
+               >
+                 Pedro
+               </motion.span>
+            </span>
+            <span className="block overflow-hidden text-gold-muted/30 italic">
+               <motion.span 
+                 initial={{ y: "100%" }}
+                 animate={{ y: 0 }}
+                 transition={{ duration: 0.8, delay: 0.4 }}
+                 className="block"
+               >
+                 Mourão Martins
+               </motion.span>
+            </span>
           </h1>
 
-          <div className="max-w-md space-y-4 md:space-y-6 text-[#A0A0A0] text-sm sm:text-base md:text-lg font-light leading-relaxed mb-8 md:mb-10">
-            <p>
+          <div className="max-w-xl space-y-6 md:space-y-8 text-[#A0A0A0] text-base md:text-xl font-light leading-relaxed mb-10 md:mb-12">
+            <p className="border-l-2 border-gold/20 pl-6 py-2 bg-gradient-to-r from-gold/[0.03] to-transparent">
               {t('bio.tagline')} <span className="text-white font-medium underline underline-offset-8 decoration-gold/30">Claranet Portugal</span>.
             </p>
             
-            <div className="relative mt-8 p-4 glass-morphism rounded-2xl border border-white/5 overflow-hidden">
+            <div className="relative mt-8 p-6 glass-morphism rounded-3xl border border-gold/10 overflow-hidden group">
+              <div className="absolute top-0 right-0 p-4 opacity-5 bg-gold/20 rounded-bl-3xl translate-x-1/2 -translate-y-1/2" />
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeMilestone.year}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="space-y-2"
+                  className="space-y-3"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-gold font-mono text-xs bold tracking-widest">{activeMilestone.year}</span>
-                    <activeMilestone.icon size={14} className="text-gold/40" />
+                    <span className="text-gold font-mono text-xs font-bold tracking-[0.3em]">{activeMilestone.year}</span>
+                    <activeMilestone.icon size={16} className="text-gold" />
                   </div>
-                  <h4 className="text-white font-serif text-lg">{activeMilestone.title}</h4>
-                  <p className="text-[11px] md:text-xs text-[#666] leading-relaxed">{activeMilestone.description}</p>
+                  <h4 className="text-white font-serif text-2xl group-hover:text-gold transition-colors">{activeMilestone.title}</h4>
+                  <p className="text-sm md:text-base text-[#777] leading-relaxed max-w-lg">{activeMilestone.description}</p>
                 </motion.div>
               </AnimatePresence>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 md:gap-4">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
             {MILESTONES.map((milestone) => (
               <button
                 key={milestone.year}
                 onClick={() => setActiveMilestone(milestone)}
-                className={`group relative flex flex-col items-center focus:outline-none transition-all duration-300 ${activeMilestone.year === milestone.year ? 'opacity-100 scale-105 sm:scale-110' : 'opacity-40 hover:opacity-70'}`}
+                className={`group relative flex flex-col items-center focus:outline-none transition-all duration-500 ${activeMilestone.year === milestone.year ? 'opacity-100 scale-110' : 'opacity-30 hover:opacity-60'}`}
               >
-                <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center mb-1 transition-all ${activeMilestone.year === milestone.year ? 'border-gold bg-gold/10 text-gold shadow-[0_0_15px_rgba(197,160,89,0.3)]' : 'border-white/10 text-white'}`}>
-                  <milestone.icon size={10} sm:size={12} />
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border flex items-center justify-center mb-2 transition-all duration-500 ${activeMilestone.year === milestone.year ? 'border-gold bg-gold/5 text-gold shadow-[0_0_25px_rgba(212,175,55,0.2)]' : 'border-white/10 text-white'}`}>
+                  <milestone.icon size={14} sm:size={18} />
                 </div>
-                <span className="text-[7px] sm:text-[8px] font-mono tracking-tighter uppercase font-bold">{milestone.stat}</span>
+                <span className="text-[8px] sm:text-[9px] font-mono tracking-widest uppercase font-bold text-white/50">{milestone.stat}</span>
                 {activeMilestone.year === milestone.year && (
                   <motion.div 
                     layoutId="underline"
-                    className="absolute -bottom-1 w-4 h-0.5 bg-gold rounded-full"
+                    className="absolute -bottom-2 w-6 h-0.5 bg-gold rounded-full shadow-[0_0_10px_#D4AF37]"
                   />
                 )}
               </button>
@@ -170,51 +193,52 @@ export default function Bio() {
         </motion.div>
 
         <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
+          className="lg:col-span-4 hidden lg:flex items-center justify-end"
+          initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, delay: 0.2 }}
-          className="hidden lg:flex items-center justify-center relative"
+          transition={{ duration: 1.2, delay: 0.4 }}
         >
-          <div className="relative w-96 h-[500px]">
-            {/* Profile Image Overlay */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="absolute -top-12 -left-12 w-48 h-48 rounded-2xl overflow-hidden border-4 border-[#0A0A0A] shadow-2xl z-20 hidden xl:block"
-            >
-              <img 
-                src="https://m.media-amazon.com/images/S/amzn-author-media-prod/nq4001lv5jqet2jp2i50o2n229._SY600_._SL200_._PQ50_._FMwebp_.jpg" 
-                alt="Pedro Martins profile" 
-                className="w-full h-full object-cover"
-              />
-            </motion.div>
-
-             {/* Abstract System Architecture Visual */}
-            <div className="absolute inset-0 border border-gold/20 backdrop-blur-3xl rounded-2xl p-8 flex flex-col justify-between group overflow-hidden glass-morphism">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gold/10 blur-[100px] group-hover:bg-gold/20 transition-colors" />
-              
-              <div className="space-y-4">
-                <Code className="text-gold" size={32} />
-                <h3 className="font-serif text-2xl text-white">{t('bio.architecture').split(' ')[0]} <br/> {t('bio.architecture').split(' ')[1]}</h3>
-                <div className="h-px w-12 bg-gold/50" />
+          <div className="relative w-full max-w-[320px] aspect-[3/4] group">
+            {/* Visual Frame */}
+            <div className="absolute inset-0 border border-gold/20 rounded-[2rem] transform rotate-3 scale-105 opacity-20 group-hover:rotate-0 transition-transform duration-700" />
+            <div className="absolute inset-0 border border-gold/10 rounded-[2rem] transform -rotate-3 scale-105 opacity-10 group-hover:rotate-0 transition-transform duration-700 delay-100" />
+            
+            <div className="relative h-full w-full bg-[#080808] border border-white/5 rounded-[2rem] overflow-hidden glass-morphism flex flex-col">
+              {/* Profile Image - Semi transparent layer */}
+              <div className="h-2/3 relative overflow-hidden">
+                <img 
+                  src="https://m.media-amazon.com/images/S/amzn-author-media-prod/nq4001lv5jqet2jp2i50o2n229._SY600_._SL200_._PQ50_._FMwebp_.jpg" 
+                  alt="Pedro Martins profile" 
+                  className="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#080808] to-transparent" />
               </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center space-x-2 text-white">
-                  <Cpu size={14} className="text-gold/60" />
-                  <span className="text-[10px] font-mono opacity-40">SCALABLE_CORE_V2</span>
+              
+              <div className="p-8 flex-1 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center space-x-2 text-gold mb-3">
+                    <Code size={20} />
+                    <span className="text-[10px] font-mono tracking-widest font-bold">SYSTEMS_ARCHITECT</span>
+                  </div>
+                  <h3 className="font-serif text-3xl text-white leading-none">
+                    {t('bio.architecture').split(' ')[0]} <br/> 
+                    <span className="text-gold italic font-light">{t('bio.architecture').split(' ')[1]}</span>
+                  </h3>
                 </div>
-                <div className="h-32 bg-white/5 border border-white/5 flex items-end p-2 space-x-1">
-                  {[40, 70, 45, 90, 65, 80, 50, 95].map((h, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ height: 0 }}
-                      animate={{ height: `${h}%` }}
-                      transition={{ duration: 1, delay: i * 0.1 + 0.5 }}
-                      className="w-full bg-gold/40"
-                    />
-                  ))}
+
+                <div className="space-y-4">
+                   <div className="flex justify-between items-end">
+                      <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Load Density</span>
+                      <span className="text-[10px] font-mono text-gold font-bold">98.2%</span>
+                   </div>
+                   <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: "98.2%" }}
+                        transition={{ duration: 1.5, delay: 1 }}
+                        className="h-full bg-gold shadow-[0_0_10px_#D4AF37]"
+                      />
+                   </div>
                 </div>
               </div>
             </div>
