@@ -100,17 +100,17 @@ export default function Bio() {
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 md:space-x-4">
+          <div className="flex flex-wrap items-center gap-3 md:gap-4">
             {MILESTONES.map((milestone) => (
               <button
                 key={milestone.year}
                 onClick={() => setActiveMilestone(milestone)}
-                className={`group relative flex flex-col items-center focus:outline-none transition-all duration-300 ${activeMilestone.year === milestone.year ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}`}
+                className={`group relative flex flex-col items-center focus:outline-none transition-all duration-300 ${activeMilestone.year === milestone.year ? 'opacity-100 scale-105 sm:scale-110' : 'opacity-40 hover:opacity-70'}`}
               >
-                <div className={`w-8 h-8 rounded-full border flex items-center justify-center mb-1 transition-all ${activeMilestone.year === milestone.year ? 'border-gold bg-gold/10 text-gold shadow-[0_0_15px_rgba(197,160,89,0.3)]' : 'border-white/10 text-white'}`}>
-                  <milestone.icon size={12} />
+                <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center mb-1 transition-all ${activeMilestone.year === milestone.year ? 'border-gold bg-gold/10 text-gold shadow-[0_0_15px_rgba(197,160,89,0.3)]' : 'border-white/10 text-white'}`}>
+                  <milestone.icon size={10} sm:size={12} />
                 </div>
-                <span className="text-[8px] font-mono tracking-tighter uppercase font-bold">{milestone.stat}</span>
+                <span className="text-[7px] sm:text-[8px] font-mono tracking-tighter uppercase font-bold">{milestone.stat}</span>
                 {activeMilestone.year === milestone.year && (
                   <motion.div 
                     layoutId="underline"
@@ -176,7 +176,7 @@ export default function Bio() {
       </div>
 
       {/* Vertical Navigation Hint */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce opacity-40">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center animate-bounce opacity-40">
         <span className="text-[10px] uppercase tracking-widest mb-2 font-bold text-white">Scroll Feed</span>
         <div className="h-12 w-px bg-gradient-to-b from-gold to-transparent" />
       </div>

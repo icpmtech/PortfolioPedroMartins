@@ -39,8 +39,8 @@ export default function FeedSidebar() {
 
   return (
     <>
-      <div className="fixed right-2 md:right-4 bottom-20 md:bottom-24 z-50 flex flex-col items-center space-y-4 md:space-y-6">
-      <div className="relative">
+      <div className="fixed right-2 md:right-4 bottom-16 md:bottom-24 z-50 flex flex-col items-center space-y-3 md:space-y-6">
+      <div className="relative scale-90 md:scale-100">
         <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-gold p-0.5 overflow-hidden">
           <img 
             src="https://m.media-amazon.com/images/S/amzn-author-media-prod/nq4001lv5jqet2jp2i50o2n229._SY600_._SL200_._PQ50_._FMwebp_.jpg" 
@@ -53,17 +53,17 @@ export default function FeedSidebar() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center space-y-3 md:space-y-4">
+      <div className="flex flex-col items-center space-y-2 md:space-y-4">
         <motion.button 
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setIsCVOpen(true)}
           className="flex flex-col items-center group focus:outline-none"
         >
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full glass-morphism border-2 border-gold/40 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-all">
-            <User size={16} md:size={20} />
+          <div className="w-9 h-9 md:w-12 md:h-12 rounded-full glass-morphism border-2 border-gold/40 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-all">
+            <User size={14} md:size={20} />
           </div>
-          <span className="text-[8px] uppercase tracking-tighter font-bold text-gold mt-1">Profile</span>
+          <span className="text-[7px] md:text-[8px] uppercase tracking-tighter font-bold text-gold mt-1 hidden sm:block">Profile</span>
         </motion.button>
 
         {actions.map((action, idx) => (
@@ -76,10 +76,10 @@ export default function FeedSidebar() {
             whileTap={{ scale: 0.9 }}
             className="flex flex-col items-center group"
           >
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full glass-morphism flex items-center justify-center text-white/80 group-hover:text-gold transition-colors">
-              <action.icon size={16} md:size={20} />
+            <div className="w-9 h-9 md:w-12 md:h-12 rounded-full glass-morphism flex items-center justify-center text-white/80 group-hover:text-gold transition-colors">
+              <action.icon size={14} md:size={20} />
             </div>
-            <span className="text-[8px] uppercase tracking-tighter font-bold opacity-60 mt-1">{action.label}</span>
+            <span className="text-[7px] md:text-[8px] uppercase tracking-tighter font-bold opacity-60 mt-1 hidden sm:block">{action.label}</span>
           </motion.a>
         ))}
         
@@ -88,14 +88,14 @@ export default function FeedSidebar() {
           onClick={handleLike}
           className="flex flex-col items-center group focus:outline-none"
         >
-          <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full glass-morphism flex items-center justify-center transition-all duration-300 ${liked ? 'text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.4)]' : 'text-white/80 group-hover:text-red-500'}`}>
-            <Heart size={16} md:size={20} fill={liked ? "currentColor" : "none"} />
+          <div className={`w-9 h-9 md:w-12 md:h-12 rounded-full glass-morphism flex items-center justify-center transition-all duration-300 ${liked ? 'text-red-500 shadow-[0_0_15px_rgba(239,68,68,0.4)]' : 'text-white/80 group-hover:text-red-500'}`}>
+            <Heart size={14} md:size={20} fill={liked ? "currentColor" : "none"} />
           </div>
           <motion.span 
             key={likeCount}
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-[8px] uppercase tracking-tighter font-bold opacity-60 mt-1"
+            className="text-[7px] md:text-[8px] uppercase tracking-tighter font-bold opacity-60 mt-1 hidden sm:block"
           >
             {(likeCount / 1000).toFixed(1)}k
           </motion.span>
@@ -106,7 +106,7 @@ export default function FeedSidebar() {
           onClick={handleShare}
           className="flex flex-col items-center group focus:outline-none relative"
         >
-          <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full glass-morphism flex items-center justify-center transition-all duration-300 ${shared ? 'text-blue-400 shadow-[0_0_15px_rgba(96,165,250,0.4)]' : 'text-white/80 group-hover:text-blue-400'}`}>
+          <div className={`w-9 h-9 md:w-12 md:h-12 rounded-full glass-morphism flex items-center justify-center transition-all duration-300 ${shared ? 'text-blue-400 shadow-[0_0_15px_rgba(96,165,250,0.4)]' : 'text-white/80 group-hover:text-blue-400'}`}>
             <AnimatePresence mode="wait">
               {shared ? (
                 <motion.div
@@ -115,7 +115,7 @@ export default function FeedSidebar() {
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0, opacity: 0 }}
                 >
-                  <Check size={16} md:size={20} />
+                  <Check size={14} md:size={20} />
                 </motion.div>
               ) : (
                 <motion.div
@@ -124,12 +124,12 @@ export default function FeedSidebar() {
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0, opacity: 0 }}
                 >
-                  <Share2 size={16} md:size={20} />
+                  <Share2 size={14} md:size={20} />
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
-          <span className="text-[8px] uppercase tracking-tighter font-bold opacity-60 mt-1">
+          <span className="text-[7px] md:text-[8px] uppercase tracking-tighter font-bold opacity-60 mt-1 hidden sm:block">
             {shared ? 'Copied' : 'Share'}
           </span>
         </motion.button>

@@ -21,7 +21,7 @@ export default function Navbar() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="fixed top-0 left-0 w-full z-50 px-4 py-4 md:px-12 md:py-6 flex justify-between items-start pointer-events-none"
+        className="fixed top-0 left-0 w-full z-50 px-6 py-6 md:px-12 md:py-6 flex justify-between items-start pointer-events-none"
       >
       <div className="pointer-events-auto">
         <span className="text-[8px] md:text-[10px] uppercase tracking-[0.3em] md:tracking-[0.5em] font-bold text-white/40">Portfolio Feed // 2026</span>

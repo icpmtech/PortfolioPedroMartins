@@ -58,10 +58,10 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
             className="relative w-full max-w-4xl h-full max-h-[90vh] bg-[#0F0F0F] border border-white/10 rounded-3xl overflow-hidden flex flex-col shadow-2xl"
           >
             {/* Header */}
-            <div className="p-6 md:p-10 border-b border-white/5 flex justify-between items-start">
+            <div className="p-5 md:p-10 border-b border-white/5 flex justify-between items-start">
               <div>
-                <h2 className="text-3xl md:text-5xl font-serif text-white mb-2">Pedro<span className="text-gold italic font-light ml-2">Mourão Martins</span></h2>
-                <p className="text-gold font-mono text-[10px] uppercase tracking-[0.3em] font-bold">Software Architect // Portfolio V.2026</p>
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-serif text-white mb-1 md:mb-2">Pedro<span className="text-gold italic font-light ml-2">Mourão Martins</span></h2>
+                <p className="text-gold font-mono text-[8px] md:text-[10px] uppercase tracking-[0.2em] md:tracking-[0.3em] font-bold">Software Architect // Portfolio V.2026</p>
               </div>
               <button 
                 onClick={onClose}
@@ -97,13 +97,31 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
                     {SKILLS.map((set, idx) => (
                       <div key={idx} className="space-y-2">
                         <p className="text-[10px] uppercase text-gold/60 font-bold tracking-wider">{set.category}</p>
-                        <div className="flex flex-wrap gap-2">
+                        <motion.div 
+                          initial="hidden"
+                          animate="visible"
+                          variants={{
+                            visible: {
+                              transition: {
+                                staggerChildren: 0.05
+                              }
+                            }
+                          }}
+                          className="flex flex-wrap gap-2"
+                        >
                           {set.items.map((item, i) => (
-                            <span key={i} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] text-white/80">
+                            <motion.span 
+                              key={i}
+                              variants={{
+                                hidden: { opacity: 0, y: 10 },
+                                visible: { opacity: 1, y: 0 }
+                              }}
+                              className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] text-white/80"
+                            >
                               {item}
-                            </span>
+                            </motion.span>
                           ))}
-                        </div>
+                        </motion.div>
                       </div>
                     ))}
                   </section>
