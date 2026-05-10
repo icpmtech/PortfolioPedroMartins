@@ -1,18 +1,27 @@
+import React, { useRef } from 'react';
 import Navbar from "./components/Navbar";
 import Bio from "./components/Bio";
+import SocialMedia from "./components/SocialMedia";
 import Portfolio from "./components/Portfolio";
 import Books from "./components/Books";
 import Footer from "./components/Footer";
 import FeedSidebar from "./components/FeedSidebar";
+import BackToTop from "./components/BackToTop";
 
 export default function App() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   return (
     <main className="font-sans antialiased bg-[#0A0A0A] text-[#E5E5E5] selection:bg-gold/30">
       <Navbar />
       <FeedSidebar />
-      <div className="snap-container no-scrollbar">
+      <BackToTop containerRef={containerRef} />
+      <div ref={containerRef} className="snap-container no-scrollbar">
         <section className="snap-section">
           <Bio />
+        </section>
+        <section className="snap-section">
+          <SocialMedia />
         </section>
         <section className="snap-section">
           <Portfolio />
