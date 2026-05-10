@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Mail, Linkedin, Github, MessageSquare, ArrowRight, Youtube, Facebook, Video } from 'lucide-react';
+import { Mail, Linkedin, Github, MessageSquare, ArrowRight, Youtube, Facebook, Video, Phone } from 'lucide-react';
 
 export default function Footer() {
   const amazonUrl = "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259?language=pt&ref=ap_rdr&shoppingPortalEnabled=true";
@@ -91,6 +91,7 @@ export default function Footer() {
             <a href="https://youtube.com/@cantinhodedotnet?si=S1xPa_vduc-4-Xt6" target="_blank" rel="noreferrer" className="text-white/40 hover:text-red-500 transition-all"><Youtube size={20} /></a>
             <a href="https://www.facebook.com/share/1LdCY6dzfs/" target="_blank" rel="noreferrer" className="text-white/40 hover:text-blue-500 transition-all"><Facebook size={20} /></a>
             <a href="https://www.tiktok.com/@cantinhodedotnet?_r=1&_t=ZG-96FMgNnz01Q" target="_blank" rel="noreferrer" className="text-white/40 hover:text-cyan-400 transition-all"><Video size={20} /></a>
+            <a href="https://wa.me/351919520386" target="_blank" rel="noreferrer" className="text-white/40 hover:text-green-500 transition-all"><Phone size={20} /></a>
             <a href="https://cantinhodotnet.com" className="text-gold opacity-50 hover:opacity-100 transition-all"><MessageSquare size={20} /></a>
             <a href={amazonUrl} className="text-white/40 hover:text-gold transition-all font-mono text-[10px] font-bold tracking-widest">AMAZON_STORE</a>
           </div>

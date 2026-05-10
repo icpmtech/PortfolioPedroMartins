@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Linkedin, Github, MessageCircle, Heart, Share2, Database, Check, User, Youtube, Facebook, Video } from 'lucide-react';
+import { Linkedin, Github, MessageCircle, Heart, Share2, Database, Check, User, Youtube, Facebook, Video, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import CVModal from './CVModal';
 
@@ -16,6 +16,7 @@ export default function FeedSidebar() {
     { icon: Youtube, label: 'Videos', url: 'https://youtube.com/@cantinhodedotnet?si=S1xPa_vduc-4-Xt6' },
     { icon: Facebook, label: 'Social', url: 'https://www.facebook.com/share/1LdCY6dzfs/' },
     { icon: Video, label: 'TikTok', url: 'https://www.tiktok.com/@cantinhodedotnet?_r=1&_t=ZG-96FMgNnz01Q' },
+    { icon: Phone, label: 'WhatsApp', url: 'https://wa.me/351919520386' },
   ];
 
   const handleLike = () => {
