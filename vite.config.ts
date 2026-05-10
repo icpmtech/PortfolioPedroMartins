@@ -12,7 +12,6 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
         manifest: {
           name: 'Pedro Mourão Martins Portfolio',
           short_name: 'PMM Portfolio',
@@ -22,17 +21,17 @@ export default defineConfig(({mode}) => {
           display: 'standalone',
           icons: [
             {
-              src: 'pwa-192x192.png',
+              src: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=192&h=192',
               sizes: '192x192',
               type: 'image/png'
             },
             {
-              src: 'pwa-512x512.png',
+              src: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=512&h=512',
               sizes: '512x512',
               type: 'image/png'
             },
             {
-              src: 'pwa-512x512.png',
+              src: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=512&h=512',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'any maskable'
