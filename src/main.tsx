@@ -1,8 +1,12 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import { registerSW } from 'virtual:pwa-register';
+import { initGA } from './lib/analytics';
 import App from './App.tsx';
 import './index.css';
+
+// Initialize Google Analytics
+initGA();
 
 // Register service worker for PWA
 registerSW({ immediate: true });

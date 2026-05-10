@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
+import { trackPageView } from './lib/analytics';
 import Navbar from "./components/Navbar";
 import Bio from "./components/Bio";
 import SocialMedia from "./components/SocialMedia";
@@ -10,6 +11,10 @@ import BackToTop from "./components/BackToTop";
 
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    trackPageView(window.location.pathname);
+  }, []);
 
   return (
     <main className="font-sans antialiased bg-[#0A0A0A] text-[#E5E5E5] selection:bg-gold/30">
