@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { BookOpen, ShoppingBag, ExternalLink } from 'lucide-react';
+import SEO from './SEO';
 
 const BOOKS = [
   {
@@ -61,6 +62,11 @@ export default function Books() {
 
   return (
     <div className="relative min-h-screen w-full bg-dark flex flex-col justify-center overflow-hidden px-6 md:px-12 py-24 md:py-0">
+      <SEO 
+        title="Literary Collection" 
+        description="Discover the publications and books by Pedro Martins, specialized in IA, NLP, and Software Architecture."
+        keywords="Publications, Books, Authorship, Tech Books, NLP, IA, Copilot, Blazor, Pedro Martins, Kindle, Amazon"
+      />
       {/* Absolute Decorative Background */}
       <div className="absolute top-1/2 left-0 w-full h-[600px] -translate-y-1/2 opacity-5 pointer-events-none">
          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,#D4AF37_1px,transparent_1px)] [background-size:24px_24px]" />

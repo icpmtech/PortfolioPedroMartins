@@ -6,6 +6,7 @@ import { blogService, BlogPost } from '../services/blogService';
 import { format } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
 import Comments from './Comments';
+import SEO from './SEO';
 
 export default function Blog() {
   const { t } = useTranslation();
@@ -36,6 +37,11 @@ export default function Blog() {
 
   return (
     <div id="blog" className="relative min-h-screen w-full bg-dark flex flex-col justify-center px-6 md:px-12 py-24 md:py-0 overflow-hidden">
+      <SEO 
+        title="Blog Archive" 
+        description="Explore insights on software architecture, technology trends, and modern development patterns by Pedro Martins."
+        keywords="Architecture, Technology, Insights, Software Development, System Design, Pedro Martins, Blog, Archive"
+      />
       {/* Background Graphic */}
       <div className="absolute top-0 right-0 w-full h-full opacity-[0.02] pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(#D4AF37_1px,transparent_1px)] [background-size:40px_40px]" />

@@ -10,6 +10,7 @@ import Footer from "./components/Footer";
 import FeedSidebar from "./components/FeedSidebar";
 import BackToTop from "./components/BackToTop";
 import AdminPanel from "./components/AdminPanel";
+import SEO from "./components/SEO";
 
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -34,11 +35,24 @@ export default function App() {
   }, []);
 
   if (isAdminView) {
-    return <AdminPanel />;
+    return (
+      <>
+        <SEO 
+          title="Admin Portal" 
+          description="Restricted administrative access for archive management."
+        />
+        <AdminPanel />
+      </>
+    );
   }
 
   return (
     <main className="font-sans antialiased bg-dark bg-mesh min-h-screen text-[#E5E5E5] selection:bg-gold/30 overflow-hidden">
+      <SEO 
+        title="Architecture & Tech Insights" 
+        description="Official portfolio of Pedro Martins. Exploring software architecture, technological innovation, and literary discourse."
+        keywords="Pedro Martins, Architecture, Software Engineering, PWA, React, Tech Books, NLP, Gemini API"
+      />
       <Navbar />
       <FeedSidebar />
       <BackToTop containerRef={containerRef} />
