@@ -178,7 +178,7 @@ export default function Bio() {
                 className={`group relative flex flex-col items-center focus:outline-none transition-all duration-500 ${activeMilestone.year === milestone.year ? 'opacity-100 scale-110' : 'opacity-30 hover:opacity-60'}`}
               >
                 <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border flex items-center justify-center mb-2 transition-all duration-500 ${activeMilestone.year === milestone.year ? 'border-gold bg-gold/5 text-gold shadow-[0_0_25px_rgba(212,175,55,0.2)]' : 'border-white/10 text-white'}`}>
-                  <milestone.icon size={14} sm:size={18} />
+                  <milestone.icon className="w-3.5 h-3.5 sm:w-[18px] sm:h-[18px]" />
                 </div>
                 <span className="text-[8px] sm:text-[9px] font-mono tracking-widest uppercase font-bold text-white/50">{milestone.stat}</span>
                 {activeMilestone.year === milestone.year && (

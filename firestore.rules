@@ -49,6 +49,15 @@ service cloud.firestore {
              data.imageUrl is string && data.imageUrl.size() <= 1000;
     }
 
+    function isValidComment(data, postId) {
+      return data.keys().hasAll(['postId', 'authorId', 'authorName', 'content', 'createdAt']) &&
+             data.keys().size() == 5 &&
+             data.postId == postId &&
+             data.authorId == request.auth.uid &&
+             data.authorName is string && data.authorName.size() <= 100 &&
+             data.content is string && data.content.size() > 0 && data.content.size() <= 1000;
+    }
+
     // --- Collections ---
 
     match /admins/{uid} {
@@ -73,6 +82,15 @@ service cloud.firestore {
                     incoming().authorId == existing().authorId;
 
       allow delete: if isAdmin();
+
+      match /comments/{commentId} {
+        allow read: if get(/databases/$(database)/documents/blogPosts/$(postId)).data.published == true || isAdmin();
+        allow create: if isSignedIn() && 
+                      isValidComment(incoming(), postId) && 
+                      incoming().createdAt == request.time &&
+                      get(/databases/$(database)/documents/blogPosts/$(postId)).data.published == true;
+        allow delete: if isAdmin() || (isSignedIn() && existing().authorId == request.auth.uid);
+      }
     }
   }
 }

@@ -5,18 +5,24 @@ import { Calendar, User, ArrowRight, Tag, BookOpen } from 'lucide-react';
 import { blogService, BlogPost } from '../services/blogService';
 import { format } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
+import Comments from './Comments';
 
 export default function Blog() {
   const { t } = useTranslation();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
-      const data = await blogService.getAllPosts();
+      const [data, adminStatus] = await Promise.all([
+        blogService.getAllPosts(),
+        blogService.checkIsAdmin()
+      ]);
       setPosts(data);
+      setIsAdmin(adminStatus);
       setLoading(false);
     };
     fetchPosts();
@@ -176,6 +182,9 @@ export default function Blog() {
                       </span>
                     ))}
                   </div>
+
+                  {/* Comments System */}
+                  <Comments postId={selectedPost.id!} isAdmin={isAdmin} />
                 </div>
               </div>
             </motion.div>

@@ -45,7 +45,7 @@ export const blogService = {
         );
       }
       const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as BlogPost));
+      return snapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as object) } as BlogPost));
     } catch (error) {
       handleFirestoreError(error, OperationType.LIST, COLLECTION_NAME);
       return [];
@@ -57,7 +57,7 @@ export const blogService = {
       const docRef = doc(db, COLLECTION_NAME, id);
       const snapshot = await getDoc(docRef);
       if (snapshot.exists()) {
-        return { id: snapshot.id, ...snapshot.data() } as BlogPost;
+        return { id: snapshot.id, ...(snapshot.data() as object) } as BlogPost;
       }
       return null;
     } catch (error) {

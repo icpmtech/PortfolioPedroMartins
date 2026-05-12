@@ -76,7 +76,7 @@ export default function FeedSidebar() {
             transition={{ repeat: Infinity, duration: 2 }}
             className="absolute -bottom-1 right-0 bg-gold text-dark rounded-full p-0.5 md:p-1 border-2 border-dark"
           >
-            <Zap size={8} md:size={10} fill="currentColor" />
+            <Zap className="w-2 h-2 md:w-2.5 md:h-2.5" fill="currentColor" />
           </motion.div>
         </div>
 
@@ -88,7 +88,7 @@ export default function FeedSidebar() {
             className="flex flex-col items-center group relative"
           >
             <div className="w-10 h-10 md:w-14 md:h-14 rounded-full glass-morphism flex items-center justify-center text-gold border border-gold/20 group-hover:bg-gold group-hover:text-dark transition-all duration-300">
-              <User size={18} md:size={24} />
+              <User className="w-[18px] h-[18px] md:w-6 md:h-6" />
             </div>
             <span className="absolute left-full ml-4 px-3 py-1 bg-gold text-dark text-[10px] uppercase font-bold tracking-widest rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap hidden lg:block">
               {t('common.profile')}
@@ -106,7 +106,7 @@ export default function FeedSidebar() {
               className="flex flex-col items-center group relative"
             >
               <div className="w-9 h-9 md:w-14 md:h-14 rounded-full glass-morphism flex items-center justify-center text-white/40 group-hover:text-gold group-hover:border-gold/40 transition-all duration-300">
-                <action.icon size={16} md:size={24} />
+                <action.icon className="w-4 h-4 md:w-6 md:h-6" />
               </div>
               <span className="absolute left-full ml-4 px-3 py-1 bg-[#111] text-white/60 text-[10px] uppercase font-bold tracking-widest rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap border border-white/10 hidden lg:block">
                 {action.label}
@@ -123,7 +123,7 @@ export default function FeedSidebar() {
             className="flex flex-col items-center group focus:outline-none"
           >
             <div className={`w-9 h-9 md:w-14 md:h-14 rounded-full glass-morphism flex items-center justify-center transition-all duration-300 ${liked ? 'text-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)] border-red-500/40' : 'text-white/40 group-hover:text-red-500'}`}>
-              <Heart size={16} md:size={24} fill={liked ? "currentColor" : "none"} />
+              <Heart className="w-4 h-4 md:w-6 md:h-6" fill={liked ? "currentColor" : "none"} />
             </div>
             <span className="text-[8px] md:text-[10px] font-mono font-bold mt-1 text-white/30 group-hover:text-white/80 transition-colors">
               {(likeCount / 1000).toFixed(1)}k
@@ -139,11 +139,11 @@ export default function FeedSidebar() {
               <AnimatePresence mode="wait">
                 {shared ? (
                   <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                    <Check size={16} md:size={24} />
+                    <Check className="w-4 h-4 md:w-6 md:h-6" />
                   </motion.div>
                 ) : (
                   <motion.div key="share" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                    <Share2 size={16} md:size={24} />
+                    <Share2 className="w-4 h-4 md:w-6 md:h-6" />
                   </motion.div>
                 )}
               </AnimatePresence>

@@ -27,12 +27,29 @@
         "email": { "type": "string" }
       },
       "required": ["uid", "email"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "A comment on a blog post.",
+      "type": "object",
+      "properties": {
+        "postId": { "type": "string" },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["postId", "authorId", "authorName", "content", "createdAt"]
     }
   },
   "firestore": {
     "/blogPosts/{postId}": {
       "schema": "BlogPost",
       "description": "Collection of blog posts."
+    },
+    "/blogPosts/{postId}/comments/{commentId}": {
+      "schema": "Comment",
+      "description": "Subcollection of comments for a specific post."
     },
     "/admins/{uid}": {
       "schema": "Admin",
