@@ -327,21 +327,22 @@ export default function AdminPanel() {
 
       <div className="flex-1 z-10">
         {activeTab === 'posts' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full">
-            <div className="lg:col-span-4 flex flex-col space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full min-h-[600px]">
+            {/* Post List - Hidden on mobile when editing */}
+            <div className={`lg:col-span-4 flex flex-col space-y-4 ${isEditing ? 'hidden lg:flex' : 'flex'}`}>
               <button 
                 onClick={handleCreate}
-                className="w-full glass-morphism border border-gold/30 p-6 rounded-3xl flex items-center justify-center space-x-3 group hover:bg-gold hover:text-dark transition-all duration-300"
+                className="w-full glass-morphism border border-gold/30 p-4 md:p-6 rounded-3xl flex items-center justify-center space-x-3 group hover:bg-gold hover:text-dark transition-all duration-300"
               >
                 <Plus className="group-hover:rotate-90 transition-transform" />
-                <span className="text-xs uppercase font-bold tracking-[0.2em]">New Archive Entry</span>
+                <span className="text-[10px] md:text-xs uppercase font-bold tracking-[0.2em]">New Archive Entry</span>
               </button>
               
-              <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar pr-2">
+              <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar pr-2 max-h-[60vh] lg:max-h-none">
                 {posts.map(post => (
                   <div 
                     key={post.id}
-                    className={`p-5 rounded-2xl border transition-all cursor-pointer group ${isEditing?.id === post.id ? 'bg-gold/10 border-gold shadow-[0_0_20px_rgba(212,175,55,0.1)]' : 'bg-white/5 border-white/5 hover:border-white/20'}`}
+                    className={`p-4 md:p-5 rounded-2xl border transition-all cursor-pointer group ${isEditing?.id === post.id ? 'bg-gold/10 border-gold shadow-[0_0_20px_rgba(212,175,55,0.1)]' : 'bg-white/5 border-white/5 hover:border-white/20'}`}
                     onClick={() => setIsEditing(post)}
                   >
                     <div className="flex justify-between items-start mb-2">
@@ -359,9 +360,9 @@ export default function AdminPanel() {
                        <span className={`text-[8px] px-2 py-0.5 rounded font-bold uppercase tracking-tighter ${post.published ? 'bg-gold/10 text-gold' : 'bg-white/10 text-white/40'}`}>
                           {post.published ? 'Published' : 'Draft'}
                        </span>
-                       <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                       <div className="flex space-x-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                           <button 
-                            className="p-1.5 hover:text-red-400 bg-white/5 rounded-lg border border-white/5"
+                            className="p-2 hover:text-red-400 bg-white/5 rounded-lg border border-white/10"
                             onClick={(e) => { e.stopPropagation(); handleDelete(post.id!); }}
                           >
                             <Trash2 size={12} />
@@ -373,7 +374,8 @@ export default function AdminPanel() {
               </div>
             </div>
 
-            <div className="lg:col-span-8">
+            {/* Editor Area - Full width on mobile when editing */}
+            <div className={`lg:col-span-8 ${isEditing ? 'block' : 'hidden lg:block'}`}>
               <AnimatePresence mode="wait">
                 {isEditing ? (
                   <motion.form 
@@ -382,24 +384,31 @@ export default function AdminPanel() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     onSubmit={handleSave}
-                    className="glass-morphism p-8 md:p-12 rounded-[2.5rem] border border-white/10 flex flex-col h-full sticky top-6"
+                    className="glass-morphism p-6 md:p-12 rounded-[2rem] md:rounded-[2.5rem] border border-white/10 flex flex-col h-full lg:sticky lg:top-6"
                   >
-                    <div className="flex justify-between items-center mb-10">
-                      <div className="flex items-center space-x-3">
-                        <Layout size={20} className="text-gold" />
-                        <h2 className="text-xl font-bold text-white uppercase tracking-widest">Entry Editor</h2>
-                      </div>
-                      <div className="flex space-x-3">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-10 gap-4">
+                      <div className="flex items-center space-x-3 w-full md:w-auto">
                         <button 
                           type="button" 
                           onClick={() => setIsEditing(null)}
-                          className="px-4 py-2 text-[10px] font-bold text-white/40 hover:text-white uppercase tracking-widest font-mono"
+                          className="lg:hidden p-2 bg-white/5 rounded-xl border border-white/10 text-gold hover:bg-gold hover:text-dark transition-all mr-2"
+                        >
+                          <X size={18} />
+                        </button>
+                        <Layout size={20} className="text-gold hidden md:block" />
+                        <h2 className="text-lg md:text-xl font-bold text-white uppercase tracking-widest truncate">Entry Editor</h2>
+                      </div>
+                      <div className="flex space-x-2 md:space-x-3 w-full md:w-auto">
+                        <button 
+                          type="button" 
+                          onClick={() => setIsEditing(null)}
+                          className="hidden lg:block px-4 py-2 text-[10px] font-bold text-white/40 hover:text-white uppercase tracking-widest font-mono"
                         >
                           Cancel
                         </button>
                         <button 
                           type="submit"
-                          className="bg-gold text-dark px-6 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center space-x-2 hover:bg-white transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)]"
+                          className="flex-1 md:flex-none justify-center bg-gold text-dark px-6 py-3 md:py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center space-x-2 hover:bg-white transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)]"
                         >
                           <Save size={16} />
                           <span>Commit Changes</span>
@@ -407,35 +416,35 @@ export default function AdminPanel() {
                       </div>
                     </div>
 
-                    <div className="flex-1 space-y-8 overflow-y-auto custom-scrollbar pr-4">
+                    <div className="flex-1 space-y-6 md:space-y-8 overflow-y-auto custom-scrollbar pr-2 md:pr-4">
                       {/* Form inputs */}
                       <div className="space-y-2">
                         <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em] ml-2">Display Title</label>
                         <input 
                           value={isEditing.title}
                           onChange={(e) => setIsEditing({...isEditing, title: e.target.value})}
-                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white font-serif text-xl focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
+                          className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-4 text-white font-serif text-lg md:text-xl focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
                           placeholder="Untitled Insight..."
                           required
                         />
                       </div>
 
-                      <div className="grid grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                         <div className="space-y-2">
-                          <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em] ml-2">Tags (comma separated)</label>
+                          <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em] ml-2">Tags</label>
                           <input 
                             value={isEditing.tags.join(', ')}
                             onChange={(e) => setIsEditing({...isEditing, tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean)})}
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-3 text-white text-xs font-mono focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
+                            className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-4 md:px-6 py-3 text-white text-xs font-mono focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
                             placeholder="Architecture, DevOps..."
                           />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em] ml-2">Vercen Thumbnail URL</label>
+                          <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em] ml-2">Thumbnail URL</label>
                           <input 
                             value={isEditing.imageUrl}
                             onChange={(e) => setIsEditing({...isEditing, imageUrl: e.target.value})}
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-3 text-white text-xs font-mono focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
+                            className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-4 md:px-6 py-3 text-white text-xs font-mono focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
                             placeholder="https://..."
                           />
                         </div>
@@ -446,7 +455,7 @@ export default function AdminPanel() {
                         <textarea 
                           value={isEditing.excerpt}
                           onChange={(e) => setIsEditing({...isEditing, excerpt: e.target.value})}
-                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-light leading-relaxed focus:border-gold/50 outline-none transition-all placeholder:text-white/10 resize-none h-24"
+                          className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-4 text-white text-sm font-light leading-relaxed focus:border-gold/50 outline-none transition-all placeholder:text-white/10 resize-none h-24"
                           placeholder="Short summary for the index feed..."
                         />
                       </div>
@@ -454,33 +463,33 @@ export default function AdminPanel() {
                       <div className="space-y-2">
                          <div className="flex justify-between items-center mb-2 px-2">
                             <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em]">Markdown Core</label>
-                            <span className="text-[8px] font-mono text-gold/30">SUPPORTED_FMT: GFM</span>
+                            <span className="text-[8px] font-mono text-gold/30 hidden md:block">SUPPORTED_FMT: GFM</span>
                          </div>
                         <textarea 
                           value={isEditing.content}
                           onChange={(e) => setIsEditing({...isEditing, content: e.target.value})}
-                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-mono leading-relaxed focus:border-gold/50 outline-none transition-all placeholder:text-white/10 resize-none h-[400px]"
+                          className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-4 md:px-6 py-4 text-white text-sm font-mono leading-relaxed focus:border-gold/50 outline-none transition-all placeholder:text-white/10 resize-none h-[300px] md:h-[400px]"
                           placeholder="## Start writing..."
                           required
                         />
                       </div>
 
-                      <div className="flex items-center justify-between p-6 bg-white/5 rounded-2xl border border-white/10">
+                      <div className="flex items-center justify-between p-4 md:p-6 bg-white/5 rounded-xl md:rounded-2xl border border-white/10">
                         <div className="flex items-center space-x-3">
                           <div className={`p-2 rounded-lg ${isEditing.published ? 'bg-gold/20' : 'bg-white/10'}`}>
                              {isEditing.published ? <Eye size={16} className="text-gold" /> : <EyeOff size={16} className="text-white/40" />}
                           </div>
                           <div>
-                            <p className="text-[10px] font-bold text-white uppercase tracking-widest">Protocol Staging</p>
-                            <p className="text-[8px] font-mono text-white/30 uppercase">Visibility: {isEditing.published ? 'Public' : 'Encrypted_Private'}</p>
+                            <p className="text-[10px] font-bold text-white uppercase tracking-widest whitespace-nowrap">Protocol Staging</p>
+                            <p className="text-[8px] font-mono text-white/30 uppercase">Status: {isEditing.published ? 'Public' : 'Draft'}</p>
                           </div>
                         </div>
                         <button 
                           type="button"
                           onClick={() => setIsEditing({...isEditing, published: !isEditing.published})}
-                          className={`w-14 h-8 rounded-full relative transition-colors ${isEditing.published ? 'bg-gold' : 'bg-white/10'}`}
+                          className={`w-12 md:w-14 h-7 md:h-8 rounded-full relative transition-colors flex-shrink-0 ${isEditing.published ? 'bg-gold' : 'bg-white/10'}`}
                         >
-                          <div className={`absolute top-1 w-6 h-6 rounded-full bg-dark transition-all ${isEditing.published ? 'left-7' : 'left-1'}`} />
+                          <div className={`absolute top-0.5 md:top-1 w-6 h-6 rounded-full bg-dark transition-all ${isEditing.published ? 'left-5 md:left-7' : 'left-0.5 md:left-1'}`} />
                         </button>
                       </div>
                     </div>
@@ -502,7 +511,7 @@ export default function AdminPanel() {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="glass-morphism p-12 rounded-[2.5rem] border border-white/10 h-full"
+            className="glass-morphism p-6 md:p-12 rounded-[2.5rem] border border-white/10 h-full"
           >
              <div className="max-w-2xl">
                 <h2 className="font-serif text-3xl text-white mb-8">Management Protocols</h2>
