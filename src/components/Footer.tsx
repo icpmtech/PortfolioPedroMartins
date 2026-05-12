@@ -8,12 +8,12 @@ export default function Footer() {
   const amazonUrl = "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259?language=pt&ref=ap_rdr&shoppingPortalEnabled=true";
 
   return (
-    <div className="relative min-h-screen w-full bg-dark flex items-center justify-center overflow-hidden px-6 md:px-12 py-24 md:py-0">
+    <div className="relative min-h-screen w-full bg-dark flex items-center justify-center overflow-hidden px-6 md:px-12 py-16 md:py-0">
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#D4AF37_0%,transparent_70%)] blur-[120px]" />
       </div>
 
-      <div className="relative z-10 max-w-5xl text-center space-y-16">
+      <div className="relative z-10 max-w-5xl text-center space-y-10 md:space-y-16">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -23,7 +23,7 @@ export default function Footer() {
           <span>{t('footer.connectTitle')}</span>
         </motion.div>
 
-        <h2 className="font-serif text-5xl md:text-8xl text-white leading-tight tracking-tight">
+        <h2 className="font-serif text-4xl md:text-8xl text-white leading-tight tracking-tight">
           {t('footer.connectSubtitle').split('the')[0]} <br/>
           <span className="text-gold italic font-light">{t('footer.connectSubtitle').split('the')[1]}</span>
         </h2>
@@ -31,7 +31,7 @@ export default function Footer() {
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          className="max-w-3xl mx-auto p-8 md:p-12 glass-morphism rounded-[2.5rem] text-left border border-white/5 relative group overflow-hidden"
+          className="max-w-3xl mx-auto p-6 md:p-12 glass-morphism rounded-[2.5rem] text-left border border-white/5 relative group overflow-hidden"
         >
           <div className="absolute -top-10 -right-10 w-40 h-40 bg-gold/5 rounded-full blur-3xl group-hover:bg-gold/10 transition-colors" />
           
@@ -90,8 +90,8 @@ export default function Footer() {
           </a>
         </div>
 
-        <div className="pt-20 flex flex-col items-center">
-          <div className="flex flex-wrap justify-center gap-8 md:gap-12 mb-12 items-center px-4">
+        <div className="pt-12 md:pt-20 flex flex-col items-center">
+          <div className="flex flex-wrap justify-center gap-6 md:gap-12 mb-8 md:mb-12 items-center px-4">
             <a href="https://github.com/moraomartins" target="_blank" rel="noreferrer" className="text-white/20 hover:text-white transition-all hover:scale-110 duration-300"><Github size={24} /></a>
             <a href="https://youtube.com/@cantinhodedotnet?si=S1xPa_vduc-4-Xt6" target="_blank" rel="noreferrer" className="text-white/20 hover:text-red-500 transition-all hover:scale-110 duration-300"><Youtube size={24} /></a>
             <a href="https://www.facebook.com/share/1LdCY6dzfs/" target="_blank" rel="noreferrer" className="text-white/20 hover:text-blue-500 transition-all hover:scale-110 duration-300"><Facebook size={24} /></a>
