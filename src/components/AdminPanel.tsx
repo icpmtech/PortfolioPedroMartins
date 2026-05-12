@@ -38,6 +38,7 @@ export default function AdminPanel() {
   const [loginError, setLoginError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isSeeding, setIsSeeding] = useState(false);
+  const [filter, setFilter] = useState<'all' | 'published' | 'draft'>('all');
 
   useEffect(() => {
     // Check for local session first to show UI immediately
@@ -187,6 +188,13 @@ export default function AdminPanel() {
       fetchPosts();
     }
   };
+
+  const filteredPosts = posts.filter(post => {
+    if (filter === 'all') return true;
+    if (filter === 'published') return post.published;
+    if (filter === 'draft') return !post.published;
+    return true;
+  });
 
   if (loading) return null;
 
@@ -353,16 +361,31 @@ export default function AdminPanel() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full min-h-[600px]">
             {/* Post List - Hidden on mobile when editing */}
             <div className={`lg:col-span-4 flex flex-col space-y-4 ${isEditing ? 'hidden lg:flex' : 'flex'}`}>
-              <button 
-                onClick={handleCreate}
-                className="w-full glass-morphism border border-gold/30 p-4 md:p-6 rounded-3xl flex items-center justify-center space-x-3 group hover:bg-gold hover:text-dark transition-all duration-300"
-              >
-                <Plus className="group-hover:rotate-90 transition-transform" />
-                <span className="text-[10px] md:text-xs uppercase font-bold tracking-[0.2em]">New Archive Entry</span>
-              </button>
+              <div className="flex flex-col space-y-4">
+                <button 
+                  onClick={handleCreate}
+                  className="w-full glass-morphism border border-gold/30 p-4 md:p-6 rounded-3xl flex items-center justify-center space-x-3 group hover:bg-gold hover:text-dark transition-all duration-300"
+                >
+                  <Plus className="group-hover:rotate-90 transition-transform" />
+                  <span className="text-[10px] md:text-xs uppercase font-bold tracking-[0.2em]">New Archive Entry</span>
+                </button>
+
+                <div className="p-3 bg-white/5 rounded-2xl border border-white/5 flex items-center space-x-3">
+                  <span className="text-[9px] font-mono text-white/30 uppercase tracking-widest pl-2">Filter</span>
+                  <select 
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value as any)}
+                    className="flex-1 bg-transparent text-white text-[10px] font-mono uppercase tracking-widest outline-none cursor-pointer hover:text-gold transition-colors"
+                  >
+                    <option value="all" className="bg-dark text-white">All Entries ({posts.length})</option>
+                    <option value="published" className="bg-dark text-white">Published ({posts.filter(p => p.published).length})</option>
+                    <option value="draft" className="bg-dark text-white">Drafts ({posts.filter(p => !p.published).length})</option>
+                  </select>
+                </div>
+              </div>
               
               <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar pr-2 max-h-[60vh] lg:max-h-none">
-                {posts.map(post => (
+                {filteredPosts.map(post => (
                   <div 
                     key={post.id}
                     className={`p-4 md:p-5 rounded-2xl border transition-all cursor-pointer group ${isEditing?.id === post.id ? 'bg-gold/10 border-gold shadow-[0_0_20px_rgba(212,175,55,0.1)]' : 'bg-white/5 border-white/5 hover:border-white/20'}`}

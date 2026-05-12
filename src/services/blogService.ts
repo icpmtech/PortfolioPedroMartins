@@ -34,10 +34,7 @@ const COLLECTION_NAME = 'blogPosts';
 export const blogService = {
   async getAllPosts(includeUnpublished = false): Promise<BlogPost[]> {
     try {
-      const isAdminInFirebase = !!auth.currentUser && (
-        auth.currentUser.email === 'mourao.martins@gmail.com' ||
-        await this.checkIsAdmin()
-      );
+      const isAdminInFirebase = await this.checkIsAdmin();
 
       let q;
       // Only allow unpublished if we are actually an admin in FIREBASE
