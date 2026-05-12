@@ -61,6 +61,7 @@ const saveToFallback = (posts: BlogPost[]) => {
 export const blogService = {
   async getAllPosts(includeUnpublished = false): Promise<BlogPost[]> {
     try {
+      const user = auth.currentUser;
       const isAdminInFirebase = await this.checkIsAdmin();
 
       let q;
@@ -75,10 +76,10 @@ export const blogService = {
       const snapshot = await getDocs(q);
       
       // If collection is empty, trigger seeding and return fallback for now
-      if (snapshot.empty && isAdminInFirebase) {
-        console.log('Firebase is empty, seeding initial data...');
+      // Only seed if we have a real user to avoid permission errors
+      if (snapshot.empty && isAdminInFirebase && user) {
+        console.log('Firebase is empty, seeding initial data for auth user...');
         await this.seedPosts(initialPosts as any);
-        // We could re-fetch, but returning fallback is faster for the first render
         return getFallbackPosts().filter(p => includeUnpublished || p.published);
       }
 

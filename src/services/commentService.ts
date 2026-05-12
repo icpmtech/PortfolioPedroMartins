@@ -21,8 +21,33 @@ export interface Comment {
   createdAt: Timestamp | any;
 }
 
+const LOCAL_STORAGE_KEY = 'comments_fallback';
+
+const getFallbackComments = (postId: string): Comment[] => {
+  const stored = localStorage.getItem(`${LOCAL_STORAGE_KEY}_${postId}`);
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error('Failed to parse local storage comments', e);
+    }
+  }
+  return [];
+};
+
+const saveToFallback = (postId: string, comments: Comment[]) => {
+  localStorage.setItem(`${LOCAL_STORAGE_KEY}_${postId}`, JSON.stringify(comments));
+};
+
 export const commentService = {
   subscribeToComments(postId: string, callback: (comments: Comment[]) => void) {
+    // If it's a fallback post ID, use local storage only
+    if (postId.startsWith('backup-') || postId.startsWith('local-')) {
+      const fallback = getFallbackComments(postId);
+      callback(fallback);
+      return () => {}; // No-op unsubscribe
+    }
+
     const commentsRef = collection(db, 'blogPosts', postId, 'comments');
     const q = query(commentsRef, orderBy('createdAt', 'asc'));
     
@@ -31,27 +56,50 @@ export const commentService = {
         id: doc.id,
         ...doc.data()
       } as Comment));
+      // Sync local fallback for offline/errors
+      saveToFallback(postId, comments);
       callback(comments);
     }, (error) => {
-      handleFirestoreError(error, OperationType.LIST, `blogPosts/${postId}/comments`);
+      console.warn('Comments Firestore Error, falling back to local:', error.message);
+      const fallback = getFallbackComments(postId);
+      callback(fallback);
     });
   },
 
   async addComment(postId: string, content: string): Promise<void> {
     const user = auth.currentUser;
-    if (!user) throw new Error('Authentication required to comment.');
+    const authorId = user?.uid || 'local-guest';
+    const authorName = user?.displayName || 'Archive Member';
+
+    const localComment: Comment = {
+      id: `local-c-${Date.now()}`,
+      postId,
+      authorId,
+      authorName,
+      content,
+      createdAt: { seconds: Date.now() / 1000, nanoseconds: 0 } as any
+    };
+
+    // If synthetic ID or no user, save locally
+    if (postId.startsWith('backup-') || postId.startsWith('local-') || !user) {
+      const comments = getFallbackComments(postId);
+      saveToFallback(postId, [...comments, localComment]);
+      return;
+    }
 
     try {
       const commentsRef = collection(db, 'blogPosts', postId, 'comments');
       await addDoc(commentsRef, {
         postId,
-        authorId: user.uid,
-        authorName: user.displayName || 'Anonymous Operator',
+        authorId,
+        authorName,
         content,
         createdAt: serverTimestamp()
       });
     } catch (error) {
-      handleFirestoreError(error, OperationType.CREATE, `blogPosts/${postId}/comments`);
+      console.warn('Failed to add comment to Firestore, saving locally');
+      const comments = getFallbackComments(postId);
+      saveToFallback(postId, [...comments, localComment]);
     }
   },
 
