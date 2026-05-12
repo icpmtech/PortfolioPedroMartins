@@ -13,9 +13,11 @@ import {
   LogIn,
   LogOut,
   Settings,
-  Database
+  Database,
+  Mail,
+  Key
 } from 'lucide-react';
-import { auth, googleProvider } from '../lib/firebase';
+import { auth, googleProvider, signInWithEmailAndPassword } from '../lib/firebase';
 import { signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth';
 import { blogService, BlogPost } from '../services/blogService';
 
@@ -26,6 +28,12 @@ export default function AdminPanel() {
   const [isEditing, setIsEditing] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'posts' | 'settings'>('posts');
+  
+  // Login Form State
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
@@ -50,11 +58,30 @@ export default function AdminPanel() {
     setPosts(data);
   };
 
-  const handleLogin = async () => {
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError('');
+    setIsLoggingIn(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error: any) {
+      setLoginError(error.message.includes('auth/invalid-credential') 
+        ? 'Invalid credentials. Access denied.' 
+        : 'Authentication gateway failure.');
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setLoginError('');
+    setIsLoggingIn(true);
     try {
       await signInWithPopup(auth, googleProvider);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      setLoginError('Protocol failed. Check identity provider.');
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -106,27 +133,100 @@ export default function AdminPanel() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-morphism p-12 rounded-[2.5rem] border border-gold/20 text-center max-w-lg w-full relative overflow-hidden"
+          className="glass-morphism p-8 md:p-12 rounded-[2.5rem] border border-gold/20 w-full max-w-md relative overflow-hidden"
         >
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 blur-3xl" />
-          <div className="w-20 h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-gold/30">
-            <Lock size={32} className="text-gold" />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 blur-3xl pointer-events-none" />
+          
+          <div className="text-center mb-10">
+            <div className="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-gold/20">
+              <Lock size={28} className="text-gold" />
+            </div>
+            <h2 className="font-serif text-3xl text-white mb-2">Central Intelligence</h2>
+            <p className="text-white/30 font-mono text-[9px] uppercase tracking-[0.2em]">
+              {user ? 'ACCESS_DENIED: Admin Credentials Required' : 'RESTRICTED_AREA: Proxy Authentication Needed'}
+            </p>
           </div>
-          <h2 className="font-serif text-4xl text-white mb-4">Central Intelligence</h2>
-          <p className="text-white/40 mb-8 font-mono text-[10px] uppercase tracking-widest leading-relaxed">
-            Restricted access portal for systems management. Authentication required for archive modifications.
-          </p>
+
           {!user ? (
-            <button 
-              onClick={handleLogin}
-              className="w-full bg-gold hover:bg-white text-dark py-4 rounded-2xl flex items-center justify-center space-x-3 font-bold uppercase tracking-widest transition-all duration-300"
-            >
-              <LogIn size={20} />
-              <span>Authenticate Portal</span>
-            </button>
+            <div className="space-y-6">
+              <form onSubmit={handleEmailLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <div className="relative">
+                    <Mail size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" />
+                    <input 
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="root@system.admin"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white text-xs font-mono focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="relative">
+                    <Key size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" />
+                    <input 
+                      type="password"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white text-xs font-mono focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
+                    />
+                  </div>
+                </div>
+
+                {loginError && (
+                  <motion.p 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-red-400 text-[10px] font-mono text-center bg-red-500/5 border border-red-500/10 py-2 rounded-lg"
+                  >
+                    {loginError}
+                  </motion.p>
+                )}
+
+                <button 
+                  type="submit"
+                  disabled={isLoggingIn}
+                  className="w-full bg-gold hover:bg-white text-dark py-3.5 rounded-xl flex items-center justify-center space-x-2 font-bold uppercase tracking-widest transition-all duration-300 disabled:opacity-50"
+                >
+                  {isLoggingIn ? (
+                    <div className="w-4 h-4 border-2 border-dark/20 border-t-dark rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <LogIn size={18} />
+                      <span className="text-[10px]">Initialize Access</span>
+                    </>
+                  )}
+                </button>
+              </form>
+
+              <div className="relative flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/5"></div></div>
+                <span className="relative px-4 bg-[#0a0a0a] text-white/10 text-[8px] font-mono uppercase tracking-[0.4em]">Alternative</span>
+              </div>
+
+              <button 
+                onClick={handleGoogleLogin}
+                className="w-full bg-white/5 hover:bg-white/10 text-white/60 py-3.5 rounded-xl border border-white/10 flex items-center justify-center space-x-2 font-bold uppercase tracking-widest transition-all duration-300 text-[10px]"
+              >
+                <span>Google Authority SSO</span>
+              </button>
+            </div>
           ) : (
-            <div className="text-red-400 font-mono text-xs border border-red-500/20 bg-red-500/5 p-4 rounded-xl">
-               INSUFFICIENT_PERMISSIONS: UID_{user.uid.substring(0, 8)}
+            <div className="text-center">
+              <div className="text-red-400 font-mono text-[10px] border border-red-500/20 bg-red-500/5 p-4 rounded-xl mb-6">
+                 SYSTEM_ERR: UID_{user.uid.substring(0, 8)} is not whitelisted for administrative protocols.
+              </div>
+              <button 
+                onClick={handleLogout}
+                className="text-white/20 hover:text-white font-mono text-[9px] uppercase tracking-widest transition-colors underline decoration-white/10 underline-offset-4"
+              >
+                Terminate Session
+              </button>
             </div>
           )}
         </motion.div>
