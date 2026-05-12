@@ -126,5 +126,29 @@ export const blogService = {
       // If we can't read admins collection, we probably aren't an admin
       return false;
     }
+  },
+
+  async seedPosts(posts: Omit<BlogPost, 'id' | 'createdAt' | 'updatedAt' | 'authorId' | 'authorName'>[]): Promise<void> {
+    const user = auth.currentUser;
+    const localSession = localStorage.getItem('admin_session');
+    
+    if (!user && !localSession) throw new Error('Unauthorized seeding attempt.');
+
+    const authorId = user?.uid || (localSession ? JSON.parse(localSession).uid : 'system');
+    const authorName = user?.displayName || (localSession ? JSON.parse(localSession).displayName : 'System Admin');
+
+    try {
+      for (const postData of posts) {
+        await addDoc(collection(db, COLLECTION_NAME), {
+          ...postData,
+          authorId,
+          authorName,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+      }
+    } catch (error) {
+      handleFirestoreError(error, OperationType.CREATE, COLLECTION_NAME);
+    }
   }
 };

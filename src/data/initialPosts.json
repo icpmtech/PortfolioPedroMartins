@@ -1,0 +1,26 @@
+[
+  {
+    "title": "The Architecture of Resilience",
+    "excerpt": "Exploring how modern software systems can mirror the structural integrity of brutalist architecture to withstand digital decay.",
+    "content": "## Structural Integrity in Code\n\nBrutalist architecture, often misunderstood for its raw concrete surfaces, is fundamentally about honesty of materials and structural clarity. In a world of transient micro-services, applying these principles to our software architecture can yield surprising benefits.\n\n### Material Honesty\nIn software, our 'materials' are data and logic. A resilient system doesn't hide its complexity behind layers of unnecessary abstraction. Instead, it exposes its core functions clearly, allowing for predictable scaling and easier debugging.\n\n### The Monolith vs. The Grid\nWhile distributed systems are the current trend, there is much to be learned from the unified strength of monolithic structures that serve a singular, clear purpose. We examine the trade-offs between horizontal scaling and structural unity.\n\n> \"Architecture is the learned game, correct and magnificent, of forms assembled in the light.\" — Le Corbusier",
+    "tags": ["Architecture", "System Design", "Brutalism"],
+    "imageUrl": "https://images.unsplash.com/photo-1481026469463-66327c86e544?auto=format&fit=crop&q=80&w=1200",
+    "published": true
+  },
+  {
+    "title": "Prompt Engineering as Linguistics",
+    "excerpt": "Analyzing the shift from traditional coding to natural language orchestration through the lens of structural linguistics.",
+    "content": "# Linguistic Orchestration\n\nThe rise of Large Language Models has turned every developer into a linguist. We are no longer just writing syntax for compilers; we are constructing semantically rich prompts for neural networks.\n\n## Syntax vs. Semantics\nTraditional programming is syntactical—miss a semicolon and the world stops. Prompting is semantic—the *intent* behind the words matters more than the specific arrangement. \n\n### The Signifier and the Signified\nApplying Saussure's theories to AI interpretation allows us to understand why certain prompts fail while others succeed. It's about context, cultural nuance, and the internal map of the model.\n\n*   **Precision:** Words are tools.\n*   **Context:** The environment defines the result.\n*   **Iteration:** Refining the dialogue.",
+    "tags": ["AI", "NLP", "Linguistics"],
+    "imageUrl": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=1200",
+    "published": true
+  },
+  {
+    "title": "Quantum Computing: The Final Milestone?",
+    "excerpt": "A deep dive into the impending shift from binary logic to superposition and what it means for cryptographic archives.",
+    "content": "## Beyond the Binary\n\nWe have lived in a world of zeroes and ones for decades. The quantum shift promises to break these boundaries, introducing a state of 'both' and 'neither'.\n\n### Superposition in Practice\nWhat happens to our current security protocols when computational power increases by factors of millions? The 'Archive' as we know it is at risk.\n\n### The Post-Quantum Era\nPreparing systems today for the realities of tomorrow. We discuss lattice-based cryptography and the roadmap to quantum resilience.\n\n1.  **Bit:** Solid, predictable.\n2.  **Qubit:** Fluid, probabilistic.",
+    "tags": ["Future Tech", "Quantum", "Cryptography"],
+    "imageUrl": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=1200",
+    "published": false
+  }
+]

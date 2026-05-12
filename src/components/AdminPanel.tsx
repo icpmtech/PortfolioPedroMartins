@@ -22,6 +22,7 @@ import { auth, googleProvider, signInWithEmailAndPassword } from '../lib/firebas
 import { signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth';
 import { blogService, BlogPost } from '../services/blogService';
 import usersData from '../data/users.json';
+import initialPosts from '../data/initialPosts.json';
 
 export default function AdminPanel() {
   const [user, setUser] = useState<any>(null);
@@ -36,6 +37,7 @@ export default function AdminPanel() {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isSeeding, setIsSeeding] = useState(false);
 
   useEffect(() => {
     // Check for local session first
@@ -127,6 +129,22 @@ export default function AdminPanel() {
     setUser(null);
     setIsAdmin(false);
     setPosts([]);
+  };
+
+  const handleSeed = async () => {
+    if (!window.confirm('Import initial architectural archive entries? Existing posts will remain.')) return;
+    
+    setIsSeeding(true);
+    try {
+      await blogService.seedPosts(initialPosts);
+      alert('Archive populated successfully.');
+      fetchPosts();
+    } catch (error) {
+      console.error(error);
+      alert('Seeding protocol failed.');
+    } finally {
+      setIsSeeding(false);
+    }
   };
 
   const handleCreate = () => {
@@ -516,6 +534,22 @@ export default function AdminPanel() {
              <div className="max-w-2xl">
                 <h2 className="font-serif text-3xl text-white mb-8">Management Protocols</h2>
                 <div className="space-y-6">
+                   <div className="p-6 bg-white/5 rounded-2xl border border-white/5 flex justify-between items-center group hover:border-gold/30 transition-all">
+                      <div>
+                         <div className="flex items-center space-x-2 mb-1">
+                            <Database size={16} className="text-gold" />
+                            <p className="text-sm font-bold text-white uppercase tracking-widest">Initial Seed Protocol</p>
+                         </div>
+                         <p className="text-xs text-white/30 font-mono">Initialize archive with benchmark architectural entries.</p>
+                      </div>
+                      <button 
+                         onClick={handleSeed}
+                         disabled={isSeeding}
+                         className="px-6 py-3 bg-white/5 hover:bg-gold hover:text-dark border border-white/10 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all disabled:opacity-50"
+                      >
+                         {isSeeding ? 'Importing...' : 'Seed Data'}
+                      </button>
+                   </div>
                    <div className="p-6 bg-white/5 rounded-2xl border border-white/5 flex justify-between items-center">
                       <div>
                         <p className="text-sm font-bold text-white">Bootstrap Admin Status</p>
