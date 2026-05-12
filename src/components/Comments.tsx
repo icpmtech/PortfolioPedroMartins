@@ -58,8 +58,14 @@ export default function Comments({ postId, isAdmin }: CommentsProps) {
 
   const formatDate = (timestamp: any) => {
     if (!timestamp) return '...';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return format(date, 'MMM dd, HH:mm');
+    try {
+      const date = timestamp.toDate 
+        ? timestamp.toDate() 
+        : (timestamp.seconds ? new Date(timestamp.seconds * 1000) : new Date(timestamp));
+      return format(date, 'MMM dd, HH:mm');
+    } catch (e) {
+      return '...';
+    }
   };
 
   return (

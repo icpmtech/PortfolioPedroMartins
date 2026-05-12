@@ -31,8 +31,14 @@ export default function Blog() {
 
   const formatDate = (timestamp: any) => {
     if (!timestamp) return '...';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return format(date, 'MMM dd, yyyy');
+    try {
+      const date = timestamp.toDate 
+        ? timestamp.toDate() 
+        : (timestamp.seconds ? new Date(timestamp.seconds * 1000) : new Date(timestamp));
+      return format(date, 'MMM dd, yyyy');
+    } catch (e) {
+      return '...';
+    }
   };
 
   return (

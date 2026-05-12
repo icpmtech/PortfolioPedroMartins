@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import { handleFirestoreError, OperationType } from '../lib/firestoreUtils';
+import initialPosts from '../data/initialPosts.json';
 
 export interface BlogPost {
   id?: string;
@@ -30,6 +31,32 @@ export interface BlogPost {
 }
 
 const COLLECTION_NAME = 'blogPosts';
+const LOCAL_STORAGE_KEY = 'blog_posts_fallback';
+
+const getFallbackPosts = (): BlogPost[] => {
+  const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error('Failed to parse local storage posts', e);
+    }
+  }
+  
+  // Map JSON to BlogPost format
+  return initialPosts.map((post, i) => ({
+    ...post,
+    id: `backup-${i}`,
+    authorId: 'system',
+    authorName: 'System Admin',
+    createdAt: { seconds: Date.now() / 1000 - (i * 86400), nanoseconds: 0 },
+    updatedAt: { seconds: Date.now() / 1000 - (i * 86400), nanoseconds: 0 },
+  })) as any;
+};
+
+const saveToFallback = (posts: BlogPost[]) => {
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(posts));
+};
 
 export const blogService = {
   async getAllPosts(includeUnpublished = false): Promise<BlogPost[]> {
@@ -37,7 +64,6 @@ export const blogService = {
       const isAdminInFirebase = await this.checkIsAdmin();
 
       let q;
-      // Only allow unpublished if we are actually an admin in FIREBASE
       if (includeUnpublished && isAdminInFirebase) {
         q = query(collection(db, COLLECTION_NAME));
       } else {
@@ -47,27 +73,39 @@ export const blogService = {
         );
       }
       const snapshot = await getDocs(q);
+      
+      // If collection is empty, trigger seeding and return fallback for now
+      if (snapshot.empty && isAdminInFirebase) {
+        console.log('Firebase is empty, seeding initial data...');
+        await this.seedPosts(initialPosts as any);
+        // We could re-fetch, but returning fallback is faster for the first render
+        return getFallbackPosts().filter(p => includeUnpublished || p.published);
+      }
+
       const posts = snapshot.docs.map(doc => ({ 
         id: doc.id, 
         ...(doc.data() as object) 
       } as BlogPost));
 
-      // Sort client-side to avoid composite index requirements
+      // Update fallback with latest from Firebase if successful
+      if (!snapshot.empty) {
+        saveToFallback(posts);
+      }
+
       return posts.sort((a, b) => {
         const dateA = a.createdAt?.seconds || 0;
         const dateB = b.createdAt?.seconds || 0;
         return dateB - dateA;
       });
     } catch (error: any) {
-      // Catch specific permission errors and try to explain
-      if (error?.code === 'permission-denied') {
-        console.warn('Firestore Access Restricted: Falling back to public view or empty set.');
-        if (includeUnpublished) {
-          return this.getAllPosts(false);
-        }
-      }
-      handleFirestoreError(error, OperationType.LIST, COLLECTION_NAME);
-      return [];
+      console.warn('Firestore failed, using JSON/LocalStorage backup:', error.message);
+      const fallback = getFallbackPosts();
+      const filtered = includeUnpublished ? fallback : fallback.filter(p => p.published);
+      return filtered.sort((a, b) => {
+        const dateA = a.createdAt?.seconds || 0;
+        const dateB = b.createdAt?.seconds || 0;
+        return dateB - dateA;
+      });
     }
   },
 
@@ -78,30 +116,50 @@ export const blogService = {
       if (snapshot.exists()) {
         return { id: snapshot.id, ...(snapshot.data() as object) } as BlogPost;
       }
-      return null;
+      // Check fallback
+      return getFallbackPosts().find(p => p.id === id) || null;
     } catch (error) {
-      handleFirestoreError(error, OperationType.GET, `${COLLECTION_NAME}/${id}`);
-      return null;
+      console.warn('Firestore GET failed, checking backup');
+      return getFallbackPosts().find(p => p.id === id) || null;
     }
   },
 
   async createPost(post: Omit<BlogPost, 'id' | 'createdAt' | 'updatedAt' | 'authorId' | 'authorName'>): Promise<string> {
     const user = auth.currentUser;
-    if (!user) throw new Error('Unauthorized');
+    const authorId = user?.uid || 'local-admin';
+    const authorName = user?.displayName || 'Admin';
+
+    const localNewPost = {
+      ...post,
+      id: `local-${Date.now()}`,
+      authorId,
+      authorName,
+      createdAt: { seconds: Date.now() / 1000, nanoseconds: 0 },
+      updatedAt: { seconds: Date.now() / 1000, nanoseconds: 0 },
+    } as BlogPost;
 
     try {
+      if (!user) {
+        // Just local if not logged in to Firebase
+        const posts = getFallbackPosts();
+        saveToFallback([localNewPost, ...posts]);
+        return localNewPost.id!;
+      }
+
       const newPost = {
         ...post,
-        authorId: user.uid,
-        authorName: user.displayName || 'Anonymous',
+        authorId,
+        authorName,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       };
       const docRef = await addDoc(collection(db, COLLECTION_NAME), newPost);
       return docRef.id;
     } catch (error) {
-      handleFirestoreError(error, OperationType.CREATE, COLLECTION_NAME);
-      return '';
+      console.warn('Firestore CREATE failed, saving to local backup');
+      const posts = getFallbackPosts();
+      saveToFallback([localNewPost, ...posts]);
+      return localNewPost.id!;
     }
   },
 
@@ -113,7 +171,13 @@ export const blogService = {
         updatedAt: serverTimestamp(),
       });
     } catch (error) {
-      handleFirestoreError(error, OperationType.UPDATE, `${COLLECTION_NAME}/${id}`);
+      console.warn('Firestore UPDATE failed, saving to local backup');
+      const posts = getFallbackPosts();
+      const index = posts.findIndex(p => p.id === id);
+      if (index !== -1) {
+        posts[index] = { ...posts[index], ...updates, updatedAt: { seconds: Date.now() / 1000, nanoseconds: 0 } as any };
+        saveToFallback(posts);
+      }
     }
   },
 
@@ -122,7 +186,9 @@ export const blogService = {
       const docRef = doc(db, COLLECTION_NAME, id);
       await deleteDoc(docRef);
     } catch (error) {
-      handleFirestoreError(error, OperationType.DELETE, `${COLLECTION_NAME}/${id}`);
+      console.warn('Firestore DELETE failed, updating local backup');
+      const posts = getFallbackPosts();
+      saveToFallback(posts.filter(p => p.id !== id));
     }
   },
 
