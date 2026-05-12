@@ -394,7 +394,7 @@ export default function AdminPanel() {
   }
 
   return (
-    <div id="admin" className="min-h-screen bg-dark flex flex-col p-6 md:p-12 relative overflow-y-scroll scrollbar-stable">
+    <div id="admin" className="h-screen bg-dark flex flex-col p-6 md:p-12 relative overflow-y-auto scrollbar-stable">
       <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gold/5 opacity-20 blur-[150px] pointer-events-none" />
       
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 z-10 gap-6">
