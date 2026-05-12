@@ -1,0 +1,30 @@
+[
+  {
+    "title": "Whitworths Industrial",
+    "category": "Architecture & Engineering Lead",
+    "year": "Active",
+    "tags": [".NET Core", "React JS", "Sharepoint"],
+    "image": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "title": "Natixis CIB",
+    "category": "Corporate & Investment Banking",
+    "year": "2018",
+    "tags": ["CIB", "Architecture", "Fintech"],
+    "image": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "title": "ZON TV Widgets",
+    "category": "Interactive Media",
+    "year": "2012",
+    "tags": ["C#", "SQL Server", "Widgets"],
+    "image": "https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "title": "GALP Energy Portal",
+    "category": "Energy & Digital Transformation",
+    "year": "2020",
+    "tags": ["Dynamics 365", "Dynamics", "Azure"],
+    "image": "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=800"
+  }
+]

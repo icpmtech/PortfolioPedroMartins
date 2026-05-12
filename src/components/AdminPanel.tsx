@@ -21,16 +21,28 @@ import {
 import { auth, googleProvider, signInWithEmailAndPassword } from '../lib/firebase';
 import { signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth';
 import { blogService, BlogPost } from '../services/blogService';
+import { bookService, Book } from '../services/bookService';
+import { projectService, Project } from '../services/projectService';
 import usersData from '../data/users.json';
 import initialPosts from '../data/initialPosts.json';
+import initialBooks from '../data/initialBooks.json';
+import initialProjects from '../data/initialProjects.json';
+
+type ContentType = 'posts' | 'books' | 'projects' | 'settings';
 
 export default function AdminPanel() {
   const [user, setUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [isEditing, setIsEditing] = useState<BlogPost | null>(null);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  
+  const [isEditingPost, setIsEditingPost] = useState<BlogPost | null>(null);
+  const [isEditingBook, setIsEditingBook] = useState<Book | null>(null);
+  const [isEditingProject, setIsEditingProject] = useState<Project | null>(null);
+
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'posts' | 'settings'>('posts');
+  const [activeTab, setActiveTab] = useState<ContentType>('posts');
   
   // Login Form State
   const [email, setEmail] = useState('');
@@ -57,12 +69,12 @@ export default function AdminPanel() {
         if (adminStatus) {
           setUser(u);
           setIsAdmin(true);
-          fetchPosts(); // Fetch here when we have real FB auth
+          fetchAllData(); // Fetch here when we have real FB auth
         }
       } else if (localUser) {
         // If we have local but no FB yet, wait a bit or try fetch anyway
         // But blogService.getAllPosts now handles it gracefully
-        fetchPosts();
+        fetchAllData();
       }
       setLoading(false);
     });
@@ -72,6 +84,22 @@ export default function AdminPanel() {
   const fetchPosts = async () => {
     const data = await blogService.getAllPosts(true);
     setPosts(data);
+  };
+
+  const fetchBooks = async () => {
+    const data = await bookService.getAllBooks();
+    setBooks(data);
+  };
+
+  const fetchProjects = async () => {
+    const data = await projectService.getAllProjects();
+    setProjects(data);
+  };
+
+  const fetchAllData = () => {
+    fetchPosts();
+    fetchBooks();
+    fetchProjects();
   };
 
   const handleEmailLogin = async (e: React.FormEvent) => {
@@ -138,13 +166,15 @@ export default function AdminPanel() {
   };
 
   const handleSeed = async () => {
-    if (!window.confirm('Import initial architectural archive entries? Existing posts will remain.')) return;
+    if (!window.confirm('Import all architectural archive entries (Blog, Books, Projects)? Existing entries will remain.')) return;
     
     setIsSeeding(true);
     try {
       await blogService.seedPosts(initialPosts);
+      await bookService.seedBooks(initialBooks as any);
+      await projectService.seedProjects(initialProjects as any);
       alert('Archive populated successfully.');
-      fetchPosts();
+      fetchAllData();
     } catch (error) {
       console.error(error);
       alert('Seeding protocol failed.');
@@ -154,38 +184,96 @@ export default function AdminPanel() {
   };
 
   const handleCreate = () => {
-    setIsEditing({
-      title: '',
-      content: '',
-      excerpt: '',
-      authorId: user?.uid || '',
-      authorName: user?.displayName || 'Admin',
-      published: false,
-      createdAt: null,
-      updatedAt: null,
-      tags: [],
-      imageUrl: ''
-    });
+    if (activeTab === 'posts') {
+      setIsEditingPost({
+        title: '',
+        content: '',
+        excerpt: '',
+        authorId: user?.uid || '',
+        authorName: user?.displayName || 'Admin',
+        published: false,
+        createdAt: null,
+        updatedAt: null,
+        tags: [],
+        imageUrl: ''
+      });
+    } else if (activeTab === 'books') {
+      setIsEditingBook({
+        title: '',
+        subtitle: '',
+        year: new Date().getFullYear().toString(),
+        price: '',
+        image: '',
+        amazonUrl: ''
+      });
+    } else if (activeTab === 'projects') {
+      setIsEditingProject({
+        title: '',
+        category: '',
+        year: new Date().getFullYear().toString(),
+        tags: [],
+        image: '',
+        description: '',
+        url: '',
+        published: true
+      });
+    }
   };
 
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSavePost = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isEditing) return;
-
-    if (isEditing.id) {
-      await blogService.updatePost(isEditing.id, isEditing);
+    if (!isEditingPost) return;
+    if (isEditingPost.id) {
+      await blogService.updatePost(isEditingPost.id, isEditingPost);
     } else {
-      await blogService.createPost(isEditing);
+      await blogService.createPost(isEditingPost);
     }
-    
-    setIsEditing(null);
+    setIsEditingPost(null);
     fetchPosts();
   };
 
-  const handleDelete = async (id: string) => {
+  const handleSaveBook = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isEditingBook) return;
+    if (isEditingBook.id) {
+      await bookService.updateBook(isEditingBook.id, isEditingBook);
+    } else {
+      await bookService.addBook(isEditingBook);
+    }
+    setIsEditingBook(null);
+    fetchBooks();
+  };
+
+  const handleSaveProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isEditingProject) return;
+    if (isEditingProject.id) {
+      await projectService.updateProject(isEditingProject.id, isEditingProject);
+    } else {
+      await projectService.addProject(isEditingProject);
+    }
+    setIsEditingProject(null);
+    fetchProjects();
+  };
+
+  const handleDeletePost = async (id: string) => {
     if (window.confirm('Delete this post permanently?')) {
       await blogService.deletePost(id);
       fetchPosts();
+    }
+  };
+
+  const handleDeleteBook = async (id: string) => {
+    if (window.confirm('Delete this book permanently?')) {
+      await bookService.deleteBook(id);
+      fetchBooks();
+    }
+  };
+
+  const handleDeleteProject = async (id: string) => {
+    if (window.confirm('Delete this project permanently?')) {
+      await projectService.deleteProject(id);
+      fetchProjects();
     }
   };
 
@@ -306,7 +394,7 @@ export default function AdminPanel() {
   }
 
   return (
-    <div id="admin" className="min-h-screen bg-dark flex flex-col p-6 md:p-12 relative overflow-y-scroll">
+    <div id="admin" className="min-h-screen bg-dark flex flex-col p-6 md:p-12 relative overflow-y-scroll scrollbar-stable">
       <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gold/5 opacity-20 blur-[150px] pointer-events-none" />
       
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 z-10 gap-6">
@@ -339,17 +427,31 @@ export default function AdminPanel() {
         </div>
       </div>
 
-      <div className="flex space-x-2 mb-8 z-10">
+      <div className="flex space-x-2 mb-8 z-10 overflow-x-auto no-scrollbar">
         <button 
-          onClick={() => setActiveTab('posts')}
-          className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-mono text-[10px] uppercase font-bold tracking-widest transition-all ${activeTab === 'posts' ? 'bg-gold text-dark' : 'text-white/40 hover:text-gold bg-white/5'}`}
+          onClick={() => { setActiveTab('posts'); setIsEditingPost(null); }}
+          className={`flex-shrink-0 flex items-center space-x-2 px-6 py-3 rounded-xl font-mono text-[10px] uppercase font-bold tracking-widest transition-all ${activeTab === 'posts' ? 'bg-gold text-dark' : 'text-white/40 hover:text-gold bg-white/5'}`}
         >
           <Database size={16} />
-          <span>Entries</span>
+          <span>Blog</span>
+        </button>
+        <button 
+          onClick={() => { setActiveTab('books'); setIsEditingBook(null); }}
+          className={`flex-shrink-0 flex items-center space-x-2 px-6 py-3 rounded-xl font-mono text-[10px] uppercase font-bold tracking-widest transition-all ${activeTab === 'books' ? 'bg-gold text-dark' : 'text-white/40 hover:text-gold bg-white/5'}`}
+        >
+          <Plus size={16} />
+          <span>Books</span>
+        </button>
+        <button 
+          onClick={() => { setActiveTab('projects'); setIsEditingProject(null); }}
+          className={`flex-shrink-0 flex items-center space-x-2 px-6 py-3 rounded-xl font-mono text-[10px] uppercase font-bold tracking-widest transition-all ${activeTab === 'projects' ? 'bg-gold text-dark' : 'text-white/40 hover:text-gold bg-white/5'}`}
+        >
+          <Layout size={16} />
+          <span>Portfolio</span>
         </button>
         <button 
           onClick={() => setActiveTab('settings')}
-          className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-mono text-[10px] uppercase font-bold tracking-widest transition-all ${activeTab === 'settings' ? 'bg-gold text-dark' : 'text-white/40 hover:text-gold bg-white/5'}`}
+          className={`flex-shrink-0 flex items-center space-x-2 px-6 py-3 rounded-xl font-mono text-[10px] uppercase font-bold tracking-widest transition-all ${activeTab === 'settings' ? 'bg-gold text-dark' : 'text-white/40 hover:text-gold bg-white/5'}`}
         >
           <Settings size={16} />
           <span>Protocols</span>
@@ -359,8 +461,8 @@ export default function AdminPanel() {
       <div className="flex-1 z-10">
         {activeTab === 'posts' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full min-h-[600px]">
-            {/* Post List - Hidden on mobile when editing */}
-            <div className={`lg:col-span-4 flex flex-col space-y-4 ${isEditing ? 'hidden lg:flex' : 'flex'}`}>
+            {/* Post List */}
+            <div className={`lg:col-span-4 flex flex-col space-y-4 ${isEditingPost ? 'hidden lg:flex' : 'flex'}`}>
               <div className="flex flex-col space-y-4">
                 <button 
                   onClick={handleCreate}
@@ -388,11 +490,11 @@ export default function AdminPanel() {
                 {filteredPosts.map(post => (
                   <div 
                     key={post.id}
-                    className={`p-4 md:p-5 rounded-2xl border transition-all cursor-pointer group ${isEditing?.id === post.id ? 'bg-gold/10 border-gold shadow-[0_0_20px_rgba(212,175,55,0.1)]' : 'bg-white/5 border-white/5 hover:border-white/20'}`}
-                    onClick={() => setIsEditing(post)}
+                    className={`p-4 md:p-5 rounded-2xl border transition-all cursor-pointer group ${isEditingPost?.id === post.id ? 'bg-gold/10 border-gold shadow-[0_0_20px_rgba(212,175,55,0.1)]' : 'bg-white/5 border-white/5 hover:border-white/20'}`}
+                    onClick={() => setIsEditingPost(post)}
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className={`text-sm font-bold truncate pr-4 ${isEditing?.id === post.id ? 'text-gold' : 'text-white'}`}>{post.title}</h3>
+                      <h3 className={`text-sm font-bold truncate pr-4 ${isEditingPost?.id === post.id ? 'text-gold' : 'text-white'}`}>{post.title}</h3>
                       {post.published ? (
                         <Eye size={12} className="text-gold/50" />
                       ) : (
@@ -409,7 +511,7 @@ export default function AdminPanel() {
                        <div className="flex space-x-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                           <button 
                             className="p-2 hover:text-red-400 bg-white/5 rounded-lg border border-white/10"
-                            onClick={(e) => { e.stopPropagation(); handleDelete(post.id!); }}
+                            onClick={(e) => { e.stopPropagation(); handleDeletePost(post.id!); }}
                           >
                             <Trash2 size={12} />
                           </button>
@@ -420,55 +522,47 @@ export default function AdminPanel() {
               </div>
             </div>
 
-            {/* Editor Area - Full width on mobile when editing */}
-            <div className={`lg:col-span-8 ${isEditing ? 'block' : 'hidden lg:block'}`}>
+            {/* Editor Area */}
+            <div className={`lg:col-span-8 ${isEditingPost ? 'block' : 'hidden lg:block'}`}>
               <AnimatePresence mode="wait">
-                {isEditing ? (
+                {isEditingPost ? (
                   <motion.form 
-                    key="editor"
+                    key="editor-post"
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    onSubmit={handleSave}
+                    onSubmit={handleSavePost}
                     className="glass-morphism p-6 md:p-12 rounded-[2rem] md:rounded-[2.5rem] border border-white/10 flex flex-col h-full lg:sticky lg:top-6"
                   >
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-10 gap-4">
                       <div className="flex items-center space-x-3 w-full md:w-auto">
                         <button 
                           type="button" 
-                          onClick={() => setIsEditing(null)}
+                          onClick={() => setIsEditingPost(null)}
                           className="lg:hidden p-2 bg-white/5 rounded-xl border border-white/10 text-gold hover:bg-gold hover:text-dark transition-all mr-2"
                         >
                           <X size={18} />
                         </button>
                         <Layout size={20} className="text-gold hidden md:block" />
-                        <h2 className="text-lg md:text-xl font-bold text-white uppercase tracking-widest truncate">Entry Editor</h2>
+                        <h2 className="text-lg md:text-xl font-bold text-white uppercase tracking-widest truncate">Blog Editor</h2>
                       </div>
                       <div className="flex space-x-2 md:space-x-3 w-full md:w-auto">
-                        <button 
-                          type="button" 
-                          onClick={() => setIsEditing(null)}
-                          className="hidden lg:block px-4 py-2 text-[10px] font-bold text-white/40 hover:text-white uppercase tracking-widest font-mono"
-                        >
-                          Cancel
-                        </button>
                         <button 
                           type="submit"
                           className="flex-1 md:flex-none justify-center bg-gold text-dark px-6 py-3 md:py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center space-x-2 hover:bg-white transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)]"
                         >
                           <Save size={16} />
-                          <span>Commit Changes</span>
+                          <span>Commit Post</span>
                         </button>
                       </div>
                     </div>
 
                     <div className="flex-1 space-y-6 md:space-y-8 overflow-y-auto custom-scrollbar pr-2 md:pr-4">
-                      {/* Form inputs */}
                       <div className="space-y-2">
                         <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em] ml-2">Display Title</label>
                         <input 
-                          value={isEditing.title}
-                          onChange={(e) => setIsEditing({...isEditing, title: e.target.value})}
+                          value={isEditingPost.title}
+                          onChange={(e) => setIsEditingPost({...isEditingPost, title: e.target.value})}
                           className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-4 text-white font-serif text-lg md:text-xl focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
                           placeholder="Untitled Insight..."
                           required
@@ -479,8 +573,8 @@ export default function AdminPanel() {
                         <div className="space-y-2">
                           <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em] ml-2">Tags</label>
                           <input 
-                            value={isEditing.tags.join(', ')}
-                            onChange={(e) => setIsEditing({...isEditing, tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean)})}
+                            value={isEditingPost.tags.join(', ')}
+                            onChange={(e) => setIsEditingPost({...isEditingPost, tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean)})}
                             className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-4 md:px-6 py-3 text-white text-xs font-mono focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
                             placeholder="Architecture, DevOps..."
                           />
@@ -488,8 +582,8 @@ export default function AdminPanel() {
                         <div className="space-y-2">
                           <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em] ml-2">Thumbnail URL</label>
                           <input 
-                            value={isEditing.imageUrl}
-                            onChange={(e) => setIsEditing({...isEditing, imageUrl: e.target.value})}
+                            value={isEditingPost.imageUrl}
+                            onChange={(e) => setIsEditingPost({...isEditingPost, imageUrl: e.target.value})}
                             className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-4 md:px-6 py-3 text-white text-xs font-mono focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
                             placeholder="https://..."
                           />
@@ -499,21 +593,17 @@ export default function AdminPanel() {
                       <div className="space-y-2">
                         <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em] ml-2">Abstract Summary</label>
                         <textarea 
-                          value={isEditing.excerpt}
-                          onChange={(e) => setIsEditing({...isEditing, excerpt: e.target.value})}
+                          value={isEditingPost.excerpt}
+                          onChange={(e) => setIsEditingPost({...isEditingPost, excerpt: e.target.value})}
                           className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-4 text-white text-sm font-light leading-relaxed focus:border-gold/50 outline-none transition-all placeholder:text-white/10 resize-none h-24"
                           placeholder="Short summary for the index feed..."
                         />
                       </div>
 
                       <div className="space-y-2">
-                         <div className="flex justify-between items-center mb-2 px-2">
-                            <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em]">Markdown Core</label>
-                            <span className="text-[8px] font-mono text-gold/30 hidden md:block">SUPPORTED_FMT: GFM</span>
-                         </div>
                         <textarea 
-                          value={isEditing.content}
-                          onChange={(e) => setIsEditing({...isEditing, content: e.target.value})}
+                          value={isEditingPost.content}
+                          onChange={(e) => setIsEditingPost({...isEditingPost, content: e.target.value})}
                           className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-4 md:px-6 py-4 text-white text-sm font-mono leading-relaxed focus:border-gold/50 outline-none transition-all placeholder:text-white/10 resize-none h-[300px] md:h-[400px]"
                           placeholder="## Start writing..."
                           required
@@ -522,20 +612,20 @@ export default function AdminPanel() {
 
                       <div className="flex items-center justify-between p-4 md:p-6 bg-white/5 rounded-xl md:rounded-2xl border border-white/10">
                         <div className="flex items-center space-x-3">
-                          <div className={`p-2 rounded-lg ${isEditing.published ? 'bg-gold/20' : 'bg-white/10'}`}>
-                             {isEditing.published ? <Eye size={16} className="text-gold" /> : <EyeOff size={16} className="text-white/40" />}
+                          <div className={`p-2 rounded-lg ${isEditingPost.published ? 'bg-gold/20' : 'bg-white/10'}`}>
+                             {isEditingPost.published ? <Eye size={16} className="text-gold" /> : <EyeOff size={16} className="text-white/40" />}
                           </div>
                           <div>
                             <p className="text-[10px] font-bold text-white uppercase tracking-widest whitespace-nowrap">Protocol Staging</p>
-                            <p className="text-[8px] font-mono text-white/30 uppercase">Status: {isEditing.published ? 'Public' : 'Draft'}</p>
+                            <p className="text-[8px] font-mono text-white/30 uppercase">Status: {isEditingPost.published ? 'Public' : 'Draft'}</p>
                           </div>
                         </div>
                         <button 
                           type="button"
-                          onClick={() => setIsEditing({...isEditing, published: !isEditing.published})}
-                          className={`w-12 md:w-14 h-7 md:h-8 rounded-full relative transition-colors flex-shrink-0 ${isEditing.published ? 'bg-gold' : 'bg-white/10'}`}
+                          onClick={() => setIsEditingPost({...isEditingPost, published: !isEditingPost.published})}
+                          className={`w-12 md:w-14 h-7 md:h-8 rounded-full relative transition-colors flex-shrink-0 ${isEditingPost.published ? 'bg-gold' : 'bg-white/10'}`}
                         >
-                          <div className={`absolute top-0.5 md:top-1 w-6 h-6 rounded-full bg-dark transition-all ${isEditing.published ? 'left-5 md:left-7' : 'left-0.5 md:left-1'}`} />
+                          <div className={`absolute top-0.5 md:top-1 w-6 h-6 rounded-full bg-dark transition-all ${isEditingPost.published ? 'left-5 md:left-7' : 'left-0.5 md:left-1'}`} />
                         </button>
                       </div>
                     </div>
@@ -545,11 +635,191 @@ export default function AdminPanel() {
                     <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-6">
                        <Edit3 size={24} className="text-white/10" />
                     </div>
-                    <p className="text-white/20 font-mono text-[10px] uppercase tracking-[0.4em]">Awaiting Selection // Select or Create Entry</p>
+                    <p className="text-white/20 font-mono text-[10px] uppercase tracking-[0.4em]">Select Blog Post to Edit</p>
                   </div>
                 )}
               </AnimatePresence>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'books' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full min-h-[600px]">
+             {/* Book List */}
+             <div className={`lg:col-span-4 flex flex-col space-y-4 ${isEditingBook ? 'hidden lg:flex' : 'flex'}`}>
+                <button 
+                  onClick={handleCreate}
+                  className="w-full glass-morphism border border-gold/30 p-4 md:p-6 rounded-3xl flex items-center justify-center space-x-3 group hover:bg-gold hover:text-dark transition-all duration-300"
+                >
+                  <Plus className="group-hover:rotate-90 transition-transform" />
+                  <span className="text-[10px] md:text-xs uppercase font-bold tracking-[0.2em]">Add New Book</span>
+                </button>
+                
+                <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar pr-2 max-h-[60vh] lg:max-h-none">
+                  {books.map(book => (
+                    <div 
+                      key={book.id}
+                      className={`p-4 md:p-5 rounded-2xl border transition-all cursor-pointer group ${isEditingBook?.id === book.id ? 'bg-gold/10 border-gold shadow-[0_0_20px_rgba(212,175,55,0.1)]' : 'bg-white/5 border-white/5 hover:border-white/20'}`}
+                      onClick={() => setIsEditingBook(book)}
+                    >
+                      <h3 className={`text-sm font-bold truncate pr-4 ${isEditingBook?.id === book.id ? 'text-gold' : 'text-white'}`}>{book.title}</h3>
+                      <p className="text-white/20 text-[9px] font-mono uppercase tracking-widest mt-1 mb-2">{book.year} // {book.price}</p>
+                      <div className="flex justify-end">
+                         <button 
+                            className="p-2 hover:text-red-400 bg-white/5 rounded-lg border border-white/10"
+                            onClick={(e) => { e.stopPropagation(); handleDeleteBook(book.id!); }}
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+             </div>
+
+             {/* Book Editor */}
+             <div className={`lg:col-span-8 ${isEditingBook ? 'block' : 'hidden lg:block'}`}>
+                <AnimatePresence mode="wait">
+                   {isEditingBook ? (
+                      <motion.form 
+                        key="editor-book"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        onSubmit={handleSaveBook}
+                        className="glass-morphism p-6 md:p-12 rounded-[2rem] md:rounded-[2.5rem] border border-white/10 flex flex-col h-full lg:sticky lg:top-6"
+                      >
+                         <div className="flex justify-between items-center mb-8">
+                            <h2 className="text-lg font-bold text-white uppercase tracking-widest">Book Editor</h2>
+                            <button type="submit" className="bg-gold text-dark px-6 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-white transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)]">Save Book</button>
+                         </div>
+                         <div className="flex-1 space-y-6 overflow-y-auto custom-scrollbar pr-4">
+                            <div className="space-y-2">
+                               <label className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Title</label>
+                               <input value={isEditingBook.title} onChange={e => setIsEditingBook({...isEditingBook, title: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold/50" />
+                            </div>
+                            <div className="space-y-2">
+                               <label className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Subtitle</label>
+                               <input value={isEditingBook.subtitle} onChange={e => setIsEditingBook({...isEditingBook, subtitle: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold/50" />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                               <div className="space-y-2">
+                                  <label className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Year</label>
+                                  <input value={isEditingBook.year} onChange={e => setIsEditingBook({...isEditingBook, year: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold/50" />
+                               </div>
+                               <div className="space-y-2">
+                                  <label className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Price</label>
+                                  <input value={isEditingBook.price} onChange={e => setIsEditingBook({...isEditingBook, price: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold/50" />
+                               </div>
+                            </div>
+                            <div className="space-y-2">
+                               <label className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Cover Image URL</label>
+                               <input value={isEditingBook.image} onChange={e => setIsEditingBook({...isEditingBook, image: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold/50" />
+                            </div>
+                            <div className="space-y-2">
+                               <label className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Amazon Link</label>
+                               <input value={isEditingBook.amazonUrl} onChange={e => setIsEditingBook({...isEditingBook, amazonUrl: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold/50" />
+                            </div>
+                         </div>
+                      </motion.form>
+                   ) : (
+                      <div className="h-full flex flex-col items-center justify-center glass-morphism rounded-[2.5rem] border border-white/5 border-dashed">
+                        <p className="text-white/20 font-mono text-[10px] uppercase tracking-[0.4em]">Select Book to Edit</p>
+                      </div>
+                   )}
+                </AnimatePresence>
+             </div>
+          </div>
+        )}
+
+        {activeTab === 'projects' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full min-h-[600px]">
+             {/* Project List */}
+             <div className={`lg:col-span-4 flex flex-col space-y-4 ${isEditingProject ? 'hidden lg:flex' : 'flex'}`}>
+                <button 
+                  onClick={handleCreate}
+                  className="w-full glass-morphism border border-gold/30 p-4 md:p-6 rounded-3xl flex items-center justify-center space-x-3 group hover:bg-gold hover:text-dark transition-all duration-300"
+                >
+                  <Plus className="group-hover:rotate-90 transition-transform" />
+                  <span className="text-[10px] md:text-xs uppercase font-bold tracking-[0.2em]">Add New Project</span>
+                </button>
+                
+                <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar pr-2 max-h-[60vh] lg:max-h-none">
+                  {projects.map(proj => (
+                    <div 
+                      key={proj.id}
+                      className={`p-4 md:p-5 rounded-2xl border transition-all cursor-pointer group ${isEditingProject?.id === proj.id ? 'bg-gold/10 border-gold shadow-[0_0_20px_rgba(212,175,55,0.1)]' : 'bg-white/5 border-white/5 hover:border-white/20'}`}
+                      onClick={() => setIsEditingProject(proj)}
+                    >
+                      <h3 className={`text-sm font-bold truncate pr-4 ${isEditingProject?.id === proj.id ? 'text-gold' : 'text-white'}`}>{proj.title}</h3>
+                      <p className="text-white/20 text-[9px] font-mono uppercase tracking-widest mt-1 mb-2">{proj.category} // {proj.year}</p>
+                      <div className="flex justify-end">
+                         <button 
+                            className="p-2 hover:text-red-400 bg-white/5 rounded-lg border border-white/10"
+                            onClick={(e) => { e.stopPropagation(); handleDeleteProject(proj.id!); }}
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+             </div>
+
+             {/* Project Editor */}
+             <div className={`lg:col-span-8 ${isEditingProject ? 'block' : 'hidden lg:block'}`}>
+                <AnimatePresence mode="wait">
+                   {isEditingProject ? (
+                      <motion.form 
+                        key="editor-project"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        onSubmit={handleSaveProject}
+                        className="glass-morphism p-6 md:p-12 rounded-[2rem] md:rounded-[2.5rem] border border-white/10 flex flex-col h-full lg:sticky lg:top-6"
+                      >
+                         <div className="flex justify-between items-center mb-8">
+                            <h2 className="text-lg font-bold text-white uppercase tracking-widest">Project Editor</h2>
+                            <button type="submit" className="bg-gold text-dark px-6 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-white transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)]">Save Project</button>
+                         </div>
+                         <div className="flex-1 space-y-6 overflow-y-auto custom-scrollbar pr-4">
+                            <div className="space-y-2">
+                               <label className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Project Name</label>
+                               <input value={isEditingProject.title} onChange={e => setIsEditingProject({...isEditingProject, title: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold/50" />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                               <div className="space-y-2">
+                                  <label className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Category</label>
+                                  <input value={isEditingProject.category} onChange={e => setIsEditingProject({...isEditingProject, category: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold/50" />
+                               </div>
+                               <div className="space-y-2">
+                                  <label className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Year</label>
+                                  <input value={isEditingProject.year} onChange={e => setIsEditingProject({...isEditingProject, year: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold/50" />
+                               </div>
+                            </div>
+                            <div className="space-y-2">
+                               <label className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Tags (comma separated)</label>
+                               <input value={isEditingProject.tags.join(', ')} onChange={e => setIsEditingProject({...isEditingProject, tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean)})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold/50" />
+                            </div>
+                            <div className="space-y-2">
+                               <label className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Image URL</label>
+                               <input value={isEditingProject.image} onChange={e => setIsEditingProject({...isEditingProject, image: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold/50" />
+                            </div>
+                            <div className="space-y-2">
+                               <label className="text-[9px] font-mono text-white/30 uppercase tracking-widest">External Link (Project URL)</label>
+                               <input value={isEditingProject.url} onChange={e => setIsEditingProject({...isEditingProject, url: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold/50" />
+                            </div>
+                            <div className="space-y-2">
+                               <label className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Description</label>
+                               <textarea value={isEditingProject.description} onChange={e => setIsEditingProject({...isEditingProject, description: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold/50 h-32 resize-none" />
+                            </div>
+                         </div>
+                      </motion.form>
+                   ) : (
+                      <div className="h-full flex flex-col items-center justify-center glass-morphism rounded-[2.5rem] border border-white/5 border-dashed">
+                        <p className="text-white/20 font-mono text-[10px] uppercase tracking-[0.4em]">Select Project to Edit</p>
+                      </div>
+                   )}
+                </AnimatePresence>
+             </div>
           </div>
         )}
 

@@ -1,0 +1,58 @@
+[
+  {
+    "title": "Ontologias em AI",
+    "subtitle": "Da Teoria à Prática",
+    "year": "2024",
+    "price": "€6.42",
+    "image": "https://m.media-amazon.com/images/I/715FlDHYuhL._UF1000,1000_QL80_FMwebp_.jpg",
+    "amazonUrl": "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259"
+  },
+  {
+    "title": "Blazor Web Apps",
+    "subtitle": "Practical Guide & Advanced Patterns",
+    "year": "2024",
+    "price": "€8.48",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800",
+    "amazonUrl": "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259"
+  },
+  {
+    "title": "Arquitecto de Sistemas",
+    "subtitle": "O que é a vida de um arquitecto?",
+    "year": "2023",
+    "price": "€0.92",
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
+    "amazonUrl": "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259"
+  },
+  {
+    "title": "Revolução do Copiloto",
+    "subtitle": "IA Generativa no Trabalho",
+    "year": "2024",
+    "price": "€9.99",
+    "image": "https://images.unsplash.com/photo-1620712943543-bcc4628c6bb3?auto=format&fit=crop&q=80&w=800",
+    "amazonUrl": "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259"
+  },
+  {
+    "title": "NLP para Todos",
+    "subtitle": "Da Teoria aos Modelos GPT",
+    "year": "2024",
+    "price": "€19.22",
+    "image": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&q=80&w=800",
+    "amazonUrl": "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259"
+  },
+  {
+    "title": "The Power of JavaScript",
+    "subtitle": "Concepts, Code, and Best Practices",
+    "year": "2023",
+    "price": "€27.33",
+    "image": "https://images.unsplash.com/photo-1579403124614-197f69d8187b?auto=format&fit=crop&q=80&w=800",
+    "amazonUrl": "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259"
+  },
+  {
+    "title": "Mastering Scrapy",
+    "subtitle": "Web Scraping Expert Class",
+    "year": "2024",
+    "price": "€12.50",
+    "image": "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&q=80&w=800",
+    "amazonUrl": "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259"
+  }
+]

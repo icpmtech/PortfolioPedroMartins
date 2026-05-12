@@ -94,5 +94,15 @@ service cloud.firestore {
         allow delete: if isAdmin() || (isSignedIn() && existing().authorId == request.auth.uid);
       }
     }
+
+    match /books/{bookId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /projects/{projectId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
   }
 }
