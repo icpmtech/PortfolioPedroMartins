@@ -75,12 +75,14 @@ export const blogService = {
       }
       const snapshot = await getDocs(q);
       
-      // If collection is empty, trigger seeding and return fallback for now
-      // Only seed if we have a real user to avoid permission errors
-      if (snapshot.empty && isAdminInFirebase && user) {
-        console.log('Firebase is empty, seeding initial data for auth user...');
-        await this.seedPosts(initialPosts as any);
-        return getFallbackPosts().filter(p => includeUnpublished || p.published);
+      if (snapshot.empty) {
+        // Try to seed if admin is logged in
+        if (isAdminInFirebase && user) {
+          console.log('Firebase is empty, seeding initial data for auth user...');
+          await this.seedPosts(initialPosts as any);
+        }
+        const fallback = getFallbackPosts();
+        return includeUnpublished ? fallback : fallback.filter(p => p.published);
       }
 
       const posts = snapshot.docs.map(doc => ({ 

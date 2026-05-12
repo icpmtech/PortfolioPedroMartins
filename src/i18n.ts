@@ -85,6 +85,12 @@ const resources = {
         viewShelf: "View Full Shelf",
         available: "{{count}} Titles Available"
       },
+      blog: {
+        empty: "No entries found in the archive yet.",
+        initializing: "INITIALIZING_FEED...",
+        readEntry: "Read Entry",
+        close: "[Esc]_Close"
+      },
       media: {
         shareTitle: "Check out {{title}} by Pedro Mourão Martins",
         channels: "Media Channels",
@@ -218,6 +224,12 @@ const resources = {
         library: "A Biblioteca",
         viewShelf: "Ver Estante Completa",
         available: "{{count}} Títulos Disponíveis"
+      },
+      blog: {
+        empty: "Nenhum registo encontrado no arquivo ainda.",
+        initializing: "INICIALIZANDO_FEED...",
+        readEntry: "Ler Entrada",
+        close: "[Esc]_Fechar"
       },
       media: {
         shareTitle: "Descobre {{title}} por Pedro Mourão Martins",

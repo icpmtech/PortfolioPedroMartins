@@ -68,12 +68,12 @@ export default function Blog() {
       <div className="max-w-7xl w-full mx-auto relative z-10 mt-12 md:mt-24">
         {loading ? (
           <div className="flex items-center justify-center h-64 text-gold/50 font-mono text-sm animate-pulse">
-            INITIALIZING_FEED...
+            {t('blog.initializing')}
           </div>
         ) : posts.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-64 glass-morphism rounded-3xl border border-white/5">
              <BookOpen size={48} className="text-white/10 mb-4" />
-             <p className="text-white/30 font-mono text-xs uppercase tracking-widest">No entries found in the archive yet.</p>
+             <p className="text-white/30 font-mono text-xs uppercase tracking-widest">{t('blog.empty')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -123,7 +123,7 @@ export default function Blog() {
                   </p>
                   
                   <div className="mt-auto flex items-center text-gold text-[10px] uppercase font-bold tracking-widest">
-                    <span>Read Entry</span>
+                    <span>{t('blog.readEntry')}</span>
                     <ArrowRight size={14} className="ml-2 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
@@ -158,7 +158,7 @@ export default function Blog() {
                   onClick={() => setSelectedPost(null)}
                   className="text-white/40 hover:text-white text-[10px] uppercase font-bold tracking-widest font-mono p-2"
                 >
-                  [Esc]_Close
+                  {t('blog.close')}
                 </button>
               </div>
               
