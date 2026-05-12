@@ -67,6 +67,12 @@ export default function Navbar() {
         >
           Cantinho de .NET
         </a>
+        <a 
+          href="#blog" 
+          className="text-[10px] md:text-[11px] uppercase tracking-[0.3em] font-bold text-gold/60 hover:text-gold transition-all hover:tracking-[0.4em] duration-500"
+        >
+          {t('navbar.blog')}
+        </a>
       </div>
     </motion.nav>
     </>

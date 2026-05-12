@@ -106,7 +106,7 @@ export default function Footer() {
             © 2026 Pedro Miguel Mourão Martins • {t('common.architect')}
           </p>
           <p className="text-[8px] uppercase tracking-[0.3em] text-gold/20 font-mono">
-            Crafted for the future of systems
+            Crafted for the future of systems • <a href="/admin" className="hover:text-gold transition-colors">Admin_Portal</a>
           </p>
         </div>
       </div>

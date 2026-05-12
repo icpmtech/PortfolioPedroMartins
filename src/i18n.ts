@@ -53,9 +53,11 @@ const resources = {
         connect: "Connect",
         portfolio: "Portfolio",
         books: "Books",
+        blog: "Archive",
         feedSubtitle: "Portfolio Feed // 2026"
       },
       sidebar: {
+        follow: "Follow Me",
         label: {
           connect: "Connect",
           repo: "Repo",
@@ -185,9 +187,11 @@ const resources = {
         connect: "Conectar",
         portfolio: "Portfólio",
         books: "Livros",
+        blog: "Arquivo",
         feedSubtitle: "Feed de Portfólio // 2026"
       },
       sidebar: {
+        follow: "Seguir",
         label: {
           connect: "Conectar",
           repo: "Repo",

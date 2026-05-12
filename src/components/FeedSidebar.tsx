@@ -46,6 +46,21 @@ export default function FeedSidebar() {
   return (
     <>
       <div className="fixed right-2 md:right-8 bottom-20 md:bottom-32 z-50 flex flex-col items-center space-y-3 md:space-y-8">
+        {/* Follow Me Button */}
+        <motion.a
+          href="https://pt.linkedin.com/in/pedromiguelmouraomartins"
+          target="_blank"
+          rel="noreferrer"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="bg-gold hover:bg-white text-dark px-4 py-2 rounded-full flex items-center space-x-2 shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all duration-300 group"
+        >
+          <Linkedin size={14} className="group-hover:scale-110 transition-transform" />
+          <span className="text-[10px] md:text-[11px] font-black uppercase tracking-widest">{t('sidebar.follow')}</span>
+        </motion.a>
+
         {/* Creator Identity */}
         <div className="relative group cursor-pointer" onClick={() => setIsCVOpen(true)}>
           <div className="w-11 h-11 md:w-16 md:h-16 rounded-full border-2 border-gold p-0.5 md:p-1 bg-dark overflow-hidden group-hover:scale-110 transition-transform duration-500">

@@ -1,0 +1,392 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { 
+  Plus, 
+  Trash2, 
+  Edit3, 
+  Save, 
+  X, 
+  Lock, 
+  Eye, 
+  EyeOff, 
+  Layout, 
+  LogIn,
+  LogOut,
+  Settings,
+  Database
+} from 'lucide-react';
+import { auth, googleProvider } from '../lib/firebase';
+import { signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth';
+import { blogService, BlogPost } from '../services/blogService';
+
+export default function AdminPanel() {
+  const [user, setUser] = useState(auth.currentUser);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [isEditing, setIsEditing] = useState<BlogPost | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'posts' | 'settings'>('posts');
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (u) => {
+      setUser(u);
+      if (u) {
+        const adminStatus = await blogService.checkIsAdmin();
+        setIsAdmin(adminStatus);
+        if (adminStatus) {
+          fetchPosts();
+        }
+      } else {
+        setIsAdmin(false);
+        setPosts([]);
+      }
+      setLoading(false);
+    });
+    return unsubscribe;
+  }, []);
+
+  const fetchPosts = async () => {
+    const data = await blogService.getAllPosts(true);
+    setPosts(data);
+  };
+
+  const handleLogin = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+  };
+
+  const handleCreate = () => {
+    setIsEditing({
+      title: '',
+      content: '',
+      excerpt: '',
+      authorId: user?.uid || '',
+      authorName: user?.displayName || 'Admin',
+      published: false,
+      createdAt: null,
+      updatedAt: null,
+      tags: [],
+      imageUrl: ''
+    });
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isEditing) return;
+
+    if (isEditing.id) {
+      await blogService.updatePost(isEditing.id, isEditing);
+    } else {
+      await blogService.createPost(isEditing);
+    }
+    
+    setIsEditing(null);
+    fetchPosts();
+  };
+
+  const handleDelete = async (id: string) => {
+    if (window.confirm('Delete this post permanently?')) {
+      await blogService.deletePost(id);
+      fetchPosts();
+    }
+  };
+
+  if (loading) return null;
+
+  if (!user || !isAdmin) {
+    return (
+      <div id="admin" className="min-h-screen bg-dark flex flex-col items-center justify-center p-6 bg-mesh">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass-morphism p-12 rounded-[2.5rem] border border-gold/20 text-center max-w-lg w-full relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 blur-3xl" />
+          <div className="w-20 h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-gold/30">
+            <Lock size={32} className="text-gold" />
+          </div>
+          <h2 className="font-serif text-4xl text-white mb-4">Central Intelligence</h2>
+          <p className="text-white/40 mb-8 font-mono text-[10px] uppercase tracking-widest leading-relaxed">
+            Restricted access portal for systems management. Authentication required for archive modifications.
+          </p>
+          {!user ? (
+            <button 
+              onClick={handleLogin}
+              className="w-full bg-gold hover:bg-white text-dark py-4 rounded-2xl flex items-center justify-center space-x-3 font-bold uppercase tracking-widest transition-all duration-300"
+            >
+              <LogIn size={20} />
+              <span>Authenticate Portal</span>
+            </button>
+          ) : (
+            <div className="text-red-400 font-mono text-xs border border-red-500/20 bg-red-500/5 p-4 rounded-xl">
+               INSUFFICIENT_PERMISSIONS: UID_{user.uid.substring(0, 8)}
+            </div>
+          )}
+        </motion.div>
+      </div>
+    );
+  }
+
+  return (
+    <div id="admin" className="min-h-screen bg-dark flex flex-col p-6 md:p-12 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gold/5 opacity-20 blur-[150px] pointer-events-none" />
+      
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 z-10 gap-6">
+        <div>
+          <div className="flex items-center space-x-3 mb-2">
+            <span className="h-px w-8 bg-gold" />
+            <span className="text-gold font-mono text-[10px] tracking-widest uppercase font-bold">CMS_ARCHIVE_CORE // V1.0</span>
+          </div>
+          <h1 className="font-serif text-5xl text-white">Console Control</h1>
+        </div>
+        
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3 bg-white/5 rounded-2xl p-2 pr-6 border border-white/5">
+            <img 
+              src={user.photoURL || ''} 
+              alt={user.displayName || ''} 
+              className="w-10 h-10 rounded-xl border border-gold/20"
+            />
+            <div className="flex flex-col">
+              <span className="text-white text-xs font-bold">{user.displayName}</span>
+              <span className="text-white/30 text-[8px] font-mono uppercase tracking-widest">Operator_Active</span>
+            </div>
+          </div>
+          <button 
+            onClick={handleLogout}
+            className="p-3 text-white/30 hover:text-red-400 transition-colors bg-white/5 rounded-2xl border border-white/5"
+          >
+            <LogOut size={20} />
+          </button>
+        </div>
+      </div>
+
+      <div className="flex space-x-2 mb-8 z-10">
+        <button 
+          onClick={() => setActiveTab('posts')}
+          className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-mono text-[10px] uppercase font-bold tracking-widest transition-all ${activeTab === 'posts' ? 'bg-gold text-dark' : 'text-white/40 hover:text-gold bg-white/5'}`}
+        >
+          <Database size={16} />
+          <span>Entries</span>
+        </button>
+        <button 
+          onClick={() => setActiveTab('settings')}
+          className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-mono text-[10px] uppercase font-bold tracking-widest transition-all ${activeTab === 'settings' ? 'bg-gold text-dark' : 'text-white/40 hover:text-gold bg-white/5'}`}
+        >
+          <Settings size={16} />
+          <span>Protocols</span>
+        </button>
+      </div>
+
+      <div className="flex-1 z-10">
+        {activeTab === 'posts' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full">
+            <div className="lg:col-span-4 flex flex-col space-y-4">
+              <button 
+                onClick={handleCreate}
+                className="w-full glass-morphism border border-gold/30 p-6 rounded-3xl flex items-center justify-center space-x-3 group hover:bg-gold hover:text-dark transition-all duration-300"
+              >
+                <Plus className="group-hover:rotate-90 transition-transform" />
+                <span className="text-xs uppercase font-bold tracking-[0.2em]">New Archive Entry</span>
+              </button>
+              
+              <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar pr-2">
+                {posts.map(post => (
+                  <div 
+                    key={post.id}
+                    className={`p-5 rounded-2xl border transition-all cursor-pointer group ${isEditing?.id === post.id ? 'bg-gold/10 border-gold shadow-[0_0_20px_rgba(212,175,55,0.1)]' : 'bg-white/5 border-white/5 hover:border-white/20'}`}
+                    onClick={() => setIsEditing(post)}
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className={`text-sm font-bold truncate pr-4 ${isEditing?.id === post.id ? 'text-gold' : 'text-white'}`}>{post.title}</h3>
+                      {post.published ? (
+                        <Eye size={12} className="text-gold/50" />
+                      ) : (
+                        <EyeOff size={12} className="text-white/20" />
+                      )}
+                    </div>
+                    <p className="text-white/20 text-[9px] font-mono uppercase tracking-widest mb-3">
+                      UID_{post.id?.substring(0, 8)} // {post.tags[0] || 'Unlabeled'}
+                    </p>
+                    <div className="flex justify-between items-center">
+                       <span className={`text-[8px] px-2 py-0.5 rounded font-bold uppercase tracking-tighter ${post.published ? 'bg-gold/10 text-gold' : 'bg-white/10 text-white/40'}`}>
+                          {post.published ? 'Published' : 'Draft'}
+                       </span>
+                       <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button 
+                            className="p-1.5 hover:text-red-400 bg-white/5 rounded-lg border border-white/5"
+                            onClick={(e) => { e.stopPropagation(); handleDelete(post.id!); }}
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                       </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="lg:col-span-8">
+              <AnimatePresence mode="wait">
+                {isEditing ? (
+                  <motion.form 
+                    key="editor"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    onSubmit={handleSave}
+                    className="glass-morphism p-8 md:p-12 rounded-[2.5rem] border border-white/10 flex flex-col h-full sticky top-6"
+                  >
+                    <div className="flex justify-between items-center mb-10">
+                      <div className="flex items-center space-x-3">
+                        <Layout size={20} className="text-gold" />
+                        <h2 className="text-xl font-bold text-white uppercase tracking-widest">Entry Editor</h2>
+                      </div>
+                      <div className="flex space-x-3">
+                        <button 
+                          type="button" 
+                          onClick={() => setIsEditing(null)}
+                          className="px-4 py-2 text-[10px] font-bold text-white/40 hover:text-white uppercase tracking-widest font-mono"
+                        >
+                          Cancel
+                        </button>
+                        <button 
+                          type="submit"
+                          className="bg-gold text-dark px-6 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center space-x-2 hover:bg-white transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)]"
+                        >
+                          <Save size={16} />
+                          <span>Commit Changes</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 space-y-8 overflow-y-auto custom-scrollbar pr-4">
+                      {/* Form inputs */}
+                      <div className="space-y-2">
+                        <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em] ml-2">Display Title</label>
+                        <input 
+                          value={isEditing.title}
+                          onChange={(e) => setIsEditing({...isEditing, title: e.target.value})}
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white font-serif text-xl focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
+                          placeholder="Untitled Insight..."
+                          required
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em] ml-2">Tags (comma separated)</label>
+                          <input 
+                            value={isEditing.tags.join(', ')}
+                            onChange={(e) => setIsEditing({...isEditing, tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean)})}
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-3 text-white text-xs font-mono focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
+                            placeholder="Architecture, DevOps..."
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em] ml-2">Vercen Thumbnail URL</label>
+                          <input 
+                            value={isEditing.imageUrl}
+                            onChange={(e) => setIsEditing({...isEditing, imageUrl: e.target.value})}
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-3 text-white text-xs font-mono focus:border-gold/50 outline-none transition-all placeholder:text-white/10"
+                            placeholder="https://..."
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em] ml-2">Abstract Summary</label>
+                        <textarea 
+                          value={isEditing.excerpt}
+                          onChange={(e) => setIsEditing({...isEditing, excerpt: e.target.value})}
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-light leading-relaxed focus:border-gold/50 outline-none transition-all placeholder:text-white/10 resize-none h-24"
+                          placeholder="Short summary for the index feed..."
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                         <div className="flex justify-between items-center mb-2 px-2">
+                            <label className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em]">Markdown Core</label>
+                            <span className="text-[8px] font-mono text-gold/30">SUPPORTED_FMT: GFM</span>
+                         </div>
+                        <textarea 
+                          value={isEditing.content}
+                          onChange={(e) => setIsEditing({...isEditing, content: e.target.value})}
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-mono leading-relaxed focus:border-gold/50 outline-none transition-all placeholder:text-white/10 resize-none h-[400px]"
+                          placeholder="## Start writing..."
+                          required
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between p-6 bg-white/5 rounded-2xl border border-white/10">
+                        <div className="flex items-center space-x-3">
+                          <div className={`p-2 rounded-lg ${isEditing.published ? 'bg-gold/20' : 'bg-white/10'}`}>
+                             {isEditing.published ? <Eye size={16} className="text-gold" /> : <EyeOff size={16} className="text-white/40" />}
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-bold text-white uppercase tracking-widest">Protocol Staging</p>
+                            <p className="text-[8px] font-mono text-white/30 uppercase">Visibility: {isEditing.published ? 'Public' : 'Encrypted_Private'}</p>
+                          </div>
+                        </div>
+                        <button 
+                          type="button"
+                          onClick={() => setIsEditing({...isEditing, published: !isEditing.published})}
+                          className={`w-14 h-8 rounded-full relative transition-colors ${isEditing.published ? 'bg-gold' : 'bg-white/10'}`}
+                        >
+                          <div className={`absolute top-1 w-6 h-6 rounded-full bg-dark transition-all ${isEditing.published ? 'left-7' : 'left-1'}`} />
+                        </button>
+                      </div>
+                    </div>
+                  </motion.form>
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center glass-morphism rounded-[2.5rem] border border-white/5 border-dashed">
+                    <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-6">
+                       <Edit3 size={24} className="text-white/10" />
+                    </div>
+                    <p className="text-white/20 font-mono text-[10px] uppercase tracking-[0.4em]">Awaiting Selection // Select or Create Entry</p>
+                  </div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'settings' && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="glass-morphism p-12 rounded-[2.5rem] border border-white/10 h-full"
+          >
+             <div className="max-w-2xl">
+                <h2 className="font-serif text-3xl text-white mb-8">Management Protocols</h2>
+                <div className="space-y-6">
+                   <div className="p-6 bg-white/5 rounded-2xl border border-white/5 flex justify-between items-center">
+                      <div>
+                        <p className="text-sm font-bold text-white">Bootstrap Admin Status</p>
+                        <p className="text-xs text-white/30 font-mono">Permission delegated to: mourao.martins@gmail.com</p>
+                      </div>
+                      <div className="px-3 py-1 bg-gold/10 text-gold rounded-full text-[10px] font-bold uppercase tracking-widest">Permanent</div>
+                   </div>
+
+                   <div className="p-6 bg-white/5 rounded-2xl border border-white/5 flex justify-between items-center opacity-40">
+                      <div>
+                        <p className="text-sm font-bold text-white">System Logs</p>
+                        <p className="text-xs text-white/30 font-mono">Firestore write stream tracking</p>
+                      </div>
+                      <div className="px-3 py-1 bg-white/10 text-white rounded-full text-[10px] font-bold uppercase tracking-widest">Locked</div>
+                   </div>
+                </div>
+             </div>
+          </motion.div>
+        )}
+      </div>
+    </div>
+  );
+}

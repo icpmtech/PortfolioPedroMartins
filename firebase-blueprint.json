@@ -1,0 +1,42 @@
+{
+  "entities": {
+    "BlogPost": {
+      "title": "Blog Post",
+      "description": "A blog post about software development.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "The title of the post." },
+        "content": { "type": "string", "description": "Markdown content of the post." },
+        "excerpt": { "type": "string", "description": "A short summary of the post." },
+        "authorId": { "type": "string", "description": "Firebase UID of the author." },
+        "authorName": { "type": "string", "description": "Name of the author." },
+        "published": { "type": "boolean", "description": "Whether the post is published." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last update timestamp." },
+        "tags": { "type": "array", "items": { "type": "string" }, "description": "Tags for the post." },
+        "imageUrl": { "type": "string", "description": "Thumbnail image URL." }
+      },
+      "required": ["title", "content", "authorId", "authorName", "published", "createdAt", "updatedAt"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "A user with administrative privileges.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" }
+      },
+      "required": ["uid", "email"]
+    }
+  },
+  "firestore": {
+    "/blogPosts/{postId}": {
+      "schema": "BlogPost",
+      "description": "Collection of blog posts."
+    },
+    "/admins/{uid}": {
+      "schema": "Admin",
+      "description": "Whitelist of admin users."
+    }
+  }
+}
