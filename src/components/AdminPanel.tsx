@@ -40,13 +40,14 @@ export default function AdminPanel() {
   const [isSeeding, setIsSeeding] = useState(false);
 
   useEffect(() => {
-    // Check for local session first
+    // Check for local session first to show UI immediately
     const localUser = localStorage.getItem('admin_session');
     if (localUser) {
       const parsedUser = JSON.parse(localUser);
       setUser(parsedUser);
       setIsAdmin(true);
-      fetchPosts();
+      // We don't fetchPosts here anymore, we wait for either 
+      // onAuthStateChanged or we'll fetch manually if needed
     }
 
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
@@ -55,8 +56,12 @@ export default function AdminPanel() {
         if (adminStatus) {
           setUser(u);
           setIsAdmin(true);
-          fetchPosts();
+          fetchPosts(); // Fetch here when we have real FB auth
         }
+      } else if (localUser) {
+        // If we have local but no FB yet, wait a bit or try fetch anyway
+        // But blogService.getAllPosts now handles it gracefully
+        fetchPosts();
       }
       setLoading(false);
     });
@@ -293,7 +298,7 @@ export default function AdminPanel() {
   }
 
   return (
-    <div id="admin" className="min-h-screen bg-dark flex flex-col p-6 md:p-12 relative overflow-y-auto">
+    <div id="admin" className="min-h-screen bg-dark flex flex-col p-6 md:p-12 relative overflow-y-scroll">
       <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gold/5 opacity-20 blur-[150px] pointer-events-none" />
       
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 z-10 gap-6">

@@ -34,19 +34,41 @@ const COLLECTION_NAME = 'blogPosts';
 export const blogService = {
   async getAllPosts(includeUnpublished = false): Promise<BlogPost[]> {
     try {
+      const isAdminInFirebase = !!auth.currentUser && (
+        auth.currentUser.email === 'mourao.martins@gmail.com' ||
+        await this.checkIsAdmin()
+      );
+
       let q;
-      if (includeUnpublished) {
-        q = query(collection(db, COLLECTION_NAME), orderBy('createdAt', 'desc'));
+      // Only allow unpublished if we are actually an admin in FIREBASE
+      if (includeUnpublished && isAdminInFirebase) {
+        q = query(collection(db, COLLECTION_NAME));
       } else {
         q = query(
           collection(db, COLLECTION_NAME), 
-          where('published', '==', true),
-          orderBy('createdAt', 'desc')
+          where('published', '==', true)
         );
       }
       const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as object) } as BlogPost));
-    } catch (error) {
+      const posts = snapshot.docs.map(doc => ({ 
+        id: doc.id, 
+        ...(doc.data() as object) 
+      } as BlogPost));
+
+      // Sort client-side to avoid composite index requirements
+      return posts.sort((a, b) => {
+        const dateA = a.createdAt?.seconds || 0;
+        const dateB = b.createdAt?.seconds || 0;
+        return dateB - dateA;
+      });
+    } catch (error: any) {
+      // Catch specific permission errors and try to explain
+      if (error?.code === 'permission-denied') {
+        console.warn('Firestore Access Restricted: Falling back to public view or empty set.');
+        if (includeUnpublished) {
+          return this.getAllPosts(false);
+        }
+      }
       handleFirestoreError(error, OperationType.LIST, COLLECTION_NAME);
       return [];
     }

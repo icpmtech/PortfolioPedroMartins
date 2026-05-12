@@ -97,20 +97,20 @@ export default function Blog() {
                 </div>
                 
                 <div className="p-8 flex-1 flex flex-col">
-                  <div className="flex items-center space-x-4 text-white/30 text-[9px] font-mono uppercase tracking-[0.2em] mb-4">
+                  <h3 className="font-serif text-2xl text-white mb-2 group-hover:text-gold transition-colors line-clamp-2 leading-tight">
+                    {post.title}
+                  </h3>
+
+                  <div className="flex items-center space-x-4 text-white/30 text-[9px] font-mono uppercase tracking-[0.2em] mb-5">
                     <div className="flex items-center">
-                      <Calendar size={12} className="mr-1 text-gold/40" />
+                      <Calendar size={12} className="mr-1.5 text-gold/40" />
                       {formatDate(post.createdAt)}
                     </div>
-                    <div className="flex items-center">
-                      <User size={12} className="mr-1 text-gold/40" />
+                    <div className="flex items-center border-l border-white/10 pl-4">
+                      <User size={12} className="mr-1.5 text-gold/40" />
                       {post.authorName}
                     </div>
                   </div>
-                  
-                  <h3 className="font-serif text-2xl text-white mb-4 group-hover:text-gold transition-colors line-clamp-2 leading-tight">
-                    {post.title}
-                  </h3>
                   
                   <p className="text-white/40 text-sm font-light leading-relaxed mb-6 line-clamp-3">
                     {post.excerpt}
