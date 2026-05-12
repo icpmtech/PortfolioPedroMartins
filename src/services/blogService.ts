@@ -108,6 +108,10 @@ export const blogService = {
   },
 
   async checkIsAdmin(): Promise<boolean> {
+    // Check local session first
+    const localSession = localStorage.getItem('admin_session');
+    if (localSession) return true;
+
     const user = auth.currentUser;
     if (!user) return false;
     

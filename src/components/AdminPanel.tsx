@@ -15,14 +15,16 @@ import {
   Settings,
   Database,
   Mail,
-  Key
+  Key,
+  ShieldCheck
 } from 'lucide-react';
 import { auth, googleProvider, signInWithEmailAndPassword } from '../lib/firebase';
 import { signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth';
 import { blogService, BlogPost } from '../services/blogService';
+import usersData from '../data/users.json';
 
 export default function AdminPanel() {
-  const [user, setUser] = useState(auth.currentUser);
+  const [user, setUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [isEditing, setIsEditing] = useState<BlogPost | null>(null);
@@ -36,17 +38,23 @@ export default function AdminPanel() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   useEffect(() => {
+    // Check for local session first
+    const localUser = localStorage.getItem('admin_session');
+    if (localUser) {
+      const parsedUser = JSON.parse(localUser);
+      setUser(parsedUser);
+      setIsAdmin(true);
+      fetchPosts();
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
-      setUser(u);
       if (u) {
         const adminStatus = await blogService.checkIsAdmin();
-        setIsAdmin(adminStatus);
         if (adminStatus) {
+          setUser(u);
+          setIsAdmin(true);
           fetchPosts();
         }
-      } else {
-        setIsAdmin(false);
-        setPosts([]);
       }
       setLoading(false);
     });
@@ -62,22 +70,50 @@ export default function AdminPanel() {
     e.preventDefault();
     setLoginError('');
     setIsLoggingIn(true);
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (error: any) {
-      setLoginError(error.message.includes('auth/invalid-credential') 
-        ? 'Invalid credentials. Access denied.' 
-        : 'Authentication gateway failure.');
-    } finally {
-      setIsLoggingIn(false);
+    
+    // Check against local JSON file
+    const localMatch = usersData.find(u => u.email === email && u.password === password);
+    
+    if (localMatch) {
+      try {
+        // Also try to sign in to Firebase to satisfy Firestore rules
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (fbError) {
+        console.warn('Firebase sync failed, using local session only:', fbError);
+      }
+      
+      const sessionData = { 
+        uid: localMatch.email, 
+        email: localMatch.email, 
+        displayName: localMatch.name,
+        photoURL: `https://ui-avatars.com/api/?name=${localMatch.name}&background=D4AF37&color=000`
+      };
+      
+      setUser(sessionData);
+      setIsAdmin(true);
+      localStorage.setItem('admin_session', JSON.stringify(sessionData));
+      fetchPosts();
+    } else {
+      setLoginError('Invalid local credentials. Protocol rejected.');
     }
+    
+    setIsLoggingIn(false);
   };
 
   const handleGoogleLogin = async () => {
     setLoginError('');
     setIsLoggingIn(true);
     try {
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      const adminStatus = await blogService.checkIsAdmin();
+      if (adminStatus) {
+        setUser(result.user);
+        setIsAdmin(true);
+        fetchPosts();
+      } else {
+        setLoginError('Google identity not in administrative whitelist.');
+        await signOut(auth);
+      }
     } catch (error: any) {
       setLoginError('Protocol failed. Check identity provider.');
     } finally {
@@ -87,6 +123,10 @@ export default function AdminPanel() {
 
   const handleLogout = async () => {
     await signOut(auth);
+    localStorage.removeItem('admin_session');
+    setUser(null);
+    setIsAdmin(false);
+    setPosts([]);
   };
 
   const handleCreate = () => {
