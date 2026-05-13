@@ -47,9 +47,13 @@ export const bookService = {
       const q = query(collection(db, COLLECTION_NAME), orderBy('year', 'desc'));
       const snapshot = await getDocs(q);
       
+      const localSession = localStorage.getItem('admin_session');
+      const isAdmin = auth.currentUser || localSession;
+
       if (snapshot.empty) {
         // Try to seed if admin is logged in
-        if (auth.currentUser) {
+        if (isAdmin) {
+           console.log('Books empty, seeding...');
            await this.seedBooks(initialBooks as any);
         }
         return getFallbackBooks();

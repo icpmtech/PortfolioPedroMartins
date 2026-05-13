@@ -49,8 +49,12 @@ export const projectService = {
       const q = query(collection(db, COLLECTION_NAME), orderBy('year', 'desc'));
       const snapshot = await getDocs(q);
       
+      const localSession = localStorage.getItem('admin_session');
+      const isAdmin = auth.currentUser || localSession;
+
       if (snapshot.empty) {
-        if (auth.currentUser) {
+        if (isAdmin) {
+          console.log('Projects empty, seeding...');
           await this.seedProjects(initialProjects as any);
         }
         return getFallbackProjects();

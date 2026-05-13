@@ -28,7 +28,7 @@ import initialPosts from '../data/initialPosts.json';
 import initialBooks from '../data/initialBooks.json';
 import initialProjects from '../data/initialProjects.json';
 
-type ContentType = 'posts' | 'books' | 'projects' | 'settings';
+type ContentType = 'posts' | 'books' | 'projects' | 'comments' | 'settings';
 
 export default function AdminPanel() {
   const [user, setUser] = useState<any>(null);
@@ -42,7 +42,9 @@ export default function AdminPanel() {
   const [isEditingProject, setIsEditingProject] = useState<Project | null>(null);
 
   const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<ContentType>('posts');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   
   // Login Form State
   const [email, setEmail] = useState('');
@@ -69,31 +71,56 @@ export default function AdminPanel() {
         if (adminStatus) {
           setUser(u);
           setIsAdmin(true);
-          fetchAllData(); // Fetch here when we have real FB auth
         }
       } else if (localUser) {
-        // If we have local but no FB yet, wait a bit or try fetch anyway
-        // But blogService.getAllPosts now handles it gracefully
-        fetchAllData();
+        // Handled by useEffect[isAdmin]
       }
       setLoading(false);
     });
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    if (isAdmin) {
+      fetchAllData();
+    }
+  }, [isAdmin]);
+
   const fetchPosts = async () => {
-    const data = await blogService.getAllPosts(true);
-    setPosts(data);
+    setDataLoading(true);
+    setErrorMsg(null);
+    try {
+      const data = await blogService.getAllPosts(true);
+      setPosts(data);
+    } catch (e) {
+      setErrorMsg('Failed to fetch blog protocol.');
+    } finally {
+      setDataLoading(false);
+    }
   };
 
   const fetchBooks = async () => {
-    const data = await bookService.getAllBooks();
-    setBooks(data);
+    setDataLoading(true);
+    try {
+      const data = await bookService.getAllBooks();
+      setBooks(data);
+    } catch (e) {
+      setErrorMsg('Failed to fetch library records.');
+    } finally {
+      setDataLoading(false);
+    }
   };
 
   const fetchProjects = async () => {
-    const data = await projectService.getAllProjects();
-    setProjects(data);
+    setDataLoading(true);
+    try {
+      const data = await projectService.getAllProjects();
+      setProjects(data);
+    } catch (e) {
+      setErrorMsg('Failed to fetch portfolio projects.');
+    } finally {
+      setDataLoading(false);
+    }
   };
 
   const fetchAllData = () => {
@@ -128,7 +155,6 @@ export default function AdminPanel() {
       setUser(sessionData);
       setIsAdmin(true);
       localStorage.setItem('admin_session', JSON.stringify(sessionData));
-      fetchPosts();
     } else {
       setLoginError('Invalid local credentials. Protocol rejected.');
     }
@@ -145,7 +171,6 @@ export default function AdminPanel() {
       if (adminStatus) {
         setUser(result.user);
         setIsAdmin(true);
-        fetchPosts();
       } else {
         setLoginError('Google identity not in administrative whitelist.');
         await signOut(auth);
@@ -163,6 +188,8 @@ export default function AdminPanel() {
     setUser(null);
     setIsAdmin(false);
     setPosts([]);
+    setBooks([]);
+    setProjects([]);
   };
 
   const handleSeed = async () => {
@@ -447,7 +474,14 @@ export default function AdminPanel() {
           className={`flex-shrink-0 flex items-center space-x-2 px-6 py-3 rounded-xl font-mono text-[10px] uppercase font-bold tracking-widest transition-all ${activeTab === 'projects' ? 'bg-gold text-dark' : 'text-white/40 hover:text-gold bg-white/5'}`}
         >
           <Layout size={16} />
-          <span>Portfolio</span>
+          <span>Projects</span>
+        </button>
+        <button 
+          onClick={() => { setActiveTab('comments'); }}
+          className={`flex-shrink-0 flex items-center space-x-2 px-6 py-3 rounded-xl font-mono text-[10px] uppercase font-bold tracking-widest transition-all ${activeTab === 'comments' ? 'bg-gold text-dark' : 'text-white/40 hover:text-gold bg-white/5'}`}
+        >
+          <Mail size={16} />
+          <span>Comments</span>
         </button>
         <button 
           onClick={() => setActiveTab('settings')}
@@ -459,6 +493,20 @@ export default function AdminPanel() {
       </div>
 
       <div className="flex-1 z-10">
+        {errorMsg && (
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center space-x-3 text-red-400 font-mono text-[10px] uppercase tracking-widest animate-pulse">
+            <ShieldCheck size={14} />
+            <span>{errorMsg}</span>
+          </div>
+        )}
+
+        {dataLoading && !isSeeding && (
+          <div className="fixed bottom-12 right-12 flex items-center space-x-3 bg-gold/10 border border-gold/30 px-4 py-2 rounded-full z-[100] backdrop-blur-md">
+             <div className="w-3 h-3 border-2 border-gold/20 border-t-gold rounded-full animate-spin" />
+             <span className="text-gold font-mono text-[9px] uppercase tracking-widest">Hydrating Cache...</span>
+          </div>
+        )}
+
         {activeTab === 'posts' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full min-h-[600px]">
             {/* Post List */}
@@ -656,6 +704,11 @@ export default function AdminPanel() {
                 </button>
                 
                 <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar pr-2 max-h-[60vh] lg:max-h-none">
+                  {books.length === 0 && (
+                    <div className="text-white/20 text-[10px] font-mono text-center py-12 border border-white/5 border-dashed rounded-3xl">
+                      NO_ENTRIES_LOCATED
+                    </div>
+                  )}
                   {books.map(book => (
                     <div 
                       key={book.id}
@@ -744,6 +797,11 @@ export default function AdminPanel() {
                 </button>
                 
                 <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar pr-2 max-h-[60vh] lg:max-h-none">
+                  {projects.length === 0 && (
+                    <div className="text-white/20 text-[10px] font-mono text-center py-12 border border-white/5 border-dashed rounded-3xl">
+                      NO_ENTRIES_LOCATED
+                    </div>
+                  )}
                   {projects.map(proj => (
                     <div 
                       key={proj.id}
@@ -819,6 +877,27 @@ export default function AdminPanel() {
                       </div>
                    )}
                 </AnimatePresence>
+             </div>
+          </div>
+        )}
+
+        {activeTab === 'comments' && (
+          <div className="glass-morphism p-6 md:p-12 rounded-[2.5rem] border border-white/10 h-full">
+             <h2 className="font-serif text-3xl text-white mb-8">Communications Archive</h2>
+             <p className="text-white/30 font-mono text-[10px] uppercase tracking-widest mb-6">Interaction logs across blog archive.</p>
+             <div className="space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar pr-4">
+                {posts.filter(p => p.id).map(post => (
+                   <div key={post.id} className="p-4 bg-white/5 rounded-2xl border border-white/5">
+                      <h3 className="text-gold text-xs font-bold uppercase tracking-widest mb-2">{post.title}</h3>
+                      <p className="text-white/20 text-[9px] font-mono mb-4">POST_ID: {post.id}</p>
+                      <div className="pl-4 border-l border-white/10 space-y-3">
+                         <p className="text-[10px] text-white/40 italic">Note: Navigate to post to manage nested conversation threads.</p>
+                      </div>
+                   </div>
+                ))}
+                {posts.length === 0 && (
+                   <div className="py-12 text-center text-white/10 font-mono text-[10px] uppercase tracking-[0.4em]">NO_BLOG_ENTRIES_COMM_LINK_EMPTY</div>
+                )}
              </div>
           </div>
         )}
