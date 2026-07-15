@@ -39,7 +39,7 @@ export default function Portfolio() {
           <span className="h-0.5 w-6 bg-gold" />
           <span className="text-gold font-mono text-[10px] tracking-[0.4em] uppercase font-bold">{t('portfolio.index')}</span>
         </motion.div>
-        <h2 className="font-serif text-5xl md:text-6xl text-white tracking-tight leading-none">{t('portfolio.title')}</h2>
+        <h2 className="font-serif text-5xl md:text-6xl text-[var(--color-text-primary)] tracking-tight leading-none">{t('portfolio.title')}</h2>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-4 mt-0 md:mt-24 max-w-7xl w-full mx-auto relative z-10">
@@ -77,8 +77,8 @@ export default function Portfolio() {
                   </div>
                   
                   <div>
-                    <h3 className="text-white font-serif text-3xl mb-1 group-hover:text-gold transition-colors duration-300">{project.title}</h3>
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-[#555] font-bold font-mono group-hover:text-white/60 transition-colors">
+                    <h3 className="text-[var(--color-text-primary)] font-serif text-3xl mb-1 group-hover:text-gold transition-colors duration-300">{project.title}</h3>
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--color-text-secondary)] font-bold font-mono group-hover:text-[var(--color-text-primary)] transition-colors">
                       {project.category}
                     </p>
                   </div>
@@ -104,10 +104,10 @@ export default function Portfolio() {
 
 
       {/* Decorative Blueprint Text */}
-      <div className="absolute bottom-12 right-12 hidden lg:flex items-center space-x-6 text-[#333]">
+      <div className="absolute bottom-12 right-12 hidden lg:flex items-center space-x-6 text-[var(--color-text-secondary)]">
         <div className="flex flex-col items-end">
           <span className="text-[9px] font-mono uppercase font-bold tracking-[0.3em] text-gold/40">{t('portfolio.status')}</span>
-          <span className="text-[11px] font-mono text-white/10 italic">STRATEGIC_MAPPING_LIVE</span>
+          <span className="text-[11px] font-mono text-[var(--color-text-primary)]/10 italic">STRATEGIC_MAPPING_LIVE</span>
         </div>
         <div className="p-3 rounded-full border border-gold/10 glass-morphism animate-pulse">
            <Layers size={24} className="opacity-40" />

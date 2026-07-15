@@ -70,7 +70,7 @@ function PostDetail({ post, onClose, isAdmin, formatDate }: PostDetailProps) {
               <span className="flex items-center"><User size={14} className="mr-2 text-gold" /> {post.authorName}</span>
             </div>
             
-            <h1 className="font-serif text-4xl md:text-6xl text-white mb-8 tracking-tighter leading-[0.9]">
+            <h1 className="font-serif text-4xl md:text-6xl text-[var(--color-text-primary)] mb-8 tracking-tighter leading-[0.9]">
               {post.title}
             </h1>
             
@@ -83,7 +83,7 @@ function PostDetail({ post, onClose, isAdmin, formatDate }: PostDetailProps) {
             </div>
             
             <div className="prose prose-invert prose-gold max-w-none">
-              <div className="text-white/70 leading-relaxed font-light space-y-6 markdown-body">
+              <div className="text-[var(--color-text-primary)]/70 leading-relaxed font-light space-y-6 markdown-body">
                 <ReactMarkdown>{post.content}</ReactMarkdown>
               </div>
             </div>
@@ -160,7 +160,7 @@ export default function Blog() {
           <span className="h-px w-8 bg-gold" />
           <span className="text-gold font-mono text-[10px] tracking-[0.4em] uppercase font-bold">Insights // Blog</span>
         </motion.div>
-        <h2 className="font-serif text-5xl md:text-6xl text-white tracking-tight leading-none">The Archive</h2>
+        <h2 className="font-serif text-5xl md:text-6xl text-[var(--color-text-primary)] tracking-tight leading-none">The Archive</h2>
       </div>
 
       <div className="max-w-7xl w-full mx-auto relative z-10 mt-12 md:mt-24">
@@ -201,11 +201,11 @@ export default function Blog() {
                 </div>
                 
                 <div className="p-8 flex-1 flex flex-col">
-                  <h3 className="font-serif text-2xl text-white mb-2 group-hover:text-gold transition-colors line-clamp-2 leading-tight">
+                  <h3 className="font-serif text-2xl text-[var(--color-text-primary)] mb-2 group-hover:text-gold transition-colors line-clamp-2 leading-tight">
                     {post.title}
                   </h3>
 
-                  <div className="flex items-center space-x-4 text-white/30 text-[9px] font-mono uppercase tracking-[0.2em] mb-5">
+                  <div className="flex items-center space-x-4 text-[var(--color-text-secondary)] text-[9px] font-mono uppercase tracking-[0.2em] mb-5">
                     <div className="flex items-center">
                       <Calendar size={12} className="mr-1.5 text-gold/40" />
                       {formatDate(post.createdAt)}
@@ -216,7 +216,7 @@ export default function Blog() {
                     </div>
                   </div>
                   
-                  <p className="text-white/40 text-sm font-light leading-relaxed mb-6 line-clamp-3">
+                  <p className="text-[var(--color-text-secondary)] text-sm font-light leading-relaxed mb-6 line-clamp-3">
                     {post.excerpt}
                   </p>
                   

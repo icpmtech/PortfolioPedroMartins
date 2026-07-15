@@ -10,6 +10,7 @@ export default function FeedSidebar() {
   const [likeCount, setLikeCount] = useState(4800);
   const [shared, setShared] = useState(false);
   const [isCVOpen, setIsCVOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const actions = [
     { icon: Linkedin, label: t('sidebar.label.connect'), url: 'https://pt.linkedin.com/in/pedromiguelmouraomartins' },
@@ -21,12 +22,14 @@ export default function FeedSidebar() {
     { icon: Phone, label: t('sidebar.label.whatsapp'), url: 'https://wa.me/351919520386' },
   ];
 
-  const handleLike = () => {
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setLiked(!liked);
     setLikeCount(prev => liked ? prev - 1 : prev + 1);
   };
 
-  const handleShare = async () => {
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     try {
       if (navigator.share) {
         await navigator.share({
@@ -45,114 +48,130 @@ export default function FeedSidebar() {
 
   return (
     <>
-      <div className="fixed right-2 md:right-8 bottom-20 md:bottom-32 z-50 flex flex-col items-center space-y-3 md:space-y-8">
-        {/* Follow Me Button */}
-        <motion.a
-          href="https://pt.linkedin.com/in/pedromiguelmouraomartins"
-          target="_blank"
-          rel="noreferrer"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
+      <div className="fixed right-6 md:right-10 bottom-6 md:bottom-10 z-[100] flex flex-col items-center">
+        <AnimatePresence>
+          {isExpanded && (
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.9 }}
+              className="flex flex-col items-center space-y-4 mb-6"
+            >
+              <motion.a
+                href="https://pt.linkedin.com/in/pedromiguelmouraomartins"
+                target="_blank"
+                rel="noreferrer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-gold hover:bg-white text-dark px-5 py-2.5 rounded-full flex items-center space-x-2 shadow-[0_10px_30px_rgba(212,175,55,0.4)] transition-all duration-300 group whitespace-nowrap"
+              >
+                <Linkedin size={14} className="group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] md:text-[11px] font-black uppercase tracking-widest">{t('sidebar.follow')}</span>
+              </motion.a>
+
+              <div className="flex flex-col items-center space-y-4 p-4 glass-morphism rounded-[2.5rem] border border-gold/20 shadow-[0_20px_50px_rgba(0,0,0,0.3)] backdrop-blur-2xl">
+                <motion.button 
+                  whileHover={{ scale: 1.1, backgroundColor: 'var(--color-gold)', color: '#000' }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setIsCVOpen(true)}
+                  className="w-12 h-12 rounded-full border border-gold/30 flex items-center justify-center text-gold transition-all duration-300"
+                >
+                  <User className="w-5 h-5" />
+                </motion.button>
+
+                {actions.map((action, idx) => (
+                  <motion.a
+                    key={idx}
+                    href={action.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: idx * 0.05, type: 'spring', stiffness: 300 }}
+                    whileHover={{ scale: 1.1, backgroundColor: 'rgba(212, 175, 55, 0.1)' }}
+                    whileTap={{ scale: 0.9 }}
+                    className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[var(--color-text-primary)]/60 hover:text-gold hover:border-gold/40 transition-all duration-300 shadow-sm"
+                  >
+                    <action.icon className="w-5 h-5" />
+                  </motion.a>
+                ))}
+                
+                <div className="h-px w-8 bg-gold/10 my-2" />
+
+                <motion.button 
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.7 }}
+                  onClick={handleLike}
+                  className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all duration-300 ${liked ? 'text-red-500 border-red-500/40 bg-red-500/10' : 'text-[var(--color-text-primary)]/40 border-white/10 hover:text-red-500 hover:border-red-500/20'}`}
+                >
+                  <Heart className="w-5 h-5" fill={liked ? "currentColor" : "none"} />
+                </motion.button>
+
+                <motion.button 
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.7 }}
+                  onClick={handleShare}
+                  className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all duration-300 ${shared ? 'text-blue-400 border-blue-400/40 bg-blue-400/10' : 'text-[var(--color-text-primary)]/40 border-white/10 hover:text-blue-400 hover:border-blue-400/20'}`}
+                >
+                  <AnimatePresence mode="wait">
+                    {shared ? (
+                      <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                        <Check className="w-5 h-5" />
+                      </motion.div>
+                    ) : (
+                      <motion.div key="share" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                        <Share2 className="w-5 h-5" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Trigger Button */}
+        <motion.button
+          onClick={() => setIsExpanded(!isExpanded)}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="bg-gold hover:bg-white text-dark px-4 py-2 rounded-full flex items-center space-x-2 shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all duration-300 group"
+          className="relative group focus:outline-none"
         >
-          <Linkedin size={14} className="group-hover:scale-110 transition-transform" />
-          <span className="text-[10px] md:text-[11px] font-black uppercase tracking-widest">{t('sidebar.follow')}</span>
-        </motion.a>
-
-        {/* Creator Identity */}
-        <div className="relative group cursor-pointer" onClick={() => setIsCVOpen(true)}>
-          <div className="w-11 h-11 md:w-16 md:h-16 rounded-full border-2 border-gold p-0.5 md:p-1 bg-dark overflow-hidden group-hover:scale-110 transition-transform duration-500">
-            <img 
-              src="https://m.media-amazon.com/images/S/amzn-author-media-prod/nq4001lv5jqet2jp2i50o2n229._SY600_._SL200_._PQ50_._FMwebp_.jpg" 
-              alt="Pedro Martins" 
-              className="w-full h-full object-cover rounded-full grayscale group-hover:grayscale-0 transition-all duration-500"
-              referrerPolicy="no-referrer"
-            />
-          </div>
-          <motion.div 
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="absolute -bottom-1 right-0 bg-gold text-dark rounded-full p-0.5 md:p-1 border-2 border-dark"
-          >
-            <Zap className="w-2 h-2 md:w-2.5 md:h-2.5" fill="currentColor" />
-          </motion.div>
-        </div>
-
-        <div className="flex flex-col items-center space-y-3 md:space-y-6">
-          <motion.button 
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setIsCVOpen(true)}
-            className="flex flex-col items-center group relative"
-          >
-            <div className="w-10 h-10 md:w-14 md:h-14 rounded-full glass-morphism flex items-center justify-center text-gold border border-gold/20 group-hover:bg-gold group-hover:text-dark transition-all duration-300">
-              <User className="w-[18px] h-[18px] md:w-6 md:h-6" />
-            </div>
-            <span className="absolute left-full ml-4 px-3 py-1 bg-gold text-dark text-[10px] uppercase font-bold tracking-widest rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap hidden lg:block">
-              {t('common.profile')}
-            </span>
-          </motion.button>
-
-          {actions.map((action, idx) => (
-            <motion.a
-              key={idx}
-              href={action.url}
-              target="_blank"
-              rel="noreferrer"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="flex flex-col items-center group relative"
-            >
-              <div className="w-9 h-9 md:w-14 md:h-14 rounded-full glass-morphism flex items-center justify-center text-white/40 group-hover:text-gold group-hover:border-gold/40 transition-all duration-300">
-                <action.icon className="w-4 h-4 md:w-6 md:h-6" />
-              </div>
-              <span className="absolute left-full ml-4 px-3 py-1 bg-[#111] text-white/60 text-[10px] uppercase font-bold tracking-widest rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap border border-white/10 hidden lg:block">
-                {action.label}
-              </span>
-            </motion.a>
-          ))}
-          
-          {/* Reaction Actions */}
-          <div className="h-px w-4 md:w-6 bg-white/10 my-1 md:my-2" />
-
-          <motion.button 
-            whileTap={{ scale: 0.7 }}
-            onClick={handleLike}
-            className="flex flex-col items-center group focus:outline-none"
-          >
-            <div className={`w-9 h-9 md:w-14 md:h-14 rounded-full glass-morphism flex items-center justify-center transition-all duration-300 ${liked ? 'text-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)] border-red-500/40' : 'text-white/40 group-hover:text-red-500'}`}>
-              <Heart className="w-4 h-4 md:w-6 md:h-6" fill={liked ? "currentColor" : "none"} />
-            </div>
-            <span className="text-[8px] md:text-[10px] font-mono font-bold mt-1 text-white/30 group-hover:text-white/80 transition-colors">
-              {(likeCount / 1000).toFixed(1)}k
-            </span>
-          </motion.button>
-
-          <motion.button 
-            whileTap={{ scale: 0.7 }}
-            onClick={handleShare}
-            className="flex flex-col items-center group focus:outline-none"
-          >
-            <div className={`w-9 h-9 md:w-14 md:h-14 rounded-full glass-morphism flex items-center justify-center transition-all duration-300 ${shared ? 'text-blue-400 shadow-[0_0_20px_rgba(96,165,250,0.4)] border-blue-400/40' : 'text-white/40 group-hover:text-blue-400'}`}>
-              <AnimatePresence mode="wait">
-                {shared ? (
-                  <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                    <Check className="w-4 h-4 md:w-6 md:h-6" />
-                  </motion.div>
-                ) : (
-                  <motion.div key="share" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                    <Share2 className="w-4 h-4 md:w-6 md:h-6" />
-                  </motion.div>
+          <div className={`w-14 h-14 md:w-18 md:h-18 rounded-full border-2 transition-all duration-500 p-1 bg-[var(--color-bg)] shadow-2xl ${isExpanded ? 'border-gold rotate-45' : 'border-white/10 hover:border-gold/50'}`}>
+            <div className="w-full h-full rounded-full overflow-hidden relative">
+              <img 
+                src="https://m.media-amazon.com/images/S/amzn-author-media-prod/nq4001lv5jqet2jp2i50o2n229._SY600_._SL200_._PQ50_._FMwebp_.jpg" 
+                alt="Pedro Martins" 
+                className={`w-full h-full object-cover transition-all duration-500 ${isExpanded ? 'scale-110 grayscale-0' : 'grayscale group-hover:grayscale-0'}`}
+                referrerPolicy="no-referrer"
+              />
+              <AnimatePresence>
+                {isExpanded && (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 bg-gold/10 backdrop-blur-[2px]"
+                  />
                 )}
               </AnimatePresence>
             </div>
-            <span className="text-[8px] md:text-[10px] font-mono font-bold mt-1 text-white/30 group-hover:text-white/80 transition-colors uppercase tracking-tighter">
-              {shared ? t('common.copied') : t('common.share')}
+          </div>
+          
+          <motion.div 
+            animate={{ scale: isExpanded ? 0.8 : [1, 1.2, 1] }}
+            transition={{ repeat: isExpanded ? 0 : Infinity, duration: 2 }}
+            className={`absolute -bottom-1 -right-1 rounded-full p-1 border-2 transition-colors duration-500 ${isExpanded ? 'bg-white text-dark border-gold' : 'bg-gold text-dark border-dark'}`}
+          >
+            {isExpanded ? <Zap className="w-3 h-3" /> : <Zap className="w-3 h-3" fill="currentColor" />}
+          </motion.div>
+
+          {!isExpanded && (
+            <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-dark/80 backdrop-blur-md border border-white/10 rounded-lg text-[9px] font-mono text-gold uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+              {t('common.menu')}
             </span>
-          </motion.button>
-        </div>
+          )}
+        </motion.button>
       </div>
       <CVModal isOpen={isCVOpen} onClose={() => setIsCVOpen(false)} />
     </>

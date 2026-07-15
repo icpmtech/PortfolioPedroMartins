@@ -23,7 +23,7 @@ export default function Footer() {
           <span>{t('footer.connectTitle')}</span>
         </motion.div>
 
-        <h2 className="font-serif text-4xl md:text-8xl text-white leading-tight tracking-tight">
+        <h2 className="font-serif text-4xl md:text-8xl text-[var(--color-text-primary)] leading-tight tracking-tight">
           {t('footer.connectSubtitle').split('the')[0]} <br/>
           <span className="text-gold italic font-light">{t('footer.connectSubtitle').split('the')[1]}</span>
         </h2>
@@ -40,13 +40,13 @@ export default function Footer() {
               <span className="h-px w-8 bg-gold/40" />
               <span className="text-[10px] md:text-[11px] uppercase tracking-[0.3em] text-gold font-mono font-bold">{t('footer.expertiseTitle') || 'Professional Thesis'}</span>
             </div>
-            <p className="text-sm md:text-lg text-white/50 leading-relaxed font-medium">
+            <p className="text-sm md:text-lg text-[var(--color-text-secondary)] leading-relaxed font-medium">
               {t('footer.expertise')}
               <a 
                 href="https://pt.linkedin.com/in/pedromiguelmouraomartins" 
                 target="_blank" 
                 rel="noreferrer"
-                className="inline-flex items-center text-gold ml-2 hover:text-white transition-colors group font-bold font-mono tracking-tight"
+                className="inline-flex items-center text-gold ml-2 hover:text-[var(--color-text-primary)] transition-colors group font-bold font-mono tracking-tight"
               >
                 {t('footer.readMore')} <ArrowRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
               </a>
@@ -64,11 +64,11 @@ export default function Footer() {
                 <Mail size={24} />
               </div>
               <div className="text-left">
-                <p className="text-[10px] md:text-[11px] uppercase font-bold text-white/30 tracking-widest mb-1 font-mono">{t('footer.directMail')}</p>
-                <p className="text-sm md:text-base text-white font-medium group-hover:text-gold transition-colors">mourao.martins@gmail.com</p>
+                <p className="text-[10px] md:text-[11px] uppercase font-bold text-[var(--color-text-secondary)] tracking-widest mb-1 font-mono">{t('footer.directMail')}</p>
+                <p className="text-sm md:text-base text-[var(--color-text-primary)] font-medium group-hover:text-gold transition-colors">mourao.martins@gmail.com</p>
               </div>
             </div>
-            <ArrowRight size={20} className="text-white/10 group-hover:text-gold transition-all duration-500" />
+            <ArrowRight size={20} className="text-[var(--color-text-primary)]/10 group-hover:text-gold transition-all duration-500" />
           </a>
 
           <a 
@@ -82,27 +82,27 @@ export default function Footer() {
                 <Linkedin size={24} />
               </div>
               <div className="text-left">
-                <p className="text-[10px] md:text-[11px] uppercase font-bold text-white/30 tracking-widest mb-1 font-mono">{t('footer.professional')}</p>
-                <p className="text-sm md:text-base text-white font-medium group-hover:text-[#0077b5] transition-colors">Network Portal</p>
+                <p className="text-[10px] md:text-[11px] uppercase font-bold text-[var(--color-text-secondary)] tracking-widest mb-1 font-mono">{t('footer.professional')}</p>
+                <p className="text-sm md:text-base text-[var(--color-text-primary)] font-medium group-hover:text-[#0077b5] transition-colors">Network Portal</p>
               </div>
             </div>
-            <ArrowRight size={20} className="text-white/10 group-hover:text-[#0077b5] transition-all duration-500" />
+            <ArrowRight size={20} className="text-[var(--color-text-primary)]/10 group-hover:text-[#0077b5] transition-all duration-500" />
           </a>
         </div>
 
         <div className="pt-12 md:pt-20 flex flex-col items-center">
           <div className="flex flex-wrap justify-center gap-6 md:gap-12 mb-8 md:mb-12 items-center px-4">
-            <a href="https://github.com/moraomartins" target="_blank" rel="noreferrer" className="text-white/20 hover:text-white transition-all hover:scale-110 duration-300"><Github size={24} /></a>
-            <a href="https://youtube.com/@cantinhodedotnet?si=S1xPa_vduc-4-Xt6" target="_blank" rel="noreferrer" className="text-white/20 hover:text-red-500 transition-all hover:scale-110 duration-300"><Youtube size={24} /></a>
-            <a href="https://www.facebook.com/share/1LdCY6dzfs/" target="_blank" rel="noreferrer" className="text-white/20 hover:text-blue-500 transition-all hover:scale-110 duration-300"><Facebook size={24} /></a>
-            <a href="https://www.tiktok.com/@cantinhodedotnet?_r=1&_t=ZG-96FMgNnz01Q" target="_blank" rel="noreferrer" className="text-white/20 hover:text-cyan-400 transition-all hover:scale-110 duration-300"><Video size={24} /></a>
-            <a href="https://wa.me/351919520386" target="_blank" rel="noreferrer" className="text-white/20 hover:text-green-500 transition-all hover:scale-110 duration-300"><Phone size={24} /></a>
+            <a href="https://github.com/moraomartins" target="_blank" rel="noreferrer" className="text-[var(--color-text-primary)]/20 hover:text-[var(--color-text-primary)] transition-all hover:scale-110 duration-300"><Github size={24} /></a>
+            <a href="https://youtube.com/@cantinhodedotnet?si=S1xPa_vduc-4-Xt6" target="_blank" rel="noreferrer" className="text-[var(--color-text-primary)]/20 hover:text-red-500 transition-all hover:scale-110 duration-300"><Youtube size={24} /></a>
+            <a href="https://www.facebook.com/share/1LdCY6dzfs/" target="_blank" rel="noreferrer" className="text-[var(--color-text-primary)]/20 hover:text-blue-500 transition-all hover:scale-110 duration-300"><Facebook size={24} /></a>
+            <a href="https://www.tiktok.com/@cantinhodedotnet?_r=1&_t=ZG-96FMgNnz01Q" target="_blank" rel="noreferrer" className="text-[var(--color-text-primary)]/20 hover:text-cyan-400 transition-all hover:scale-110 duration-300"><Video size={24} /></a>
+            <a href="https://wa.me/351919520386" target="_blank" rel="noreferrer" className="text-[var(--color-text-primary)]/20 hover:text-green-500 transition-all hover:scale-110 duration-300"><Phone size={24} /></a>
             <a href="https://cantinhodotnet.com" target="_blank" rel="noreferrer" className="text-gold/40 hover:text-gold transition-all hover:scale-110 duration-300"><MessageSquare size={24} /></a>
           </div>
           
-          <div className="w-20 h-px bg-white/5 mb-8" />
+          <div className="w-20 h-px bg-[var(--color-text-primary)]/5 mb-8" />
           
-          <p className="text-[10px] uppercase tracking-[0.6em] text-white/20 font-bold mb-4 font-mono text-center">
+          <p className="text-[10px] uppercase tracking-[0.6em] text-[var(--color-text-primary)]/20 font-bold mb-4 font-mono text-center">
             © 2026 Pedro Miguel Mourão Martins • {t('common.architect')}
           </p>
           <p className="text-[8px] uppercase tracking-[0.3em] text-gold/20 font-mono">
@@ -112,7 +112,7 @@ export default function Footer() {
       </div>
 
       <div className="absolute top-1/2 left-0 -translate-y-1/2 -rotate-90 origin-left hidden lg:block select-none pointer-events-none opacity-[0.03]">
-        <span className="text-[120px] uppercase font-black tracking-[0.4em] text-white whitespace-nowrap">MARTINS_ARCHIVE</span>
+        <span className="text-[120px] uppercase font-black tracking-[0.4em] text-[var(--color-text-primary)] whitespace-nowrap">MARTINS_ARCHIVE</span>
       </div>
     </div>
   );

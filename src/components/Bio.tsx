@@ -121,7 +121,7 @@ export default function Bio() {
             <span className="text-[10px] uppercase tracking-[0.4em] md:tracking-[0.6em] text-gold font-bold font-mono">{t('bio.role')}</span>
           </div>
           
-          <h1 className="font-serif text-[clamp(2.5rem,15vw,9rem)] leading-[0.85] mb-6 tracking-tighter text-white">
+          <h1 className="font-serif text-[clamp(2.5rem,15vw,9rem)] leading-[0.85] mb-6 tracking-tighter text-[var(--color-text-primary)]">
             <span className="block overflow-hidden">
                <motion.span 
                  initial={{ y: "100%" }}
@@ -144,9 +144,9 @@ export default function Bio() {
             </span>
           </h1>
 
-          <div className="max-w-xl space-y-6 md:space-y-8 text-[#A0A0A0] text-base md:text-xl font-light leading-relaxed mb-10 md:mb-12">
+          <div className="max-w-xl space-y-6 md:space-y-8 text-[var(--color-text-secondary)] text-base md:text-xl font-light leading-relaxed mb-10 md:mb-12">
             <p className="border-l-2 border-gold/20 pl-6 py-2 bg-gradient-to-r from-gold/[0.03] to-transparent">
-              {t('bio.tagline')} <span className="text-white font-medium underline underline-offset-8 decoration-gold/30">Claranet Portugal</span>.
+              {t('bio.tagline')} <span className="text-[var(--color-text-primary)] font-medium underline underline-offset-8 decoration-gold/30">Claranet Portugal</span>.
             </p>
             
             <div className="relative mt-8 p-6 glass-morphism rounded-3xl border border-gold/10 overflow-hidden group">
@@ -163,8 +163,8 @@ export default function Bio() {
                     <span className="text-gold font-mono text-xs font-bold tracking-[0.3em]">{activeMilestone.year}</span>
                     <activeMilestone.icon size={16} className="text-gold" />
                   </div>
-                  <h4 className="text-white font-serif text-2xl group-hover:text-gold transition-colors">{activeMilestone.title}</h4>
-                  <p className="text-sm md:text-base text-[#777] leading-relaxed max-w-lg">{activeMilestone.description}</p>
+                  <h4 className="text-[var(--color-text-primary)] font-serif text-2xl group-hover:text-gold transition-colors">{activeMilestone.title}</h4>
+                  <p className="text-sm md:text-base text-[var(--color-text-secondary)] leading-relaxed max-w-lg">{activeMilestone.description}</p>
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -177,10 +177,10 @@ export default function Bio() {
                 onClick={() => setActiveMilestone(milestone)}
                 className={`group relative flex flex-col items-center focus:outline-none transition-all duration-500 ${activeMilestone.year === milestone.year ? 'opacity-100 scale-110' : 'opacity-30 hover:opacity-60'}`}
               >
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border flex items-center justify-center mb-2 transition-all duration-500 ${activeMilestone.year === milestone.year ? 'border-gold bg-gold/5 text-gold shadow-[0_0_25px_rgba(212,175,55,0.2)]' : 'border-white/10 text-white'}`}>
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border flex items-center justify-center mb-2 transition-all duration-500 ${activeMilestone.year === milestone.year ? 'border-gold bg-gold/5 text-gold shadow-[0_0_25px_rgba(212,175,55,0.2)]' : 'border-white/10 text-[var(--color-text-primary)]'}`}>
                   <milestone.icon className="w-3.5 h-3.5 sm:w-[18px] sm:h-[18px]" />
                 </div>
-                <span className="text-[8px] sm:text-[9px] font-mono tracking-widest uppercase font-bold text-white/50">{milestone.stat}</span>
+                <span className="text-[8px] sm:text-[9px] font-mono tracking-widest uppercase font-bold text-[var(--color-text-secondary)]">{milestone.stat}</span>
                 {activeMilestone.year === milestone.year && (
                   <motion.div 
                     layoutId="underline"
@@ -203,7 +203,7 @@ export default function Bio() {
             <div className="absolute inset-0 border border-gold/20 rounded-[2rem] transform rotate-3 scale-105 opacity-20 group-hover:rotate-0 transition-transform duration-700" />
             <div className="absolute inset-0 border border-gold/10 rounded-[2rem] transform -rotate-3 scale-105 opacity-10 group-hover:rotate-0 transition-transform duration-700 delay-100" />
             
-            <div className="relative h-full w-full bg-[#080808] border border-white/5 rounded-[2rem] overflow-hidden glass-morphism flex flex-col">
+            <div className="relative h-full w-full bg-[var(--color-bg)] border border-white/5 rounded-[2rem] overflow-hidden glass-morphism flex flex-col">
               {/* Profile Image - Semi transparent layer */}
               <div className="h-2/3 relative overflow-hidden">
                 <img 
@@ -211,7 +211,7 @@ export default function Bio() {
                   alt="Pedro Martins profile" 
                   className="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#080808] to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)] to-transparent" />
               </div>
               
               <div className="p-8 flex-1 flex flex-col justify-between">
@@ -220,7 +220,7 @@ export default function Bio() {
                     <Code size={20} />
                     <span className="text-[10px] font-mono tracking-widest font-bold">SYSTEMS_ARCHITECT</span>
                   </div>
-                  <h3 className="font-serif text-3xl text-white leading-none">
+                  <h3 className="font-serif text-3xl text-[var(--color-text-primary)] leading-none">
                     {t('bio.architecture').split(' ')[0]} <br/> 
                     <span className="text-gold italic font-light">{t('bio.architecture').split(' ')[1]}</span>
                   </h3>
@@ -228,10 +228,10 @@ export default function Bio() {
 
                 <div className="space-y-4">
                    <div className="flex justify-between items-end">
-                      <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Load Density</span>
+                      <span className="text-[10px] font-mono text-[var(--color-text-secondary)] uppercase tracking-widest">Load Density</span>
                       <span className="text-[10px] font-mono text-gold font-bold">98.2%</span>
                    </div>
-                   <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                   <div className="h-1 w-full bg-[var(--color-text-primary)]/5 rounded-full overflow-hidden">
                       <motion.div 
                         initial={{ width: 0 }}
                         whileInView={{ width: "98.2%" }}
@@ -248,7 +248,7 @@ export default function Bio() {
 
       {/* Vertical Navigation Hint */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center animate-bounce opacity-40">
-        <span className="text-[10px] uppercase tracking-widest mb-2 font-bold text-white">{t('bio.scrollFeed')}</span>
+        <span className="text-[10px] uppercase tracking-widest mb-2 font-bold text-[var(--color-text-primary)]">{t('bio.scrollFeed')}</span>
         <div className="h-12 w-px bg-gradient-to-b from-gold to-transparent" />
       </div>
     </div>

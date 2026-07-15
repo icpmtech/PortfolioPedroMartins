@@ -72,7 +72,7 @@ export default function SocialMedia() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-dark flex flex-col justify-center px-6 md:px-12 py-24 md:py-0 overflow-hidden">
+    <div className="relative min-h-screen w-full bg-[var(--color-dark)] flex flex-col justify-center px-6 md:px-12 py-24 md:py-0 overflow-hidden">
       {/* Background Graphic */}
       <div className="absolute top-0 right-0 w-full h-full opacity-[0.02] pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(212,175,55,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(212,175,55,0.1)_1px,transparent_1px)] [background-size:40px_40px]" />
@@ -87,7 +87,7 @@ export default function SocialMedia() {
           <span className="h-px w-8 bg-gold" />
           <span className="text-gold font-mono text-[10px] tracking-[0.4em] uppercase font-bold">{t('media.channels')}</span>
         </motion.div>
-        <h2 className="font-serif text-5xl md:text-6xl text-white tracking-tight leading-none">{t('media.presence')}</h2>
+        <h2 className="font-serif text-5xl md:text-6xl text-[var(--color-text-primary)] tracking-tight leading-none">{t('media.presence')}</h2>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-4 mt-0 md:mt-24 max-w-7xl w-full mx-auto relative z-10">
@@ -101,37 +101,37 @@ export default function SocialMedia() {
             className="group relative h-[450px] md:h-[520px] flex flex-col glass-morphism border border-white/5 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-gold/30 shadow-2xl"
           >
             {/* Background Thumbnail */}
-            <div className="absolute inset-0 overflow-hidden">
-              <img 
-                src={feed.thumbnail} 
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-30 group-hover:opacity-50 grayscale group-hover:grayscale-0"
-                alt={feed.title}
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/60 to-transparent" />
-            </div>
-
-            {/* Content Overlays */}
-            <div className="relative h-full flex flex-col justify-between p-8">
-              <div className="flex items-center justify-between">
-                <div className={`p-3 rounded-2xl border border-white/10 ${feed.color} shadow-lg backdrop-blur-md`}>
-                  <feed.icon size={24} />
-                </div>
-                <div className="bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 flex items-center space-x-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" />
-                  <span className="text-[9px] font-mono font-bold text-white/80 tracking-widest uppercase">{t('common.liveFeed')}</span>
-                </div>
+              <div className="absolute inset-0 overflow-hidden">
+                <img 
+                  src={feed.thumbnail} 
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-30 group-hover:opacity-50 grayscale group-hover:grayscale-0"
+                  alt={feed.title}
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-dark)] via-[var(--color-dark)]/60 to-transparent" />
               </div>
+
+              {/* Content Overlays */}
+              <div className="relative h-full flex flex-col justify-between p-8">
+                <div className="flex items-center justify-between">
+                  <div className={`p-3 rounded-2xl border border-white/10 ${feed.color} shadow-lg backdrop-blur-md`}>
+                    <feed.icon size={24} />
+                  </div>
+                  <div className="bg-[var(--color-card-bg)] backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 flex items-center space-x-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" />
+                    <span className="text-[9px] font-mono font-bold text-[var(--color-text-primary)]/80 tracking-widest uppercase">{t('common.liveFeed')}</span>
+                  </div>
+                </div>
 
               <div className="space-y-6">
                 <div className="space-y-2">
                   <p className="text-[10px] uppercase font-bold text-gold tracking-[0.3em] font-mono">{feed.platform}</p>
-                  <h3 className="text-3xl md:text-3xl font-serif text-white group-hover:text-gold transition-colors duration-300 leading-tight">{feed.title}</h3>
+                  <h3 className="text-3xl md:text-3xl font-serif text-[var(--color-text-primary)] group-hover:text-gold transition-colors duration-300 leading-tight">{feed.title}</h3>
                 </div>
                 
                 <div className="flex items-center justify-between pt-4 border-t border-white/5">
                   <div className="flex flex-col">
-                    <span className="text-[9px] uppercase tracking-[0.2em] text-white/30 font-bold font-mono">{t('common.engagement')}</span>
+                    <span className="text-[9px] uppercase tracking-[0.2em] text-[var(--color-text-secondary)] font-bold font-mono">{t('common.engagement')}</span>
                     <span className="text-base font-mono text-gold-muted font-bold group-hover:text-gold transition-colors">{feed.stats}</span>
                   </div>
                   <div className="flex items-center space-x-3">
@@ -139,7 +139,7 @@ export default function SocialMedia() {
                       onClick={() => handleShare(feed.title, feed.url, index)}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
-                      className="w-12 h-12 rounded-full glass-morphism border border-white/10 flex items-center justify-center text-white/60 hover:text-gold hover:border-gold/40 transition-all duration-300 focus:outline-none"
+                      className="w-12 h-12 rounded-full glass-morphism border border-white/10 flex items-center justify-center text-[var(--color-text-primary)]/60 hover:text-gold hover:border-gold/40 transition-all duration-300 focus:outline-none"
                     >
                       <AnimatePresence mode="wait">
                         {sharedIndex === index ? (

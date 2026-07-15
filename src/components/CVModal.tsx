@@ -51,24 +51,24 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/90 backdrop-blur-md"
+            className="absolute inset-0 bg-[var(--color-bg)]/90 backdrop-blur-md"
           />
           
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-4xl h-full max-h-[90vh] bg-[#0F0F0F] border border-white/10 rounded-3xl overflow-hidden flex flex-col shadow-2xl"
+            className="relative w-full max-w-4xl h-full max-h-[90vh] bg-[var(--color-bg)] border border-[var(--color-border)] rounded-3xl overflow-hidden flex flex-col shadow-2xl"
           >
             {/* Header */}
-            <div className="p-5 md:p-10 border-b border-white/5 flex justify-between items-start">
+            <div className="p-5 md:p-10 border-b border-[var(--color-border)] flex justify-between items-start">
               <div>
-                <h2 className="text-2xl sm:text-3xl md:text-5xl font-serif text-white mb-1 md:mb-2">Pedro<span className="text-gold italic font-light ml-2">Mourão Martins</span></h2>
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-serif text-[var(--color-text-primary)] mb-1 md:mb-2">Pedro<span className="text-gold italic font-light ml-2">Mourão Martins</span></h2>
                 <p className="text-gold font-mono text-[8px] md:text-[10px] uppercase tracking-[0.2em] md:tracking-[0.3em] font-bold">{t('cv.subtitle')}</p>
               </div>
               <button 
                 onClick={onClose}
-                className="w-10 h-10 rounded-full glass-morphism flex items-center justify-center text-white hover:text-gold transition-colors"
+                className="w-10 h-10 rounded-full glass-morphism flex items-center justify-center text-[var(--color-text-primary)] hover:text-gold transition-colors"
               >
                 <X size={20} />
               </button>
@@ -82,10 +82,10 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
                 <div className="space-y-10">
                   {/* Contact */}
                   <section className="space-y-4">
-                    <h3 className="text-xs uppercase tracking-widest text-white/40 font-bold flex items-center gap-2">
+                    <h3 className="text-xs uppercase tracking-widest text-[var(--color-text-primary)]/40 font-bold flex items-center gap-2">
                        <MapPin size={14} className="text-gold" /> {t('cv.contact')}
                     </h3>
-                    <div className="space-y-3 text-sm text-[#A0A0A0]">
+                    <div className="space-y-3 text-sm text-[var(--color-text-secondary)]">
                       <p className="flex items-center gap-3"><Mail size={14} /> mourao.martins@gmail.com</p>
                       <p className="flex items-center gap-3"><Globe size={14} /> cantinhode..net</p>
                       <p className="flex items-center gap-3"><MapPin size={14} /> Porto, Portugal</p>
@@ -94,7 +94,7 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
 
                   {/* Skills Grid */}
                   <section className="space-y-6">
-                    <h3 className="text-xs uppercase tracking-widest text-white/40 font-bold flex items-center gap-2">
+                    <h3 className="text-xs uppercase tracking-widest text-[var(--color-text-primary)]/40 font-bold flex items-center gap-2">
                        <Code size={14} className="text-gold" /> {t('cv.technologies')}
                     </h3>
                     {SKILLS.map((set, idx) => (
@@ -119,7 +119,7 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
                                 hidden: { opacity: 0, y: 10 },
                                 visible: { opacity: 1, y: 0 }
                               }}
-                              className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] text-white/80"
+                              className="px-3 py-1 bg-[var(--color-text-primary)]/5 border border-[var(--color-border)] rounded-full text-[10px] text-[var(--color-text-primary)]/80"
                             >
                               {item}
                             </motion.span>
@@ -133,7 +133,7 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
                 {/* Right Column: Experience & Education */}
                 <div className="lg:col-span-2 space-y-12">
                   <section className="space-y-8">
-                    <h3 className="text-xs uppercase tracking-widest text-white/40 font-bold flex items-center gap-2">
+                    <h3 className="text-xs uppercase tracking-widest text-[var(--color-text-primary)]/40 font-bold flex items-center gap-2">
                       <Briefcase size={14} className="text-gold" /> {t('cv.professionalPath')}
                     </h3>
                     <div className="space-y-10">
@@ -142,13 +142,13 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
                           <div className="absolute left-[-5px] top-1.5 w-2 h-2 rounded-full bg-gold shadow-[0_0_8px_rgba(197,160,89,0.5)] group-hover:scale-150 transition-transform" />
                           <div className="mb-2">
                             <span className="text-[10px] font-mono text-gold/60 font-bold">{job.period}</span>
-                            <h4 className="text-lg text-white font-medium">{job.role}</h4>
+                            <h4 className="text-lg text-[var(--color-text-primary)] font-medium">{job.role}</h4>
                             <p className="text-sm text-gold/80 italic">{job.company}</p>
                           </div>
-                          <p className="text-sm text-[#808080] leading-relaxed mb-4">{job.description}</p>
+                          <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-4">{job.description}</p>
                           <div className="flex flex-wrap gap-2">
                             {job.tech.map((t, i) => (
-                              <span key={i} className="text-[9px] uppercase tracking-tighter font-bold text-white/30">{t} {i < job.tech.length - 1 && "•"}</span>
+                              <span key={i} className="text-[9px] uppercase tracking-tighter font-bold text-[var(--color-text-primary)]/30">{t} {i < job.tech.length - 1 && "•"}</span>
                             ))}
                           </div>
                         </div>
@@ -157,12 +157,12 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
                   </section>
 
                   <section className="space-y-6">
-                    <h3 className="text-xs uppercase tracking-widest text-white/40 font-bold flex items-center gap-2">
+                    <h3 className="text-xs uppercase tracking-widest text-[var(--color-text-primary)]/40 font-bold flex items-center gap-2">
                       <GraduationCap size={14} className="text-gold" /> {t('cv.education')}
                     </h3>
-                    <div className="p-6 glass-morphism rounded-2xl border border-white/5">
-                      <p className="text-white font-medium">{t('cv.masters')}</p>
-                      <p className="text-sm text-[#A0A0A0]">{t('cv.university')}</p>
+                    <div className="p-6 glass-morphism rounded-2xl border border-[var(--color-border)]">
+                      <p className="text-[var(--color-text-primary)] font-medium">{t('cv.masters')}</p>
+                      <p className="text-sm text-[var(--color-text-secondary)]">{t('cv.university')}</p>
                       <p className="text-xs text-gold/60 mt-1">2010 - 2012 • {t('cv.eqf')}</p>
                     </div>
                   </section>
@@ -171,8 +171,8 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
             </div>
 
             {/* Footer Action */}
-            <div className="p-6 md:p-8 bg-black/40 border-t border-white/5 flex flex-wrap gap-4 items-center justify-between">
-              <p className="text-xs text-[#666]">{t('cv.builtWith')}</p>
+            <div className="p-6 md:p-8 bg-[var(--color-bg)]/40 border-t border-[var(--color-border)] flex flex-wrap gap-4 items-center justify-between">
+              <p className="text-xs text-[var(--color-text-secondary)]">{t('cv.builtWith')}</p>
               <div className="flex gap-4">
                 <a 
                   href="mailto:mourao.martins@gmail.com"

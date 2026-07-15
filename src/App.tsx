@@ -11,6 +11,7 @@ import FeedSidebar from "./components/FeedSidebar";
 import BackToTop from "./components/BackToTop";
 import AdminPanel from "./components/AdminPanel";
 import SEO from "./components/SEO";
+import { ThemeProvider } from './context/ThemeContext';
 
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,35 +48,37 @@ export default function App() {
   }
 
   return (
-    <main className="font-sans antialiased bg-dark bg-mesh min-h-screen text-[#E5E5E5] selection:bg-gold/30 overflow-hidden">
-      <SEO 
-        title="Architecture & Tech Insights" 
-        description="Official portfolio of Pedro Martins. Exploring software architecture, technological innovation, and literary discourse."
-        keywords="Pedro Martins, Architecture, Software Engineering, PWA, React, Tech Books, NLP, Gemini API"
-      />
-      <Navbar />
-      <FeedSidebar />
-      <BackToTop containerRef={containerRef} />
-      <div ref={containerRef} className="snap-container no-scrollbar">
-        <section className="snap-section">
-          <Bio />
-        </section>
-        <section className="snap-section">
-          <SocialMedia />
-        </section>
-        <section className="snap-section">
-          <Portfolio />
-        </section>
-        <section className="snap-section">
-          <Blog />
-        </section>
-        <section className="snap-section">
-          <Books />
-        </section>
-        <section className="snap-section">
-          <Footer />
-        </section>
-      </div>
-    </main>
+    <ThemeProvider>
+      <main className="font-sans antialiased bg-dark bg-mesh min-h-screen text-[var(--color-text-primary)] selection:bg-gold/30 overflow-hidden">
+        <SEO 
+          title="Architecture & Tech Insights" 
+          description="Official portfolio of Pedro Martins. Exploring software architecture, technological innovation, and literary discourse."
+          keywords="Pedro Martins, Architecture, Software Engineering, PWA, React, Tech Books, NLP, Gemini API"
+        />
+        <Navbar />
+        <FeedSidebar />
+        <BackToTop containerRef={containerRef} />
+        <div ref={containerRef} className="snap-container no-scrollbar">
+          <section className="snap-section">
+            <Bio />
+          </section>
+          <section className="snap-section">
+            <SocialMedia />
+          </section>
+          <section className="snap-section">
+            <Portfolio />
+          </section>
+          <section className="snap-section">
+            <Blog />
+          </section>
+          <section className="snap-section">
+            <Books />
+          </section>
+          <section className="snap-section">
+            <Footer />
+          </section>
+        </div>
+      </main>
+    </ThemeProvider>
   );
 }

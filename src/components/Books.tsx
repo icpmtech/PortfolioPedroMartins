@@ -46,7 +46,7 @@ export default function Books() {
           <span className="h-0.5 w-6 bg-gold" />
           <span className="text-gold font-mono text-[10px] tracking-[0.4em] uppercase font-bold">{t('books.publications')}</span>
         </motion.div>
-        <h2 className="font-serif text-5xl md:text-6xl text-white tracking-tight leading-none">{t('books.library')}</h2>
+        <h2 className="font-serif text-5xl md:text-6xl text-[var(--color-text-primary)] tracking-tight leading-none">{t('books.library')}</h2>
       </div>
 
       <div className="flex space-x-6 md:space-x-8 overflow-x-auto no-scrollbar pb-12 md:pb-16 pt-8 md:pt-32 snap-x snap-mandatory relative z-10">
@@ -81,8 +81,8 @@ export default function Books() {
                   
                   <div className="space-y-4">
                     <div>
-                      <h3 className="font-serif text-3xl text-white mb-2 leading-none group-hover:text-gold transition-colors duration-300">{book.title}</h3>
-                      <p className="text-[11px] uppercase font-bold text-[#555] font-mono tracking-[0.1em]">{book.subtitle}</p>
+                      <h3 className="font-serif text-3xl text-[var(--color-text-primary)] mb-2 leading-none group-hover:text-gold transition-colors duration-300">{book.title}</h3>
+                      <p className="text-[11px] uppercase font-bold text-[var(--color-text-secondary)] font-mono tracking-[0.1em]">{book.subtitle}</p>
                     </div>
                     
                     <div className="flex items-center justify-between pt-4 border-t border-white/5">
@@ -114,7 +114,7 @@ export default function Books() {
                 <BookOpen size={32} className="text-gold/40 group-hover:text-gold transition-all duration-500" />
               </div>
               <div className="text-center space-y-2">
-                <span className="block text-[12px] uppercase tracking-[0.4em] font-black text-white/40 group-hover:text-white transition-all duration-500">{t('books.viewShelf')}</span>
+                <span className="block text-[12px] uppercase tracking-[0.4em] font-black text-[var(--color-text-primary)]/40 group-hover:text-[var(--color-text-primary)] transition-all duration-500">{t('books.viewShelf')}</span>
                 <span className="block text-[10px] uppercase tracking-[0.2em] text-gold-muted font-bold">{t('books.available', { count: books.length > 0 ? books.length : 36 })}</span>
               </div>
             </motion.a>
@@ -124,7 +124,7 @@ export default function Books() {
 
 
       <div className="absolute top-1/2 right-0 -translate-y-1/2 rotate-90 origin-right hidden xl:block select-none pointer-events-none opacity-5">
-        <span className="text-[140px] uppercase font-black tracking-[0.2em] text-white leading-none whitespace-nowrap">{t('common.literary')}</span>
+        <span className="text-[140px] uppercase font-black tracking-[0.2em] text-[var(--color-text-primary)] leading-none whitespace-nowrap">{t('common.literary')}</span>
       </div>
     </div>
   );
