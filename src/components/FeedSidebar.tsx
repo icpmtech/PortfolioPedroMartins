@@ -57,7 +57,7 @@ export default function FeedSidebar() {
 
   return (
     <>
-      <div className="fixed right-6 md:right-10 bottom-6 md:bottom-10 z-[100] flex flex-col items-center">
+      <div className="fixed right-6 md:right-10 bottom-24 md:bottom-10 z-[100] flex flex-col items-center">
         <AnimatePresence>
           {isExpanded && (
             <motion.div
@@ -79,66 +79,77 @@ export default function FeedSidebar() {
                 <span className="text-[10px] md:text-[11px] font-black uppercase tracking-widest">{t('sidebar.follow')}</span>
               </motion.a>
 
-              <div className="flex flex-col items-center space-y-4 p-4 glass-morphism rounded-[2.5rem] border border-gold/20 shadow-[0_20px_50px_rgba(0,0,0,0.3)] backdrop-blur-2xl">
+              <div className="p-5 glass-morphism rounded-[2.5rem] border border-gold/20 shadow-[0_30px_70px_rgba(0,0,0,0.5)] backdrop-blur-3xl flex flex-col items-center gap-5">
+                {/* Primary Action: Profile/CV */}
                 <motion.button 
-                  whileHover={{ scale: 1.1, backgroundColor: 'var(--color-gold)', color: '#000' }}
-                  whileTap={{ scale: 0.9 }}
+                  whileHover={{ scale: 1.05, backgroundColor: 'var(--color-gold)', color: '#000' }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => {
                     triggerHaptic(20);
                     setIsCVOpen(true);
                   }}
-                  className="w-12 h-12 rounded-full border border-gold/30 flex items-center justify-center text-gold transition-all duration-300"
+                  className="w-full py-3 px-4 rounded-2xl border border-gold/30 flex items-center justify-center gap-3 text-gold transition-all duration-300 bg-gold/5"
                 >
                   <User className="w-5 h-5" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest">{t('common.profile')}</span>
                 </motion.button>
 
-                {actions.map((action, idx) => (
-                  <motion.a
-                    key={idx}
-                    href={action.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: idx * 0.05, type: 'spring', stiffness: 300 }}
-                    whileHover={{ scale: 1.1, backgroundColor: 'rgba(212, 175, 55, 0.1)' }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => triggerHaptic(15)}
-                    className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[var(--color-text-primary)]/60 hover:text-gold hover:border-gold/40 transition-all duration-300 shadow-sm"
-                  >
-                    <action.icon className="w-5 h-5" />
-                  </motion.a>
-                ))}
+                {/* Social Grid */}
+                <div className="grid grid-cols-4 gap-3">
+                  {actions.map((action, idx) => (
+                    <motion.a
+                      key={idx}
+                      href={action.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: idx * 0.05, type: 'spring', stiffness: 300 }}
+                      whileHover={{ scale: 1.1, backgroundColor: 'rgba(212, 175, 55, 0.1)' }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => triggerHaptic(15)}
+                      className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[var(--color-text-primary)]/60 hover:text-gold hover:border-gold/40 transition-all duration-300 shadow-sm"
+                      title={action.label}
+                    >
+                      <action.icon className="w-4 h-4" />
+                    </motion.a>
+                  ))}
+                </div>
                 
-                <div className="h-px w-8 bg-gold/10 my-2" />
+                <div className="h-px w-full bg-white/10" />
 
-                <motion.button 
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.7 }}
-                  onClick={handleLike}
-                  className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all duration-300 ${liked ? 'text-red-500 border-red-500/40 bg-red-500/10' : 'text-[var(--color-text-primary)]/40 border-white/10 hover:text-red-500 hover:border-red-500/20'}`}
-                >
-                  <Heart className="w-5 h-5" fill={liked ? "currentColor" : "none"} />
-                </motion.button>
+                {/* Interaction Row */}
+                <div className="flex items-center gap-4 w-full">
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.7 }}
+                    onClick={handleLike}
+                    className={`flex-1 h-12 rounded-2xl border flex items-center justify-center gap-2 transition-all duration-300 ${liked ? 'text-red-500 border-red-500/40 bg-red-500/10 shadow-[0_0_20px_rgba(239,68,68,0.2)]' : 'text-[var(--color-text-primary)]/40 border-white/10 hover:text-red-500 hover:border-red-500/20'}`}
+                  >
+                    <Heart className="w-4 h-4" fill={liked ? "currentColor" : "none"} />
+                    <span className="text-[10px] font-mono font-bold">{(likeCount/1000).toFixed(1)}k</span>
+                  </motion.button>
 
-                <motion.button 
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.7 }}
-                  onClick={handleShare}
-                  className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all duration-300 ${shared ? 'text-blue-400 border-blue-400/40 bg-blue-400/10' : 'text-[var(--color-text-primary)]/40 border-white/10 hover:text-blue-400 hover:border-blue-400/20'}`}
-                >
-                  <AnimatePresence mode="wait">
-                    {shared ? (
-                      <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                        <Check className="w-5 h-5" />
-                      </motion.div>
-                    ) : (
-                      <motion.div key="share" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                        <Share2 className="w-5 h-5" />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.button>
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.7 }}
+                    onClick={handleShare}
+                    className={`flex-1 h-12 rounded-2xl border flex items-center justify-center transition-all duration-300 ${shared ? 'text-blue-400 border-blue-400/40 bg-blue-400/10 shadow-[0_0_20px_rgba(96,165,250,0.2)]' : 'text-[var(--color-text-primary)]/40 border-white/10 hover:text-blue-400 hover:border-blue-400/20'}`}
+                  >
+                    <AnimatePresence mode="wait">
+                      {shared ? (
+                        <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                          <Check className="w-4 h-4" />
+                        </motion.div>
+                      ) : (
+                        <motion.div key="share" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="flex items-center gap-2">
+                          <Share2 className="w-4 h-4" />
+                          <span className="text-[9px] font-bold uppercase tracking-tighter">{t('common.share')}</span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.button>
+                </div>
               </div>
             </motion.div>
           )}

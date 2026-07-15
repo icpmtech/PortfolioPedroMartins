@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, Code, Cpu, Award, Zap, BookOpen, GraduationCap, MessageCircle } from 'lucide-react';
+import { triggerHaptic } from '../lib/haptics';
 
 const MILESTONES = [
   {
@@ -121,7 +122,7 @@ export default function Bio() {
             <span className="text-[10px] uppercase tracking-[0.4em] md:tracking-[0.6em] text-gold font-bold font-mono">{t('bio.role')}</span>
           </div>
           
-          <h1 className="font-serif text-[clamp(2.5rem,15vw,9rem)] leading-[0.85] mb-6 tracking-tighter text-[var(--color-text-primary)]">
+          <h1 className="font-serif text-[clamp(2.5rem,12vw,9rem)] leading-[0.85] mb-6 md:mb-8 tracking-tighter text-[var(--color-text-primary)]">
             <span className="block overflow-hidden">
                <motion.span 
                  initial={{ y: "100%" }}
@@ -144,47 +145,50 @@ export default function Bio() {
             </span>
           </h1>
 
-          <div className="max-w-xl space-y-6 md:space-y-8 text-[var(--color-text-secondary)] text-base md:text-xl font-light leading-relaxed mb-10 md:mb-12">
-            <p className="border-l-2 border-gold/20 pl-6 py-2 bg-gradient-to-r from-gold/[0.03] to-transparent">
+          <div className="max-w-xl space-y-6 md:space-y-8 text-[var(--color-text-secondary)] text-sm md:text-xl font-light leading-relaxed mb-8 md:mb-12">
+            <p className="border-l-2 border-gold/20 pl-4 md:pl-6 py-2 bg-gradient-to-r from-gold/[0.03] to-transparent">
               {t('bio.tagline')} <span className="text-[var(--color-text-primary)] font-medium underline underline-offset-8 decoration-gold/30">Claranet Portugal</span>.
             </p>
             
-            <div className="relative mt-8 p-6 glass-morphism rounded-3xl border border-gold/10 overflow-hidden group">
+            <div className="relative mt-4 md:mt-8 p-5 md:p-6 glass-morphism rounded-3xl border border-gold/10 overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-5 bg-gold/20 rounded-bl-3xl translate-x-1/2 -translate-y-1/2" />
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeMilestone.year}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="space-y-3"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-2 md:space-y-3"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-gold font-mono text-xs font-bold tracking-[0.3em]">{activeMilestone.year}</span>
-                    <activeMilestone.icon size={16} className="text-gold" />
+                    <span className="text-gold font-mono text-[10px] md:text-xs font-bold tracking-[0.3em]">{activeMilestone.year}</span>
+                    <activeMilestone.icon size={14} className="text-gold md:w-4 md:h-4" />
                   </div>
-                  <h4 className="text-[var(--color-text-primary)] font-serif text-2xl group-hover:text-gold transition-colors">{activeMilestone.title}</h4>
-                  <p className="text-sm md:text-base text-[var(--color-text-secondary)] leading-relaxed max-w-lg">{activeMilestone.description}</p>
+                  <h4 className="text-[var(--color-text-primary)] font-serif text-xl md:text-2xl group-hover:text-gold transition-colors">{activeMilestone.title}</h4>
+                  <p className="text-xs md:text-base text-[var(--color-text-secondary)] leading-relaxed max-w-lg">{activeMilestone.description}</p>
                 </motion.div>
               </AnimatePresence>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+          <div className="flex items-center gap-3 md:gap-6 overflow-x-auto no-scrollbar pb-4 md:pb-0 -mx-6 px-6 md:mx-0 md:px-0">
             {MILESTONES.map((milestone) => (
               <button
                 key={milestone.year}
-                onClick={() => setActiveMilestone(milestone)}
-                className={`group relative flex flex-col items-center focus:outline-none transition-all duration-500 ${activeMilestone.year === milestone.year ? 'opacity-100 scale-110' : 'opacity-30 hover:opacity-60'}`}
+                onClick={() => {
+                  triggerHaptic(10);
+                  setActiveMilestone(milestone);
+                }}
+                className={`group relative flex flex-col items-center flex-shrink-0 focus:outline-none transition-all duration-500 ${activeMilestone.year === milestone.year ? 'opacity-100 scale-105 md:scale-110' : 'opacity-30 hover:opacity-60'}`}
               >
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border flex items-center justify-center mb-2 transition-all duration-500 ${activeMilestone.year === milestone.year ? 'border-gold bg-gold/5 text-gold shadow-[0_0_25px_rgba(212,175,55,0.2)]' : 'border-white/10 text-[var(--color-text-primary)]'}`}>
-                  <milestone.icon className="w-3.5 h-3.5 sm:w-[18px] sm:h-[18px]" />
+                <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full border flex items-center justify-center mb-2 transition-all duration-500 ${activeMilestone.year === milestone.year ? 'border-gold bg-gold/5 text-gold shadow-[0_0_25px_rgba(212,175,55,0.2)]' : 'border-white/10 text-[var(--color-text-primary)]'}`}>
+                  <milestone.icon className="w-3.5 h-3.5 md:w-[18px] md:h-[18px]" />
                 </div>
-                <span className="text-[8px] sm:text-[9px] font-mono tracking-widest uppercase font-bold text-[var(--color-text-secondary)]">{milestone.stat}</span>
+                <span className="text-[7px] md:text-[9px] font-mono tracking-widest uppercase font-bold text-[var(--color-text-secondary)] whitespace-nowrap">{milestone.stat.split(' ')[0]}</span>
                 {activeMilestone.year === milestone.year && (
                   <motion.div 
-                    layoutId="underline"
-                    className="absolute -bottom-2 w-6 h-0.5 bg-gold rounded-full shadow-[0_0_10px_#D4AF37]"
+                    layoutId="underline-milestone"
+                    className="absolute -bottom-1 w-4 md:w-6 h-0.5 bg-gold rounded-full shadow-[0_0_10px_#D4AF37]"
                   />
                 )}
               </button>
