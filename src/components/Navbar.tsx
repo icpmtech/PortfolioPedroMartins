@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Globe } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 
+import { triggerHaptic } from '../lib/haptics';
+
 export default function Navbar() {
   const { i18n, t } = useTranslation();
   const amazonUrl = "https://www.amazon.es/stores/Pedro-Martins/author/B0CBCM7259?language=pt&ref=ap_rdr&shoppingPortalEnabled=true";
@@ -16,6 +18,7 @@ export default function Navbar() {
   });
 
   const toggleLanguage = () => {
+    triggerHaptic(15);
     const newLang = i18n.language === 'en' ? 'pt' : 'en';
     i18n.changeLanguage(newLang);
   };

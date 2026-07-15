@@ -3,12 +3,19 @@ import { Sun, Moon, Zap } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { motion, AnimatePresence } from 'motion/react';
 
+import { triggerHaptic } from '../lib/haptics';
+
 export const ThemeToggle: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
 
+  const handleToggle = () => {
+    triggerHaptic(15);
+    toggleTheme();
+  };
+
   return (
     <button
-      onClick={toggleTheme}
+      onClick={handleToggle}
       className="relative p-2.5 rounded-2xl bg-white/5 border border-white/10 hover:border-gold/50 hover:bg-gold/5 transition-all group flex items-center justify-center"
       title="Switch Theme"
     >

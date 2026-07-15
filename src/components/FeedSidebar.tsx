@@ -4,6 +4,8 @@ import { Linkedin, Github, MessageCircle, Heart, Share2, Database, Check, User, 
 import { motion, AnimatePresence } from 'motion/react';
 import CVModal from './CVModal';
 
+import { triggerHaptic } from '../lib/haptics';
+
 export default function FeedSidebar() {
   const { t } = useTranslation();
   const [liked, setLiked] = useState(false);
@@ -24,12 +26,14 @@ export default function FeedSidebar() {
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
+    triggerHaptic(liked ? 10 : [15, 30, 15]);
     setLiked(!liked);
     setLikeCount(prev => liked ? prev - 1 : prev + 1);
   };
 
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    triggerHaptic(20);
     try {
       if (navigator.share) {
         await navigator.share({
@@ -44,6 +48,11 @@ export default function FeedSidebar() {
     } catch (err) {
       console.error('Sharing failed', err);
     }
+  };
+
+  const toggleExpanded = () => {
+    triggerHaptic(isExpanded ? 10 : 25);
+    setIsExpanded(!isExpanded);
   };
 
   return (
@@ -63,6 +72,7 @@ export default function FeedSidebar() {
                 rel="noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => triggerHaptic(15)}
                 className="bg-gold hover:bg-white text-dark px-5 py-2.5 rounded-full flex items-center space-x-2 shadow-[0_10px_30px_rgba(212,175,55,0.4)] transition-all duration-300 group whitespace-nowrap"
               >
                 <Linkedin size={14} className="group-hover:scale-110 transition-transform" />
@@ -73,7 +83,10 @@ export default function FeedSidebar() {
                 <motion.button 
                   whileHover={{ scale: 1.1, backgroundColor: 'var(--color-gold)', color: '#000' }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={() => setIsCVOpen(true)}
+                  onClick={() => {
+                    triggerHaptic(20);
+                    setIsCVOpen(true);
+                  }}
                   className="w-12 h-12 rounded-full border border-gold/30 flex items-center justify-center text-gold transition-all duration-300"
                 >
                   <User className="w-5 h-5" />
@@ -90,6 +103,7 @@ export default function FeedSidebar() {
                     transition={{ delay: idx * 0.05, type: 'spring', stiffness: 300 }}
                     whileHover={{ scale: 1.1, backgroundColor: 'rgba(212, 175, 55, 0.1)' }}
                     whileTap={{ scale: 0.9 }}
+                    onClick={() => triggerHaptic(15)}
                     className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[var(--color-text-primary)]/60 hover:text-gold hover:border-gold/40 transition-all duration-300 shadow-sm"
                   >
                     <action.icon className="w-5 h-5" />
@@ -132,7 +146,7 @@ export default function FeedSidebar() {
 
         {/* Trigger Button */}
         <motion.button
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={toggleExpanded}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="relative group focus:outline-none"

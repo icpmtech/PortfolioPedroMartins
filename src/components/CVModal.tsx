@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Mail, Phone, MapPin, Globe, Award, Briefcase, GraduationCap, Code, Server, Database, Cloud } from 'lucide-react';
 
+import { triggerHaptic } from '../lib/haptics';
+
 interface CVModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -10,6 +12,11 @@ interface CVModalProps {
 
 export default function CVModal({ isOpen, onClose }: CVModalProps) {
   const { t, i18n } = useTranslation();
+
+  const handleClose = () => {
+    triggerHaptic(10);
+    onClose();
+  };
   
   const EXPERIENCE = [
     {
@@ -50,7 +57,7 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
+            onClick={handleClose}
             className="absolute inset-0 bg-[var(--color-bg)]/90 backdrop-blur-md"
           />
           
@@ -67,7 +74,7 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
                 <p className="text-gold font-mono text-[8px] md:text-[10px] uppercase tracking-[0.2em] md:tracking-[0.3em] font-bold">{t('cv.subtitle')}</p>
               </div>
               <button 
-                onClick={onClose}
+                onClick={handleClose}
                 className="w-10 h-10 rounded-full glass-morphism flex items-center justify-center text-[var(--color-text-primary)] hover:text-gold transition-colors"
               >
                 <X size={20} />
@@ -176,6 +183,7 @@ export default function CVModal({ isOpen, onClose }: CVModalProps) {
               <div className="flex gap-4">
                 <a 
                   href="mailto:mourao.martins@gmail.com"
+                  onClick={() => triggerHaptic(20)}
                   className="px-6 py-2 bg-gold text-black rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white transition-colors"
                 >
                   {t('cv.hireMe')}
